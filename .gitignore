@@ -1,0 +1,24 @@
+# Ignora file di log e journal di Vivado
+*.jou
+*.log
+*.str
+*.backup.log
+*.vd
+*.wdb
+*.wcfg
+
+# Ignora le cartelle di output massicce (Sintesi e Implementazione)
+/vivado_proj/*.runs/
+/vivado_proj/*.cache/
+/vivado_proj/*.hw/
+/vivado_proj/*.sim/
+/vivado_proj/*.ip_user_files/
+
+# Ignora file temporanei specifici di Xilinx
+.Xil/
+usage_statistics_webtalk.html
+usage_statistics_webtalk.xml
+
+# (Opzionale) Se vuoi ignorare anche il bitstream finale
+*.bit
+*.bin
