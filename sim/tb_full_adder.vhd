@@ -1,0 +1,67 @@
+library ieee;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
+
+entity tb_full_adder is
+end entity tb_full_adder;
+
+architecture behavioral of tb_full_adder is
+    component full_adder is
+        port (
+            a, b, cin : in    std_logic;
+            s, cout   : out   std_logic
+        );
+    end component full_adder;
+
+    signal a, b, cin : std_logic;
+    signal s, cout   : std_logic;
+
+    signal gen_input : unsigned(2 downto 0);
+
+    type truth_table_type is array (0 to 7) of std_logic_vector(4 downto 0);
+    -- bit order: a, b, cin, | exp_cout, exp_s
+    constant truth_table : truth_table_type := (
+        "000" & "00",
+        "001" & "01",
+        "010" & "01",
+        "011" & "10",
+        "100" & "01",
+        "101" & "10",
+        "110" & "10",
+        "111" & "11"
+    );
+
+begin
+    fa: component full_adder
+        port map (
+            a => a, b => b, cin => cin,
+            s => s, cout => cout
+        );
+
+    sim: process is
+    begin
+        report "--- starting `fulladder` (exhaustive testing) simulation ---";
+
+        for i in 0 to 7 loop
+            gen_input <= unsigned(truth_table(i)(4 downto 2));
+
+            a   <= to_unsigned(i, 3)(2);
+            b   <= to_unsigned(i, 3)(1);
+            cin <= to_unsigned(i, 3)(0);
+
+            wait for 10 ns;
+
+            assert unsigned'(cout & s) = unsigned(truth_table(i)(1 downto 0))
+                report "error with input " & integer'image(i) &
+                       " (binary: " & std_logic'image(gen_input(2)) &
+                       " " & std_logic'image(gen_input(1)) &
+                       " " & std_logic'image(gen_input(0)) & ")" &
+                       " | expected: " & integer'image(to_integer(unsigned(truth_table(i)(1 downto 0)))) &
+                       " | obtained: " & integer'image(to_integer(unsigned'(cout & s)))
+                severity error;
+        end loop;
+
+        report "--- simulation completed ---";
+        wait;
+    end process sim;
+end architecture behavioral;
