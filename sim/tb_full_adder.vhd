@@ -5,7 +5,7 @@ library ieee;
 entity tb_full_adder is
 end entity tb_full_adder;
 
-architecture behavioral of tb_full_adder is
+architecture unit_test of tb_full_adder is
     signal a, b, cin : STD_LOGIC;
     signal s, cout   : STD_LOGIC;
 
@@ -40,7 +40,7 @@ begin
 
     sim: process is
     begin
-        report "--- starting `fulladder` (exhaustive testing) simulation ---";
+        report "--- Starting `full_adder` (Exhaustive Testing) simulation ---";
 
         for i in 0 to 7 loop
             gen_input <= unsigned(truth_table(i)(4 downto 2));
@@ -52,7 +52,7 @@ begin
             wait for 10 ns;
 
             assert unsigned'(cout & s) = unsigned(truth_table(i)(1 downto 0))
-                report "error with input " & integer'image(i) &
+                report "Error with input " & integer'image(i) &
                        " (binary: " & std_logic'image(gen_input(2)) &
                        " " & std_logic'image(gen_input(1)) &
                        " " & std_logic'image(gen_input(0)) & ")" &
@@ -61,7 +61,7 @@ begin
                 severity error;
         end loop;
 
-        report "--- simulation completed ---";
+        report "--- Simulation completed ---";
         wait;
     end process sim;
-end architecture behavioral;
+end architecture unit_test;
