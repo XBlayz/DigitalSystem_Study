@@ -6,19 +6,19 @@ entity tb_full_adder is
 end entity tb_full_adder;
 
 architecture behavioral of tb_full_adder is
+    signal a, b, cin : STD_LOGIC;
+    signal s, cout   : STD_LOGIC;
+
+    signal gen_input : UNSIGNED(2 downto 0);
+
     component full_adder is
         port (
-            a, b, cin : in    std_logic;
-            s, cout   : out   std_logic
+            a, b, cin : in    STD_LOGIC;
+            s, cout   : out   STD_LOGIC
         );
     end component full_adder;
 
-    signal a, b, cin : std_logic;
-    signal s, cout   : std_logic;
-
-    signal gen_input : unsigned(2 downto 0);
-
-    type truth_table_type is array (0 to 7) of std_logic_vector(4 downto 0);
+    type truth_table_type is array (0 to 7) of STD_LOGIC_VECTOR(4 downto 0);
     -- bit order: a, b, cin, | exp_cout, exp_s
     constant truth_table : truth_table_type := (
         "000" & "00",

@@ -3,13 +3,14 @@ library ieee;
 
 entity full_adder is
     port (
-        a, b, cin : in    std_logic;
-        s, cout   : out   std_logic
+        a, b, cin : in    STD_LOGIC;
+        s, cout   : out   STD_LOGIC
     );
 end entity full_adder;
 
 architecture behavioral of full_adder is
-    signal p : std_logic;
+    signal p : STD_LOGIC;
+
 begin
     s    <= p xor cin;
     p    <= a xor b;
