@@ -8,11 +8,12 @@
 *.wcfg
 
 # Ignora le cartelle di output massicce (Sintesi e Implementazione)
-/vivado_proj/*.runs/
 /vivado_proj/*.cache/
 /vivado_proj/*.hw/
-/vivado_proj/*.sim/
 /vivado_proj/*.ip_user_files/
+/vivado_proj/*.runs/
+/vivado_proj/*.sim/
+/vivado_proj/*.srcs/
 
 # Ignora file temporanei specifici di Xilinx
 .Xil/
