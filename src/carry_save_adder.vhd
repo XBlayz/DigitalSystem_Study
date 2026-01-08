@@ -3,16 +3,17 @@ library ieee;
 
 entity carry_save_adder is
     generic (
-        N : POSITIVE
+        N : POSITIVE -- Number of bits
     );
 
     port (
-        a, b, c : in    STD_LOGIC_VECTOR(N - 1 downto 0);
-        ps, cv  : out   STD_LOGIC_VECTOR(N - 1 downto 0)
+        a, b, c : in    STD_LOGIC_VECTOR(N - 1 downto 0); -- Inputs
+        ps, cv  : out   STD_LOGIC_VECTOR(N - 1 downto 0)  -- Outputs: partial sum, carry vector
     );
 end entity carry_save_adder;
 
 architecture behavioral of carry_save_adder is
+    -- Sub-components
     component full_adder is
         port (
             a, b, cin : in    STD_LOGIC;
@@ -21,6 +22,7 @@ architecture behavioral of carry_save_adder is
     end component full_adder;
 
 begin
+    -- Full adders generation
     loop_n: for i in 0 to N - 1 generate
         fa_i: component full_adder
             port map (
