@@ -83,7 +83,7 @@ architecture behavioral of carry_save_tree_adder is
     signal recursive_signals : STD_LOGIC_VECTOR(TOT_SIGNALS_N - 1 downto 0);
 
     -- Signal offsets
-    type int_array is array (0 to TOT_WIRES_N - 1) of INTEGER;
+    type int_array is array (0 to TOT_WIRES_N) of INTEGER;
     -- Compute the offset of each wire
     function compute_wire_offset (
         n_bits_in : POSITIVE;              -- Number of bits of the inputs
@@ -116,6 +116,9 @@ architecture behavioral of carry_save_tree_adder is
             offsets(n_in + k * 2 + 1) := current_pos;
             current_pos               := current_pos + signal_width;
         end loop;
+
+        -- Offset of the end of the final carry save adder output
+        offsets(TOT_WIRES_N) := current_pos;
 
         return offsets;
     end function compute_wire_offset;
