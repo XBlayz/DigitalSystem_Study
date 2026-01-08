@@ -168,18 +168,18 @@ begin
     -- Instantiating of each carry save adder
     csa: for i in 0 to TOT_CSA_N - 1 generate
         -- Level
-        constant LVL : POSITIVE := CSA_LEVELS(i); -- Level of the current carry save adder (starting from 1)
+        constant LVL : INTEGER := CSA_LEVELS(i); -- Level of the current carry save adder (starting from 1)
         -- Current signal width
         constant CURRENT_CSA_WIDTH : POSITIVE := N_BITS + LVL - 1; -- Width of the current carry save adder
 
         -- Indexes
         -- Inputs
-        constant IDX_A : POSITIVE := i * 3;
-        constant IDX_B : POSITIVE := i * 3 + 1;
-        constant IDX_C : POSITIVE := i * 3 + 2;
+        constant IDX_A : INTEGER := i * 3;
+        constant IDX_B : INTEGER := i * 3 + 1;
+        constant IDX_C : INTEGER := i * 3 + 2;
         -- Outputs
-        constant IDX_PS : POSITIVE := N_INPUTS + i * 2;
-        constant IDX_CV : POSITIVE := N_INPUTS + i * 2 + 1;
+        constant IDX_PS : INTEGER := N_INPUTS + i * 2;
+        constant IDX_CV : INTEGER := N_INPUTS + i * 2 + 1;
 
         -- Signals
         signal ps_i, cv_i : STD_LOGIC_VECTOR(CURRENT_CSA_WIDTH - 1 downto 0);
