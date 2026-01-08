@@ -20,7 +20,7 @@ architecture unit_test of tb_full_adder is
 
     type truth_table_type is array (0 to 7) of STD_LOGIC_VECTOR(4 downto 0);
     -- bit order: a, b, cin, | exp_cout, exp_s
-    constant truth_table : truth_table_type := (
+    constant TRUTH_TABLE : truth_table_type := (
         "000" & "00",
         "001" & "01",
         "010" & "01",
@@ -43,7 +43,7 @@ begin
         report "--- Starting `full_adder` (Exhaustive Testing) simulation ---";
 
         for i in 0 to 7 loop
-            gen_input <= unsigned(truth_table(i)(4 downto 2));
+            gen_input <= unsigned(TRUTH_TABLE(i)(4 downto 2));
 
             a   <= to_unsigned(i, 3)(2);
             b   <= to_unsigned(i, 3)(1);
@@ -51,12 +51,12 @@ begin
 
             wait for 10 ns;
 
-            assert unsigned'(cout & s) = unsigned(truth_table(i)(1 downto 0))
+            assert unsigned'(cout & s) = unsigned(TRUTH_TABLE(i)(1 downto 0))
                 report "Error with input " & integer'image(i) &
                        " (binary: " & std_logic'image(gen_input(2)) &
                        " " & std_logic'image(gen_input(1)) &
                        " " & std_logic'image(gen_input(0)) & ")" &
-                       " | expected: " & integer'image(to_integer(unsigned(truth_table(i)(1 downto 0)))) &
+                       " | expected: " & integer'image(to_integer(unsigned(TRUTH_TABLE(i)(1 downto 0)))) &
                        " | obtained: " & integer'image(to_integer(unsigned'(cout & s)))
                 severity error;
         end loop;
