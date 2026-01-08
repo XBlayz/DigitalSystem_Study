@@ -10,7 +10,7 @@ entity carry_save_tree_adder is
 
     port (
         addends : in    STD_LOGIC_VECTOR(N_BITS * N_INPUTS - 1 downto 0); -- Inputs: addends concatenated
-        sum     : out   STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 1 downto 0)  -- Outputs
+        sum     : out   STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 2 downto 0)  -- Outputs
     );
 end entity carry_save_tree_adder;
 
