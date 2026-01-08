@@ -31,7 +31,7 @@ architecture unit_test of tb_ripple_carry_adder is
 
     -- Truth table
     type truth_table_type is array (0 to 4) of STD_LOGIC_VECTOR((N * 3) + 1 downto 0);
-    -- bit order: a, b, cin, | exp_cout, exp_s
+    -- bit order: a, b, cin | exp_cout, exp_s
     constant TRUTH_TABLE : truth_table_type := (
         -- 0 + 0 + 0 = 0 | 0
         0 =>
