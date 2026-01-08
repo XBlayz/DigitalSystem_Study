@@ -4,7 +4,7 @@ library ieee;
 entity main is
     port (
         a, b, c, d, e, f : in    STD_LOGIC_VECTOR(7 downto 0);
-        sum              : out   STD_LOGIC_VECTOR(7 downto 0)
+        sum              : out   STD_LOGIC_VECTOR(13 downto 0)
     );
 end entity main;
 
