@@ -164,6 +164,15 @@ architecture behavioral of carry_save_tree_adder is
         );
     end component ripple_carry_adder;
 
+    -- Index of the last 2 signal of the tree
+    constant LAST_IDX_PS : INTEGER := N_INPUTS + (TOT_CSA_N - 1) * 2;
+    constant LAST_IDX_CV : INTEGER := N_INPUTS + (TOT_CSA_N - 1) * 2 + 1;
+
+    -- Tree output signals
+    --
+    signal ps : STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 2 downto 0);
+    signal cv : STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 2 downto 0);
+
 begin
     -- Setting the inputs in the recursive assignment structure
     recursive_signals(N_BITS * N_INPUTS - 1 downto 0) <= addends;
@@ -256,7 +265,40 @@ begin
         recursive_signals(WIRE_OFFSETS(IDX_CV + 1) - 1 downto WIRE_OFFSETS(IDX_CV)) <= cv_i & '0';
     end generate csa;
 
-    -- TODO: Final ripple carry adder
-    sum <= (others => '0');
+    -- Extending the last 2 outputs of the tree
+    ext_ps_last: component extender
+        generic map (
+            N_IN            => N_BITS + N_INPUTS - 3,
+            N_OUT           => N_BITS + N_INPUTS - 1,
+            TWOS_COMPLEMENT => TWOS_COMPLEMENT
+        )
+
+        port map (
+            data_in  => recursive_signals(WIRE_OFFSETS(LAST_IDX_PS + 1) - 1 downto WIRE_OFFSETS(LAST_IDX_PS)),
+            data_out => ps
+        );
+    ext_cv_last: component extender
+        generic map (
+            N_IN            => N_BITS + N_INPUTS - 3,
+            N_OUT           => N_BITS + N_INPUTS - 1,
+            TWOS_COMPLEMENT => TWOS_COMPLEMENT
+        )
+
+        port map (
+            data_in  => recursive_signals(WIRE_OFFSETS(LAST_IDX_CV + 1) - 1 downto WIRE_OFFSETS(LAST_IDX_CV)),
+            data_out => cv
+        );
+    -- Adding the last 2 outputs of the tree
+    rca: component ripple_carry_adder
+        generic map (
+            N => N_BITS + N_INPUTS - 1
+        )
+
+        port map (
+            a   => ps,
+            b   => cv,
+            cin => '0',
+            s   => sum
+        );
 
 end architecture behavioral;
