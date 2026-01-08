@@ -27,13 +27,13 @@ architecture behavioral of ripple_carry_adder is
 begin
     c(0) <= cin;
 
-    carry: for i in 0 to n - 1 generate
+    loop_n: for i in 0 to n - 1 generate
         fa_i: component full_adder
             port map (
                 a => a(i), b => b(i), cin => c(i),
                 s => s(i), cout => c(i + 1)
             );
-    end generate carry;
+    end generate loop_n;
 
     cout <= c(n);
 end architecture behavioral;
