@@ -182,8 +182,46 @@ begin
         constant IDX_CV : INTEGER := N_INPUTS + i * 2 + 1;
 
         -- Signals
-        signal ps_i, cv_i : STD_LOGIC_VECTOR(CURRENT_CSA_WIDTH - 1 downto 0);
+        signal a_i, b_i, c_i : STD_LOGIC_VECTOR(CURRENT_CSA_WIDTH - 1 downto 0);
+        signal ps_i, cv_i    : STD_LOGIC_VECTOR(CURRENT_CSA_WIDTH - 1 downto 0);
     begin
+        -- Extending the inputs
+        -- Extending applied only if the signal comes form a earlier layer that the previous one
+        -- If the signal comes from a later layer, it will apply an extension of 0 (ignored by the compiler)
+        ext_a: component extender
+            generic map (
+                N_IN            => (WIRE_OFFSETS(IDX_A + 1) - WIRE_OFFSETS(IDX_A)),
+                N_OUT           => CURRENT_CSA_WIDTH,
+                TWOS_COMPLEMENT => TWOS_COMPLEMENT
+            )
+
+            port map (
+                data_in  => recursive_signals(WIRE_OFFSETS(IDX_A + 1) - 1 downto WIRE_OFFSETS(IDX_A)),
+                data_out => a_i
+            );
+        ext_b: component extender
+            generic map (
+                N_IN            => (WIRE_OFFSETS(IDX_B + 1) - WIRE_OFFSETS(IDX_B)),
+                N_OUT           => CURRENT_CSA_WIDTH,
+                TWOS_COMPLEMENT => TWOS_COMPLEMENT
+            )
+
+            port map (
+                data_in  => recursive_signals(WIRE_OFFSETS(IDX_B + 1) - 1 downto WIRE_OFFSETS(IDX_B)),
+                data_out => b_i
+            );
+        ext_c: component extender
+            generic map (
+                N_IN            => (WIRE_OFFSETS(IDX_C + 1) - WIRE_OFFSETS(IDX_C)),
+                N_OUT           => CURRENT_CSA_WIDTH,
+                TWOS_COMPLEMENT => TWOS_COMPLEMENT
+            )
+
+            port map (
+                data_in  => recursive_signals(WIRE_OFFSETS(IDX_C + 1) - 1 downto WIRE_OFFSETS(IDX_C)),
+                data_out => c_i
+            );
+
         -- Instantiating of the carry save adder
         csa_i: component carry_save_adder
             generic map (
@@ -191,15 +229,15 @@ begin
             )
 
             port map (
-                a  => recursive_signals(WIRE_OFFSETS(IDX_A + 1) - 1 downto WIRE_OFFSETS(IDX_A)),
-                b  => recursive_signals(WIRE_OFFSETS(IDX_B + 1) - 1 downto WIRE_OFFSETS(IDX_B)),
-                c  => recursive_signals(WIRE_OFFSETS(IDX_C + 1) - 1 downto WIRE_OFFSETS(IDX_C)),
+                a  => a_i,
+                b  => b_i,
+                c  => c_i,
                 ps => ps_i,
                 cv => cv_i
             );
 
         -- Extend the partial sum
-        ext_i: component extender
+        ext_ps: component extender
             generic map (
                 N_IN            => CURRENT_CSA_WIDTH,
                 N_OUT           => CURRENT_CSA_WIDTH + 1,
