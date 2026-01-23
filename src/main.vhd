@@ -4,7 +4,7 @@ library ieee;
 entity main is
     port (
         a, b, c, d, e, f : in    STD_LOGIC_VECTOR(7 downto 0);
-        sum              : out   STD_LOGIC_VECTOR(13 downto 0)
+        sum              : out   STD_LOGIC_VECTOR(12 downto 0)
     );
 end entity main;
 
@@ -18,7 +18,7 @@ architecture instantiation of main is
 
         port (
             addends : in    STD_LOGIC_VECTOR(N_BITS * N_INPUTS - 1 downto 0);
-            sum     : out   STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 1 downto 0)
+            sum     : out   STD_LOGIC_VECTOR(N_BITS + N_INPUTS - 2 downto 0)
         );
     end component carry_save_tree_adder;
 
