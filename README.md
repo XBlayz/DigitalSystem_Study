@@ -20,8 +20,8 @@
 - [ ] Shifter
     - [ ] Implementazione
     - [ ] TB
-- [ ] Buffer line
-    - [ ] Implementazione
+- [X] Buffer line (#TODO: Da rivedere)
+    - [X] Implementazione
     - [ ] TB
 - [ ] State Machine
     - [ ] Implementazione
