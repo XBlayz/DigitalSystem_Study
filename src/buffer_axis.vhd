@@ -160,39 +160,39 @@ begin
 end process;
 
 
-process(s_axis_clk)
-begin
-if(rising_edge(s_axis_clk)) then
-   if(s_axis_rstn='0')then
-      add0<=(others=>'0');
-      add1<=(others=>'0');
-      add2<=(others=>'0');
-      add3<=(others=>'0');
-      add01<=(others=>'0');
-      add23<=(others=>'0');
-      add0123<=(others=>'0');
-      outputdata<=(others=>'0');
-      d22_reg1<=(others=>'0');
-      d22_reg2<=(others=>'0');
-      d22_reg3<=(others=>'0');
-      d22_reg4<=(others=>'0');
-   else
-      if(m_axis_tready='1')then
-         add0<=(d00(7)&d00)+(d01(7)&d01);
-         add1<=(d02(7)&d02)+(d10(7)&d10);
-         add2<=(d11(7)&d11)+(d12(7)&d12);
-         add3<=(d20(7)&d20)+(d21(7)&d21);
-         add01<=(add0(8)&add0)+(add1(8)&add1);
-         add23<=(add2(8)&add2)+(add3(8)&add3);
-         add0123<=(add01(9)&add01)+(add23(9)&add23);
-         d22_reg1<=d22;
-         d22_reg2<=d22_reg1;
-         d22_reg3<=d22_reg2;
-         outputdata<=(add0123(10)&add0123)+(d22_reg3(7)&d22_reg3(7)&d22_reg3(7)&d22_reg3);
-      end if;
-   end if;
-end if;
-end process;
+-- process(s_axis_clk)
+-- begin
+-- if(rising_edge(s_axis_clk)) then
+--    if(s_axis_rstn='0')then
+--       add0<=(others=>'0');
+--       add1<=(others=>'0');
+--       add2<=(others=>'0');
+--       add3<=(others=>'0');
+--       add01<=(others=>'0');
+--       add23<=(others=>'0');
+--       add0123<=(others=>'0');
+--       outputdata<=(others=>'0');
+--       d22_reg1<=(others=>'0');
+--       d22_reg2<=(others=>'0');
+--       d22_reg3<=(others=>'0');
+--       d22_reg4<=(others=>'0');
+--    else
+--       if(m_axis_tready='1')then
+--          add0<=(d00(7)&d00)+(d01(7)&d01);
+--          add1<=(d02(7)&d02)+(d10(7)&d10);
+--          add2<=(d11(7)&d11)+(d12(7)&d12);
+--          add3<=(d20(7)&d20)+(d21(7)&d21);
+--          add01<=(add0(8)&add0)+(add1(8)&add1);
+--          add23<=(add2(8)&add2)+(add3(8)&add3);
+--          add0123<=(add01(9)&add01)+(add23(9)&add23);
+--          d22_reg1<=d22;
+--          d22_reg2<=d22_reg1;
+--          d22_reg3<=d22_reg2;
+--          outputdata<=(add0123(10)&add0123)+(d22_reg3(7)&d22_reg3(7)&d22_reg3(7)&d22_reg3);
+--       end if;
+--    end if;
+-- end if;
+-- end process;
 
 process(s_axis_clk)
 begin

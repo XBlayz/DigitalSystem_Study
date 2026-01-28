@@ -31,3 +31,8 @@
   - [ ] Report di potenza
     - [ ] File
 - [ ] Presentazione/Report
+
+# Kernel
+1, 2, 1,
+2, 4, 2,
+1, 2, 1
