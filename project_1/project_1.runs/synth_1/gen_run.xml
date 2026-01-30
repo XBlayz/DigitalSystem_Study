@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1769794436">
   <File Type="PA-TCL" Name="BufferLine.tcl"/>
-  <File Type="RDS-PROPCONSTRS" Name="BufferLine_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="BufferLine_reports.tcl"/>
   <File Type="RDS-RDS" Name="BufferLine.vds"/>
-  <File Type="RDS-UTIL" Name="BufferLine_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="BufferLine_utilization_synth.pb"/>
   <File Type="RDS-DCP" Name="BufferLine.dcp"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="BufferLine_timing_summary_synth.rpt"/>
-  <File Type="VDS-TIMING-PB" Name="BufferLine_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../src/buffer_axis.vhd">
@@ -84,9 +79,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>
