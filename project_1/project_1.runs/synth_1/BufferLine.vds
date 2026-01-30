@@ -1,0 +1,278 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Fri Jan 30 18:33:59 2026
+# Process ID: 4020
+# Current directory: C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/project_1/project_1.runs/synth_1
+# Command line: vivado.exe -log BufferLine.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source BufferLine.tcl
+# Log file: C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/project_1/project_1.runs/synth_1/BufferLine.vds
+# Journal file: C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/project_1/project_1.runs/synth_1\vivado.jou
+# Running On: THINKBOOK, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 33120 MB
+#-----------------------------------------------------------
+source BufferLine.tcl -notrace
+create_project: Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1265.195 ; gain = 0.000
+Command: synth_design -top BufferLine -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 21780
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'BufferLine' [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:49]
+INFO: [Synth 8-256] done synthesizing module 'BufferLine' (0#1) [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:49]
+WARNING: [Synth 8-6014] Unused sequential element d00_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:72]
+WARNING: [Synth 8-6014] Unused sequential element d01_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:73]
+WARNING: [Synth 8-6014] Unused sequential element d02_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:74]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[12] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[11] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[10] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[9] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[8] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[7] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[6] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[5] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[4] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[3] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[2] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[1] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element buffer1_reg[0] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:93]
+WARNING: [Synth 8-6014] Unused sequential element d10_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:112]
+WARNING: [Synth 8-6014] Unused sequential element d11_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:113]
+WARNING: [Synth 8-6014] Unused sequential element d12_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:114]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[12] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[11] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[10] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[9] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[8] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[7] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[6] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[5] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[4] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[3] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[2] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[1] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element buffer2_reg[0] was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:130]
+WARNING: [Synth 8-6014] Unused sequential element d20_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:149]
+WARNING: [Synth 8-6014] Unused sequential element d21_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:150]
+WARNING: [Synth 8-6014] Unused sequential element d22_reg was removed.  [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:151]
+WARNING: [Synth 8-3848] Net outputdata in module/entity BufferLine does not have driver. [C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/src/buffer_axis.vhd:59]
+WARNING: [Synth 8-7129] Port m_axis_tdata[10] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[9] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[8] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[7] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[6] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[5] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[4] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[3] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[2] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[1] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[0] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[7] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[6] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[5] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[4] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[3] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[2] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[1] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[0] in module BufferLine is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Synth 8-802] inferred FSM for state register 'state_curr_reg' in module 'BufferLine'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                      s0 |                               00 |                               00
+                      s1 |                               01 |                               01
+                      s2 |                               10 |                               10
+                      s3 |                               11 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_curr_reg' using encoding 'sequential' in module 'BufferLine'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   10 Bit       Adders := 2     
++---Registers : 
+	               10 Bit    Registers := 2     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   4 Input    2 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 3     
+	   2 Input    1 Bit        Muxes := 2     
+	   4 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port m_axis_tdata[10] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[9] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[8] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[7] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[6] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[5] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[4] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[3] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[2] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[1] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis_tdata[0] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[7] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[6] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[5] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[4] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[3] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[2] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[1] in module BufferLine is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdata[0] in module BufferLine is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:22 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:22 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:09 ; elapsed = 00:00:22 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------+------+
+|      |Cell  |Count |
++------+------+------+
+|1     |BUFG  |     1|
+|2     |LUT1  |     3|
+|3     |LUT2  |     9|
+|4     |LUT3  |     4|
+|5     |LUT4  |     5|
+|6     |LUT5  |     7|
+|7     |LUT6  |     9|
+|8     |FDRE  |    23|
+|9     |IBUF  |     5|
+|10    |OBUF  |     3|
+|11    |OBUFT |    16|
++------+------+------+
+
+Report Instance Areas: 
++------+---------+-------+------+
+|      |Instance |Module |Cells |
++------+---------+-------+------+
+|1     |top      |       |    85|
++------+---------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 75 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+Synthesis Optimization Complete : Time (s): cpu = 00:00:12 ; elapsed = 00:00:25 . Memory (MB): peak = 1265.195 ; gain = 0.000
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1265.195 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1265.195 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: 74d2d67
+INFO: [Common 17-83] Releasing license: Synthesis
+14 Infos, 75 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:14 ; elapsed = 00:00:27 . Memory (MB): peak = 1265.195 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/CostanzaFerrari/Desktop/progetto/DigitalSystem_Study/project_1/project_1.runs/synth_1/BufferLine.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file BufferLine_utilization_synth.rpt -pb BufferLine_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Jan 30 18:34:39 2026...
