@@ -2,13 +2,14 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 
-entity moltiplicatore is
+entity booth_multiplier is
     generic(
-        componente_immagine : POSITIVE
-        coefficiente_filtro : POSITIVE
-        somma : POSITIVE
+        componente_immagine : POSITIVE := 8;
+        coefficiente_filtro : POSITIVE := 4;
+        somma : POSITIVE := 12
     );
     port (
         clk    : in  std_logic;
@@ -29,9 +30,9 @@ entity moltiplicatore is
         M_2_1, M_2_2, M_2_3 : out std_logic_vector(somma-1 downto 0);
         M_3_1, M_3_2, M_3_3 : out std_logic_vector(somma-1 downto 0)
     );
-end entity Moltiplicatore;
+end entity booth_multiplier;
 
-architecture Structural of Moltiplicatore is
+architecture Structural of booth_multiplier is
 
     
     component ripple_carry_adder is
@@ -50,7 +51,7 @@ architecture Structural of Moltiplicatore is
     signal P_P_A_3_1, P_P_B_3_1, P_P_A_3_2, P_P_B_3_2, P_P_A_3_3, P_P_B_3_3 : std_logic_vector(somma-1 downto 0);
 
     -- Signal per prendere il negativo di una componente dell'immagine
-    signal N_P_1_1, N_P_1_2, N_P_1_3, N_P_2_1, N_P_2_2, N_P_2_3, N_P_3_1, N_P_3_2, N_P_3_3 : std_logic_vector(7 downto 0);
+    signal N_P_1_1, N_P_1_2, N_P_1_3, N_P_2_1, N_P_2_2, N_P_2_3, N_P_3_1, N_P_3_2, N_P_3_3 : std_logic_vector(componente_immagine-1 downto 0);
 
 begin
 
