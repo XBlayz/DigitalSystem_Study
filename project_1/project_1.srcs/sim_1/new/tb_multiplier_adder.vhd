@@ -3,6 +3,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+
 entity tb_multiplier_adder is
 end tb_multiplier_adder;
 
@@ -12,6 +13,7 @@ architecture testing of tb_multiplier_adder is
     constant n_adder : POSITIVE := comp_i+coeff_f;
     constant CLK_PERIOD : time := 10 ns;
     
+    signal stop_simulation : boolean := false;
     signal clk, reset, valid  :  std_logic := '0'; 
     --componenti immagine
     signal P_1_1, P_1_2, P_1_3, 
@@ -104,10 +106,13 @@ begin
     
     clk_process : process
     begin
-        clk <= '0';
-        wait for CLK_PERIOD/2;
-        clk <= '1';
-        wait for CLK_PERIOD/2;
+        while not stop_simulation loop
+            clk <= '0';
+            wait for CLK_PERIOD/2;
+            clk <= '1';
+            wait for CLK_PERIOD/2;
+        end loop;
+        wait;
     end process;
     
     stim_proc : process
@@ -276,7 +281,7 @@ begin
             valid <= '0';
             wait for 50 ns; 
         end loop;
-
+        
         --test con i coefficienti che usiamo nel progetto
         --e valori arbitrari per l'immagine
         P_1_1 <= std_logic_vector(to_signed(10, comp_i));
@@ -298,8 +303,12 @@ begin
         F_3_1 <= std_logic_vector(to_signed(1, coeff_f));
         F_3_2 <= std_logic_vector(to_signed(2, coeff_f));
         F_3_3 <= std_logic_vector(to_signed(1, coeff_f));
-        
-        assert false report "Simulazione Completata!" severity failure;
+        wait for CLK_PERIOD; 
+        valid <= '1'; 
+        wait for CLK_PERIOD; 
+        valid <= '0';
+        wait for 100 ns;
+        stop_simulation <= true;
         wait;
     end process;
 
