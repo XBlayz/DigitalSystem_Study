@@ -60,7 +60,7 @@ end component booth_multiplier;
 
 
 begin
-    bm: component booth_multiplier
+    bm: booth_multiplier
         generic map(
             componente_immagine => comp_i,
             coefficiente_filtro => coeff_f,
@@ -132,6 +132,7 @@ begin
         wait for CLK_PERIOD*10;
         
         valid <= '0';
+        assert false report "Simulazione avvenuta con successo" severity failure;
         wait;
         end process;
 
