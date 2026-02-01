@@ -39,8 +39,8 @@ architecture Structural of CSA_tree is
     
     -- Secondo livello (dimensione = 14)
     signal vr_2_1, vs_2_1 : STD_LOGIC_VECTOR(N+1 downto 0);
-    signal vs_2_2 : STD_LOGIC_VECTOR(N+1 downto 0);
-    signal vr_2_2 : STD_LOGIC_VECTOR (N+2 downto 0);
+    signal vr_2_2, vs_2_2 : STD_LOGIC_VECTOR(N+1 downto 0);
+    signal temp : STD_LOGIC_VECTOR(N+2 downto 0);
      
     -- Terzo livello (dimensione = 15)
     signal vr_3_1, vs_3_1 : STD_LOGIC_VECTOR(N+2 downto 0);
@@ -63,7 +63,7 @@ begin
                 cout=>vr_1_1(i+1)
             );
     end generate primo_sommatore_Lev1;
-    vs_1_1(N) <= vs_1_1(N-1);
+    vs_1_1(N) <= i_1_1(N-1);
     
     vr_1_2(0)  <= '0';
     secondo_sommatore_Lev1: for i in 0 to N-1 generate
@@ -76,7 +76,7 @@ begin
                 cout=>vr_1_2(i+1)
             );
     end generate secondo_sommatore_Lev1;
-    vs_1_2(N) <= vs_1_2(N-1);
+    vs_1_2(N) <= i_2_1(N-1);
     
     vr_1_3(0)  <= '0';
     terzo_sommatore_Lev1: for i in 0 to N-1 generate
@@ -89,7 +89,7 @@ begin
             cout=>vr_1_3(i+1)
         );
     end generate terzo_sommatore_Lev1;
-    vs_1_3(N) <= vs_1_3(N-1);
+    vs_1_3(N) <= i_3_1(N-1);
     
     vr_2_1(0)  <= '0';
     primo_sommatore_Lev2: for i in 0 to N generate
@@ -118,7 +118,7 @@ begin
     vs_2_2(N+1) <= vs_2_2(N);
     
 -- estendo con segno per portarli alla stessa dimensione per dopo
-    vr_2_2(N+2) <= vr_2_2(N+1);
+    temp <= vr_2_2(N+1) & vr_2_2;
     
     vr_3_1(0) <= '0';
     sommatore_Lev3: for i in 0 to N+1 generate
@@ -139,7 +139,7 @@ begin
             port map(
                 a=>vs_3_1(i),  
                 b=>vr_3_1(i),  
-                cin=>vr_2_2(i),  
+                cin=>temp(i),  
                 s=>vs_4_1(i),  
                 cout=>vr_4_1(i+1)
             );
@@ -155,10 +155,6 @@ begin
                 s    => rca_s_out,
                 cout => rca_c_out
             );
-    sum(N+4)<=rca_c_out;
-    sum(N+3 downto 0) <= rca_s_out;
-    
-    
-    
-    
+    sum <= rca_s_out(N+3) & rca_s_out;
+
 end Structural;
