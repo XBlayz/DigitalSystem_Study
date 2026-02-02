@@ -12,22 +12,22 @@ entity booth_multiplier is
         clk    : in  std_logic;
         reset  : in  std_logic;
         valid  : in  std_logic;
-        
+
         P_1_1, P_1_2, P_1_3 : in std_logic_vector(componente_immagine-1 downto 0);
         P_2_1, P_2_2, P_2_3 : in std_logic_vector(componente_immagine-1 downto 0);
         P_3_1, P_3_2, P_3_3 : in std_logic_vector(componente_immagine-1 downto 0);
-        
+
         F_1_1, F_1_2, F_1_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
         F_2_1, F_2_2, F_2_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
         F_3_1, F_3_2, F_3_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
-        
+
         M_1_1, M_1_2, M_1_3 : out std_logic_vector(somma-1 downto 0);
         M_2_1, M_2_2, M_2_3 : out std_logic_vector(somma-1 downto 0);
         M_3_1, M_3_2, M_3_3 : out std_logic_vector(somma-1 downto 0)
     );
 end entity booth_multiplier;
 
-architecture structural of Moltiplicatore is
+architecture Structural of Moltiplicatore is
 
     component ripple_carry_adder is
         generic ( N : POSITIVE );
@@ -72,11 +72,11 @@ begin
                 P_P_A_3_1 <= (others => '0'); P_P_B_3_1 <= (others => '0');
                 P_P_A_3_2 <= (others => '0'); P_P_B_3_2 <= (others => '0');
                 P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= (others => '0');
-                
+
             elsif valid = '1' then
                 case F_1_1 is
                     when "0000" => P_P_A_1_1 <= (others => '0'); P_P_B_1_1 <= (others => '0');
-                    when "0001" => P_P_A_1_1 <= "0000" & P_1_1; P_P_B_1_1 <= (others => '0');                      
+                    when "0001" => P_P_A_1_1 <= "0000" & P_1_1; P_P_B_1_1 <= (others => '0');
                     when "0010" => P_P_A_1_1 <= N_P_1_1(componente_immagine) & N_P_1_1(componente_immagine)& N_P_1_1 & "0"; P_P_B_1_1 <= "00" & P_1_1 & "00";
                     when "0011" => P_P_A_1_1 <= N_P_1_1(componente_immagine) & N_P_1_1(componente_immagine) & N_P_1_1(componente_immagine) & N_P_1_1; P_P_B_1_1 <= "00" & P_1_1 & "00";
                     when "0100" => P_P_A_1_1 <= (others => '0'); P_P_B_1_1 <= "00" & P_1_1 & "00";
@@ -96,7 +96,7 @@ begin
 
                 case F_1_2 is
                     when "0000" => P_P_A_1_2 <= (others => '0'); P_P_B_1_2 <= (others => '0');
-                    when "0001" => P_P_A_1_2 <= "0000" & P_1_2; P_P_B_1_2 <= (others => '0');                      
+                    when "0001" => P_P_A_1_2 <= "0000" & P_1_2; P_P_B_1_2 <= (others => '0');
                     when "0010" => P_P_A_1_2 <= N_P_1_2(componente_immagine) & N_P_1_2(componente_immagine)& N_P_1_2 & "0"; P_P_B_1_2 <= "00" & P_1_2 & "00";
                     when "0011" => P_P_A_1_2 <= N_P_1_2(componente_immagine) & N_P_1_2(componente_immagine) & N_P_1_2(componente_immagine) & N_P_1_2; P_P_B_1_2 <= "00" & P_1_2 & "00";
                     when "0100" => P_P_A_1_2 <= (others => '0'); P_P_B_1_2 <= "00" & P_1_2 & "00";
@@ -116,7 +116,7 @@ begin
 
                 case F_1_3 is
                     when "0000" => P_P_A_1_3 <= (others => '0'); P_P_B_1_3 <= (others => '0');
-                    when "0001" => P_P_A_1_3 <= "0000" & P_1_3; P_P_B_1_3 <= (others => '0');                      
+                    when "0001" => P_P_A_1_3 <= "0000" & P_1_3; P_P_B_1_3 <= (others => '0');
                     when "0010" => P_P_A_1_3 <= N_P_1_3(componente_immagine) & N_P_1_3(componente_immagine)& N_P_1_3 & "0"; P_P_B_1_3 <= "00" & P_1_3 & "00";
                     when "0011" => P_P_A_1_3 <= N_P_1_3(componente_immagine) & N_P_1_3(componente_immagine) & N_P_1_3(componente_immagine) & N_P_1_3; P_P_B_1_3 <= "00" & P_1_3 & "00";
                     when "0100" => P_P_A_1_3 <= (others => '0'); P_P_B_1_3 <= "00" & P_1_3 & "00";
@@ -136,7 +136,7 @@ begin
 
                 case F_2_1 is
                     when "0000" => P_P_A_2_1 <= (others => '0'); P_P_B_2_1 <= (others => '0');
-                    when "0001" => P_P_A_2_1 <= "0000" & P_2_1; P_P_B_2_1 <= (others => '0');                      
+                    when "0001" => P_P_A_2_1 <= "0000" & P_2_1; P_P_B_2_1 <= (others => '0');
                     when "0010" => P_P_A_2_1 <= N_P_2_1(componente_immagine) & N_P_2_1(componente_immagine)& N_P_2_1 & "0"; P_P_B_2_1 <= "00" & P_2_1 & "00";
                     when "0011" => P_P_A_2_1 <= N_P_2_1(componente_immagine) & N_P_2_1(componente_immagine) & N_P_2_1(componente_immagine) & N_P_2_1; P_P_B_2_1 <= "00" & P_2_1 & "00";
                     when "0100" => P_P_A_2_1 <= (others => '0'); P_P_B_2_1 <= "00" & P_2_1 & "00";
@@ -156,7 +156,7 @@ begin
 
                 case F_2_2 is
                     when "0000" => P_P_A_2_2 <= (others => '0'); P_P_B_2_2 <= (others => '0');
-                    when "0001" => P_P_A_2_2 <= "0000" & P_2_2; P_P_B_2_2 <= (others => '0');                      
+                    when "0001" => P_P_A_2_2 <= "0000" & P_2_2; P_P_B_2_2 <= (others => '0');
                     when "0010" => P_P_A_2_2 <= N_P_2_2(componente_immagine) & N_P_2_2(componente_immagine)& N_P_2_2 & "0"; P_P_B_2_2 <= "00" & P_2_2 & "00";
                     when "0011" => P_P_A_2_2 <= N_P_2_2(componente_immagine) & N_P_2_2(componente_immagine) & N_P_2_2(componente_immagine) & N_P_2_2; P_P_B_2_2 <= "00" & P_2_2 & "00";
                     when "0100" => P_P_A_2_2 <= (others => '0'); P_P_B_2_2 <= "00" & P_2_2 & "00";
@@ -176,7 +176,7 @@ begin
 
                 case F_2_3 is
                     when "0000" => P_P_A_2_3 <= (others => '0'); P_P_B_2_3 <= (others => '0');
-                    when "0001" => P_P_A_2_3 <= "0000" & P_2_3; P_P_B_2_3 <= (others => '0');                      
+                    when "0001" => P_P_A_2_3 <= "0000" & P_2_3; P_P_B_2_3 <= (others => '0');
                     when "0010" => P_P_A_2_3 <= N_P_2_3(componente_immagine) & N_P_2_3(componente_immagine)& N_P_2_3 & "0"; P_P_B_2_3 <= "00" & P_2_3 & "00";
                     when "0011" => P_P_A_2_3 <= N_P_2_3(componente_immagine) & N_P_2_3(componente_immagine) & N_P_2_3(componente_immagine) & N_P_2_3; P_P_B_2_3 <= "00" & P_2_3 & "00";
                     when "0100" => P_P_A_2_3 <= (others => '0'); P_P_B_2_3 <= "00" & P_2_3 & "00";
@@ -196,7 +196,7 @@ begin
 
                 case F_3_1 is
                     when "0000" => P_P_A_3_1 <= (others => '0'); P_P_B_3_1 <= (others => '0');
-                    when "0001" => P_P_A_3_1 <= "0000" & P_3_1; P_P_B_3_1 <= (others => '0');                      
+                    when "0001" => P_P_A_3_1 <= "0000" & P_3_1; P_P_B_3_1 <= (others => '0');
                     when "0010" => P_P_A_3_1 <= N_P_3_1(componente_immagine) & N_P_3_1(componente_immagine)& N_P_3_1 & "0"; P_P_B_3_1 <= "00" & P_3_1 & "00";
                     when "0011" => P_P_A_3_1 <= N_P_3_1(componente_immagine) & N_P_3_1(componente_immagine) & N_P_3_1(componente_immagine) & N_P_3_1; P_P_B_3_1 <= "00" & P_3_1 & "00";
                     when "0100" => P_P_A_3_1 <= (others => '0'); P_P_B_3_1 <= "00" & P_3_1 & "00";
@@ -216,7 +216,7 @@ begin
 
                 case F_3_2 is
                     when "0000" => P_P_A_3_2 <= (others => '0'); P_P_B_3_2 <= (others => '0');
-                    when "0001" => P_P_A_3_2 <= "0000" & P_3_2; P_P_B_3_2 <= (others => '0');                      
+                    when "0001" => P_P_A_3_2 <= "0000" & P_3_2; P_P_B_3_2 <= (others => '0');
                     when "0010" => P_P_A_3_2 <= N_P_3_2(componente_immagine) & N_P_3_2(componente_immagine)& N_P_3_2 & "0"; P_P_B_3_2 <= "00" & P_3_2 & "00";
                     when "0011" => P_P_A_3_2 <= N_P_3_2(componente_immagine) & N_P_3_2(componente_immagine) & N_P_3_2(componente_immagine) & N_P_3_2; P_P_B_3_2 <= "00" & P_3_2 & "00";
                     when "0100" => P_P_A_3_2 <= (others => '0'); P_P_B_3_2 <= "00" & P_3_2 & "00";
@@ -236,7 +236,7 @@ begin
 
                 case F_3_3 is
                     when "0000" => P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= (others => '0');
-                    when "0001" => P_P_A_3_3 <= "0000" & P_3_3; P_P_B_3_3 <= (others => '0');                      
+                    when "0001" => P_P_A_3_3 <= "0000" & P_3_3; P_P_B_3_3 <= (others => '0');
                     when "0010" => P_P_A_3_3 <= N_P_3_3(componente_immagine) & N_P_3_3(componente_immagine)& N_P_3_3 & "0"; P_P_B_3_3 <= "00" & P_3_3 & "00";
                     when "0011" => P_P_A_3_3 <= N_P_3_3(componente_immagine) & N_P_3_3(componente_immagine) & N_P_3_3(componente_immagine) & N_P_3_3; P_P_B_3_3 <= "00" & P_3_3 & "00";
                     when "0100" => P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= "00" & P_3_3 & "00";
@@ -268,4 +268,4 @@ begin
     RCA8: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_2, b => P_P_B_3_2, cin => '0', s => M_3_2, cout => open);
     RCA9: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_3, b => P_P_B_3_3, cin => '0', s => M_3_3, cout => open);
 
-end architecture structural;
+end architecture Structural;
