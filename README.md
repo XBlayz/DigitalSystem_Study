@@ -5,32 +5,28 @@
 - [X] Ripple Carry Adder
     - [X] Implementazione
     - [X] TB
-- [X] Carry Save Adder
+- [X] Carry Save Adder Tree
     - [X] Implementazione
     - [X] TB
-- [X] Carry Save Tree Adder (Carry Save Adder + Ripple Carry Adder)
+- [X] Booth Multiplier
     - [X] Implementazione
     - [X] TB
-- [ ] Booth Multiplier
-    - [ ] Implementazione
+- [ ] MAC parallelo
+    - [-] Implementazione
     - [ ] TB
-- [ ] MAC
-    - [ ] Implementazione
-    - [ ] TB
-- [ ] Shifter
-    - [ ] Implementazione
-    - [ ] TB
-- [X] Buffer line (#TODO: Da rivedere)
+- [ ] Buffer line
     - [X] Implementazione
-    - [ ] TB
+    - [-] TB
 - [ ] State Machine
-    - [ ] Implementazione
+    - [-] Implementazione
     - [ ] TB
 - [ ] Report
   - [ ] Caratterizzazione post implementation
   - [ ] Report di potenza
     - [ ] File
-- [ ] Presentazione/Report
+- [ ] Documenti
+  - [-] Relazione
+  - [ ] Presentazione
 
 # Kernel
 1, 2, 1,
