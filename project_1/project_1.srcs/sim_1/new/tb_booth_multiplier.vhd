@@ -13,6 +13,7 @@ architecture testing of tb_moltiplicatore is
     constant sum : POSITIVE := comp_i+coeff_f;
     constant CLK_PERIOD : time := 10 ns;
     
+    signal stop_simulation : boolean := false;
     signal clk, reset, valid  :  std_logic := '0';
     
     -- 3x3 componenti immagine
@@ -85,55 +86,132 @@ begin
         -- Generatore di Clock
     clk_process : process
     begin
+      while not stop_simulation loop
         clk <= '0';
         wait for CLK_PERIOD/2;
         clk <= '1';
         wait for CLK_PERIOD/2;
+      end loop;
+      wait;
     end process;
     
     stim_proc : process
     begin
         reset <= '1';
         valid <= '0';
+        
+        P_1_1 <= (others => '0'); 
+        P_1_2 <= (others => '0'); 
+        P_1_3 <= (others => '0');
+        P_2_1 <= (others => '0'); 
+        P_2_2 <= (others => '0'); 
+        P_2_3 <= (others => '0');
+        P_3_1 <= (others => '0'); 
+        P_3_2 <= (others => '0'); 
+        P_3_3 <= (others => '0');
+        F_1_1 <= (others => '0'); 
+        F_1_2 <= (others => '0'); 
+        F_1_3 <= (others => '0');
+        F_2_1 <= (others => '0'); 
+        F_2_2 <= (others => '0'); 
+        F_2_3 <= (others => '0');
+        F_3_1 <= (others => '0'); 
+        F_3_2 <= (others => '0'); 
+        F_3_3 <= (others => '0');
+        
         wait for 20 ns;
         reset <= '0';
-        wait for 10 ns;
-
+        wait for 20 ns;
         
+        --test sui massimi valori possibili
+        -- immagine=255, filtro = +7
+        --risultati attesi = 1785
+        P_1_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_1_2 <= std_logic_vector(to_unsigned(255, comp_i)); 
+        P_1_3 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_2 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_3 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_2 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_3 <= std_logic_vector(to_unsigned(255, comp_i));
+        F_1_1 <= std_logic_vector(to_signed(7, coeff_f));
+        F_1_2 <= std_logic_vector(to_signed(7, coeff_f));
+        F_1_3 <= std_logic_vector(to_signed(7, coeff_f));
+        F_2_1 <= std_logic_vector(to_signed(7, coeff_f));
+        F_2_2 <= std_logic_vector(to_signed(7, coeff_f));
+        F_2_3 <= std_logic_vector(to_signed(7, coeff_f));
+        F_3_1 <= std_logic_vector(to_signed(7, coeff_f));
+        F_3_2 <= std_logic_vector(to_signed(7, coeff_f));
+        F_3_3 <= std_logic_vector(to_signed(7, coeff_f));
+        wait for CLK_PERIOD;
+        valid <= '1';
+        wait for CLK_PERIOD;
+        valid <= '0';
+        wait for 50 ns;
+        
+        --test sul minimo possibile
+        --immagine = 255, filtro = -8
+        --risultato atteso = -2040
+        F_1_1 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_1_2 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_1_3 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_2_1 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_2_2 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_2_3 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_3_1 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_3_2 <= std_logic_vector(to_signed(-8, coeff_f));
+        F_3_3 <= std_logic_vector(to_signed(-8, coeff_f));
+        wait for CLK_PERIOD;
+        valid <= '1';
+        wait for CLK_PERIOD;
+        valid <= '0';
+        wait for 50 ns;
+        
+        --test sullo 0: immagine = 0, filtro =-8
+        P_1_1 <= (others => '0'); 
+        P_1_2 <= (others => '0'); 
+        P_1_3 <= (others => '0');
+        P_2_1 <= (others => '0'); 
+        P_2_2 <= (others => '0'); 
+        P_2_3 <= (others => '0');
+        P_3_1 <= (others => '0'); 
+        P_3_2 <= (others => '0'); 
+        P_3_3 <= (others => '0');
+        wait for CLK_PERIOD;
+        valid <= '1';
+        wait for CLK_PERIOD;
+        valid <= '0';
+        wait for 50 ns;
+        
+        --test sul filtro deciso e valori dell'immagine arbitrari
+        P_1_1 <= std_logic_vector(to_unsigned(10, comp_i));
+        P_1_2 <= std_logic_vector(to_unsigned(20, comp_i));
+        P_1_3 <= std_logic_vector(to_unsigned(30, comp_i));
+        P_2_1 <= std_logic_vector(to_unsigned(40, comp_i));
+        P_2_2 <= std_logic_vector(to_unsigned(50, comp_i));
+        P_2_3 <= std_logic_vector(to_unsigned(60, comp_i));
+        P_3_1 <= std_logic_vector(to_unsigned(70, comp_i));
+        P_3_2 <= std_logic_vector(to_unsigned(80, comp_i));
+        P_3_3 <= std_logic_vector(to_unsigned(90, comp_i));
         F_1_1 <= std_logic_vector(to_signed(1, coeff_f));
         F_1_2 <= std_logic_vector(to_signed(2, coeff_f));
         F_1_3 <= std_logic_vector(to_signed(1, coeff_f));
-        
         F_2_1 <= std_logic_vector(to_signed(2, coeff_f));
         F_2_2 <= std_logic_vector(to_signed(4, coeff_f));
         F_2_3 <= std_logic_vector(to_signed(2, coeff_f));
-        
         F_3_1 <= std_logic_vector(to_signed(1, coeff_f));
         F_3_2 <= std_logic_vector(to_signed(2, coeff_f));
         F_3_3 <= std_logic_vector(to_signed(1, coeff_f));
-        
-        
-        
-        P_1_1 <= std_logic_vector(to_signed(10, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(20, comp_i));
-        P_1_3 <= std_logic_vector(to_signed(30, comp_i));
-        
-        P_2_1 <= std_logic_vector(to_signed(40, comp_i));
-        P_2_2 <= std_logic_vector(to_signed(50, comp_i));
-        P_2_3 <= std_logic_vector(to_signed(60, comp_i));
-        
-        P_3_1 <= std_logic_vector(to_signed(70, comp_i));
-        P_3_2 <= std_logic_vector(to_signed(80, comp_i));
-        P_3_3 <= std_logic_vector(to_signed(90, comp_i));
-        
         wait for CLK_PERIOD;
         valid <= '1';
-
-        wait for CLK_PERIOD*10;
-        
+        wait for CLK_PERIOD;
         valid <= '0';
-        assert false report "Simulazione avvenuta con successo" severity failure;
-        wait;
+        wait for 50 ns;
+
+        stop_simulation <= true;
+        wait; 
+       
         end process;
 
         
