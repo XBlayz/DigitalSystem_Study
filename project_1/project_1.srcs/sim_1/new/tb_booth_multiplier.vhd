@@ -30,6 +30,9 @@ architecture testing of tb_moltiplicatore is
     signal M_1_1, M_1_2, M_1_3,
            M_2_1, M_2_2, M_2_3,
            M_3_1, M_3_2, M_3_3 : std_logic_vector(sum-1 downto 0);
+           
+    signal p : std_logic_vector(comp_i-1 downto 0);
+    signal f : std_logic_vector(coeff_f-1 downto 0);
     
     
     component booth_multiplier is
@@ -61,6 +64,26 @@ end component booth_multiplier;
 
 
 begin
+        P_1_1 <= p;
+        P_1_2 <= p;
+        P_1_3 <= p;
+        P_2_1 <= p;
+        P_2_2 <= p;
+        P_2_3 <= p;
+        P_3_1 <= p;
+        P_3_2 <= p;
+        P_3_3 <= p;
+        
+        F_1_1 <= f; 
+        F_1_2 <= f;
+        F_1_3 <= f;
+        F_2_1 <= f;
+        F_2_2 <= f;
+        F_2_3 <= f;
+        F_3_1 <= f; 
+        F_3_2 <= f; 
+        F_3_3 <= f;
+
     bm: booth_multiplier
         generic map(
             componente_immagine => comp_i,
@@ -100,24 +123,8 @@ begin
         reset <= '1';
         valid <= '0';
         
-        P_1_1 <= (others => '0'); 
-        P_1_2 <= (others => '0'); 
-        P_1_3 <= (others => '0');
-        P_2_1 <= (others => '0'); 
-        P_2_2 <= (others => '0'); 
-        P_2_3 <= (others => '0');
-        P_3_1 <= (others => '0'); 
-        P_3_2 <= (others => '0'); 
-        P_3_3 <= (others => '0');
-        F_1_1 <= (others => '0'); 
-        F_1_2 <= (others => '0'); 
-        F_1_3 <= (others => '0');
-        F_2_1 <= (others => '0'); 
-        F_2_2 <= (others => '0'); 
-        F_2_3 <= (others => '0');
-        F_3_1 <= (others => '0'); 
-        F_3_2 <= (others => '0'); 
-        F_3_3 <= (others => '0');
+        p <= (others => '0'); 
+        f <= (others => '0'); 
         
         wait for 20 ns;
         reset <= '0';
@@ -126,24 +133,8 @@ begin
         --test sui massimi valori possibili
         -- immagine=255, filtro = +7
         --risultati attesi = 1785
-        P_1_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_1_2 <= std_logic_vector(to_unsigned(255, comp_i)); 
-        P_1_3 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_2 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_3 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_2 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_3 <= std_logic_vector(to_unsigned(255, comp_i));
-        F_1_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(7, coeff_f));
+        p <= std_logic_vector(to_unsigned(255, comp_i));
+        f <= std_logic_vector(to_signed(7, coeff_f));
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;
@@ -153,15 +144,7 @@ begin
         --test sul minimo possibile
         --immagine = 255, filtro = -8
         --risultato atteso = -2040
-        F_1_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(-8, coeff_f));
+        f <= std_logic_vector(to_signed(-8, coeff_f));
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;
@@ -169,40 +152,24 @@ begin
         wait for 50 ns;
         
         --test sullo 0: immagine = 0, filtro =-8
-        P_1_1 <= (others => '0'); 
-        P_1_2 <= (others => '0'); 
-        P_1_3 <= (others => '0');
-        P_2_1 <= (others => '0'); 
-        P_2_2 <= (others => '0'); 
-        P_2_3 <= (others => '0');
-        P_3_1 <= (others => '0'); 
-        P_3_2 <= (others => '0'); 
-        P_3_3 <= (others => '0');
+        p <= (others => '0'); 
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;
         valid <= '0';
         wait for 50 ns;
         
-        --test sul filtro deciso e valori dell'immagine arbitrari
-        P_1_1 <= std_logic_vector(to_unsigned(10, comp_i));
-        P_1_2 <= std_logic_vector(to_unsigned(20, comp_i));
-        P_1_3 <= std_logic_vector(to_unsigned(30, comp_i));
-        P_2_1 <= std_logic_vector(to_unsigned(40, comp_i));
-        P_2_2 <= std_logic_vector(to_unsigned(50, comp_i));
-        P_2_3 <= std_logic_vector(to_unsigned(60, comp_i));
-        P_3_1 <= std_logic_vector(to_unsigned(70, comp_i));
-        P_3_2 <= std_logic_vector(to_unsigned(80, comp_i));
-        P_3_3 <= std_logic_vector(to_unsigned(90, comp_i));
-        F_1_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(2, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(1, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(2, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(4, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(2, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(2, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(1, coeff_f));
+        --iterazione per tutti ivalori del filtro e immagine a 255
+        p <= std_logic_vector(to_unsigned(255, 8));
+        for i in -8 to 7 loop
+            f <= std_logic_vector(to_signed(i, coeff_f));
+            wait for CLK_PERIOD; 
+            valid <= '1'; 
+            wait for CLK_PERIOD; 
+            valid <= '0';
+            wait for 50 ns; 
+        end loop;
+        
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;

@@ -32,6 +32,8 @@ architecture testing of tb_multiplier_adder is
               
     --uscita sommatore (Pixel filtrato) 
     signal sum_out : std_logic_vector(n_adder+4 downto 0);
+    signal p : std_logic_vector(comp_i-1 downto 0);
+    signal f : std_logic_vector(coeff_f-1 downto 0);
     
     component booth_multiplier is
         generic(
@@ -72,7 +74,26 @@ architecture testing of tb_multiplier_adder is
     end component CSA_tree;
         
 begin
-
+    P_1_1 <= p;
+        P_1_2 <= p;
+        P_1_3 <= p;
+        P_2_1 <= p;
+        P_2_2 <= p;
+        P_2_3 <= p;
+        P_3_1 <= p;
+        P_3_2 <= p;
+        P_3_3 <= p;
+        
+        F_1_1 <= f; 
+        F_1_2 <= f;
+        F_1_3 <= f;
+        F_2_1 <= f;
+        F_2_2 <= f;
+        F_2_3 <= f;
+        F_3_1 <= f; 
+        F_3_2 <= f; 
+        F_3_3 <= f;
+        
     bm: booth_multiplier
         generic map(
             componente_immagine => comp_i,
@@ -120,26 +141,8 @@ begin
         reset <= '1';
         valid <= '0';
         --metto prima tutto a 0
-        P_1_1 <= (others=>'0'); 
-        P_1_2 <= (others=>'0'); 
-        P_1_3 <= (others=>'0');
-        P_2_1 <= (others=>'0'); 
-        P_2_2 <= (others=>'0'); 
-        P_2_3 <= (others=>'0');
-        P_3_1 <= (others=>'0'); 
-        P_3_2 <= (others=>'0'); 
-        P_3_3 <= (others=>'0');
-        
-        F_1_1 <= (others=>'0'); 
-        F_1_2 <= (others=>'0'); 
-        F_1_3 <= (others=>'0');
-        F_2_1 <= (others=>'0'); 
-        F_2_2 <= (others=>'0'); 
-        F_2_3 <= (others=>'0');
-        F_3_1 <= (others=>'0'); 
-        F_3_2 <= (others=>'0'); 
-        F_3_3 <= (others=>'0');
-        
+        p <= (others=>'0'); 
+        f <= (others=>'0'); 
         wait for 20 ns;
         reset <= '0';
         wait for 20 ns;
@@ -147,25 +150,8 @@ begin
         --Test sul valore massimo positivo 
         --(componenti immagine = 1255 (8 bit), coefficienti filtro = 7 (4 bit)
         -- valore atteso: 9*(255*7) = 16065)
-        P_1_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_1_2 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_1_3 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_2 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_2_3 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_1 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_2 <= std_logic_vector(to_unsigned(255, comp_i));
-        P_3_3 <= std_logic_vector(to_unsigned(255, comp_i));
-
-        F_1_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(7, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(7, coeff_f));
+        p <= std_logic_vector(to_unsigned(255, comp_i));
+        f <= std_logic_vector(to_signed(7, coeff_f));
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;
@@ -175,15 +161,7 @@ begin
         --test sul valore minimo negativo
         --(componenti immagine = 255 (8 bit), coefficienti filtro = -8 (4 bit)
         -- valore atteso: 9*(255*-8) = -18360)
-        F_1_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(-8, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(-8, coeff_f));
+        f <= std_logic_vector(to_signed(-8, coeff_f));
         wait for CLK_PERIOD;
         valid <= '1';
         wait for CLK_PERIOD;
@@ -193,25 +171,8 @@ begin
         --test con filtro negativo e immagine positiva
         --componenti immagine = 50, coefficienti filtro = -2
         --valore atteso = -900
-        P_1_1 <= std_logic_vector(to_unsigned(50, comp_i));
-        P_1_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
-        P_1_3 <= std_logic_vector(to_unsigned(50, comp_i));
-        P_2_1 <= std_logic_vector(to_unsigned(50, comp_i)); 
-        P_2_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
-        P_2_3 <= std_logic_vector(to_unsigned(50, comp_i));
-        P_3_1 <= std_logic_vector(to_unsigned(50, comp_i)); 
-        P_3_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
-        P_3_3 <= std_logic_vector(to_unsigned(50, comp_i));
-        
-        F_1_1 <= std_logic_vector(to_signed(-2, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(-2, coeff_f)); 
-        F_1_3 <= std_logic_vector(to_signed(-2, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(-2, coeff_f)); 
-        F_2_2 <= std_logic_vector(to_signed(-2, coeff_f)); 
-        F_2_3 <= std_logic_vector(to_signed(-2, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(-2, coeff_f)); 
-        F_3_2 <= std_logic_vector(to_signed(-2, coeff_f)); 
-        F_3_3 <= std_logic_vector(to_signed(-2, coeff_f));
+        p <= std_logic_vector(to_unsigned(50, comp_i));       
+        f <= std_logic_vector(to_signed(-2, coeff_f));
         wait for CLK_PERIOD; 
         valid <= '1'; 
         wait for CLK_PERIOD; 
@@ -219,29 +180,10 @@ begin
         wait for 100 ns;
         
         --test con filtro con coefficienti = 1
-        --componenti dell'immagine fissi a 0 tranne P_1_1 che fa un ciclo da -50 a 50
-        F_1_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(1, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(1, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(1, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(1, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(1, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(1, coeff_f));
-
-        
-        P_1_2 <= (others=>'0'); 
-        P_1_3 <= (others=>'0');
-        P_2_1 <= (others=>'0'); 
-        P_2_2 <= (others=>'0'); 
-        P_2_3 <= (others=>'0');
-        P_3_1 <= (others=>'0'); 
-        P_3_2 <= (others=>'0'); 
-        P_3_3 <= (others=>'0');
-
-        for i in 55 to 60 loop
-            P_1_1 <= std_logic_vector(to_unsigned(i, comp_i));
+        --componenti dell'immagine da -10 a -5
+        f <= std_logic_vector(to_signed(1, coeff_f));
+        for i in 5 to 10 loop
+            p <= std_logic_vector(to_unsigned(i, comp_i));
             wait for CLK_PERIOD; 
             valid <= '1'; 
             wait for CLK_PERIOD; 
@@ -249,31 +191,6 @@ begin
             wait for 50 ns; 
         end loop;
         
-        --test con i coefficienti che usiamo nel progetto
-        --e valori arbitrari per l'immagine
-        P_1_1 <= std_logic_vector(to_signed(10, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(20, comp_i));
-        P_1_3 <= std_logic_vector(to_signed(30, comp_i));
-        P_2_1 <= std_logic_vector(to_signed(40, comp_i));
-        P_2_2 <= std_logic_vector(to_signed(50, comp_i));
-        P_2_3 <= std_logic_vector(to_signed(60, comp_i));
-        P_3_1 <= std_logic_vector(to_signed(70, comp_i));
-        P_3_2 <= std_logic_vector(to_signed(80, comp_i));
-        P_3_3 <= std_logic_vector(to_signed(90, comp_i));
-             
-        F_1_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(2, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(1, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(2, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(4, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(2, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(1, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(2, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(1, coeff_f));
-        wait for CLK_PERIOD; 
-        valid <= '1'; 
-        wait for CLK_PERIOD; 
-        valid <= '0';
         wait for 100 ns;
         stop_simulation <= true;
         wait;

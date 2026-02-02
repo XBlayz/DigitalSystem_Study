@@ -3,7 +3,7 @@ vhdl xil_defaultlib  \
 "../../../../project_1.srcs/sources_1/new/CarrySaveAdderTree.vhd" \
 "../../../../../src/full_adder.vhd" \
 "../../../../../src/ripple_carry_adder.vhd" \
-"../../../../project_1.srcs/sim_1/new/tb_CSAtree.vhd" \
+"../../../../project_1.srcs/sim_1/new/tb_multiplier_adder.vhd" \
 
 # Do not sort compile order
 nosort
