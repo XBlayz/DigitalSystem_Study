@@ -1,0 +1,14 @@
+\maketitle
+\chapter{Il moltiplicatore di Booth}
+\section{Architettura del componente}
+Il  moltiplicatore di Booth funziona in modo diverso rispetto al moltiplicatore "carta e penna".
+
+Se si fa distinzione fra il moltiplicando (il primo termine della moltiplicazione) e il moltiplicatore (il secondo termine della moltiplicazione) il funzionamento del moltiplicatore è incentrato sulla suddivisione in gruppi dei bit che compongono il moltiplicatore.
+
+La suddivisione in gruppi parte dal bit più significativo e ogni gruppo deve avere un bit in comune con il gruppo successivo. Tutti i gruppi devono essere completi, quindi se restano posti vuoti nel gruppo dei bit meno significativi, questi dovrenno essere colmati dagli zeri.  
+
+Ogni gruppo verrà poi codificato seguendo uno schema arbitrario: l'importante è che ogni gruppo abbia una codifica diversa dagli altri. 
+
+Questa codifica sarà ciò che ci permetterà di svolgere il prodotto: il trucco è provare a sfruttare i prodotti "immediati" con i bit, che sono quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via. La codifica di ogni gruppo di bit del moltiplicatore verrà poi moltiplicata con tutti i bit del moltiplicando.
+
+\section{Implementazione}
