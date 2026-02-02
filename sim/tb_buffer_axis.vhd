@@ -6,7 +6,7 @@ library ieee;
 entity tb_buffer_axis is
 end entity tb_buffer_axis;
 
-architecture Behavioral of tb_buffer_axis is
+architecture testing of tb_buffer_axis is
     -- Testing parameters
     constant CLK_PERIOD : time := 10 ns; -- 100 MHz
     constant NCOL       : integer := 32;
@@ -261,4 +261,4 @@ begin
         m_axis_tready <= '1';
     end process;
 
-end Behavioral;
+end testing;
