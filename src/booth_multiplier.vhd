@@ -1,6 +1,6 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+library ieee;
+    use ieee.std_logic_1164.all;
+    use ieee.numeric_std.all;
 
 entity booth_multiplier is
     generic(
@@ -27,7 +27,7 @@ entity booth_multiplier is
     );
 end entity booth_multiplier;
 
-architecture Structural of Moltiplicatore is
+architecture Structural of booth_multiplier is
 
     component ripple_carry_adder is
         generic ( N : POSITIVE );
