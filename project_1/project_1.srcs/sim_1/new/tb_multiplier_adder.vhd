@@ -145,17 +145,17 @@ begin
         wait for 20 ns;
         
         --Test sul valore massimo positivo 
-        --(componenti immagine = 127 (8 bit), coefficienti filtro = 7 (4 bit)
-        -- valore atteso: 9*(127*7) = 8001)
-        P_1_1 <= std_logic_vector(to_signed(127, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(127, comp_i));
-        P_1_3 <= std_logic_vector(to_signed(127, comp_i));
-        P_2_1 <= std_logic_vector(to_signed(127, comp_i));
-        P_2_2 <= std_logic_vector(to_signed(127, comp_i));
-        P_2_3 <= std_logic_vector(to_signed(127, comp_i));
-        P_3_1 <= std_logic_vector(to_signed(127, comp_i));
-        P_3_2 <= std_logic_vector(to_signed(127, comp_i));
-        P_3_3 <= std_logic_vector(to_signed(127, comp_i));
+        --(componenti immagine = 1255 (8 bit), coefficienti filtro = 7 (4 bit)
+        -- valore atteso: 9*(255*7) = 16065)
+        P_1_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_1_2 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_1_3 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_2 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_2_3 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_1 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_2 <= std_logic_vector(to_unsigned(255, comp_i));
+        P_3_3 <= std_logic_vector(to_unsigned(255, comp_i));
 
         F_1_1 <= std_logic_vector(to_signed(7, coeff_f));
         F_1_2 <= std_logic_vector(to_signed(7, coeff_f));
@@ -173,18 +173,8 @@ begin
         wait for 100 ns;
         
         --test sul valore minimo negativo
-        --(componenti immagine = -128 (8 bit), coefficienti filtro = -8 (4 bit)
-        -- valore atteso: 9*(-128*-8) = 9216)
-        P_1_1 <= std_logic_vector(to_signed(-128, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(-128, comp_i));
-        P_1_3 <= std_logic_vector(to_signed(-128, comp_i));
-        P_2_1 <= std_logic_vector(to_signed(-128, comp_i));
-        P_2_2 <= std_logic_vector(to_signed(-128, comp_i));
-        P_2_3 <= std_logic_vector(to_signed(-128, comp_i));
-        P_3_1 <= std_logic_vector(to_signed(-128, comp_i));
-        P_3_2 <= std_logic_vector(to_signed(-128, comp_i));
-        P_3_3 <= std_logic_vector(to_signed(-128, comp_i));
-
+        --(componenti immagine = 255 (8 bit), coefficienti filtro = -8 (4 bit)
+        -- valore atteso: 9*(255*-8) = -18360)
         F_1_1 <= std_logic_vector(to_signed(-8, coeff_f));
         F_1_2 <= std_logic_vector(to_signed(-8, coeff_f));
         F_1_3 <= std_logic_vector(to_signed(-8, coeff_f));
@@ -203,15 +193,15 @@ begin
         --test con filtro negativo e immagine positiva
         --componenti immagine = 50, coefficienti filtro = -2
         --valore atteso = -900
-        P_1_1 <= std_logic_vector(to_signed(50, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(50, comp_i)); 
-        P_1_3 <= std_logic_vector(to_signed(50, comp_i));
-        P_2_1 <= std_logic_vector(to_signed(50, comp_i)); 
-        P_2_2 <= std_logic_vector(to_signed(50, comp_i)); 
-        P_2_3 <= std_logic_vector(to_signed(50, comp_i));
-        P_3_1 <= std_logic_vector(to_signed(50, comp_i)); 
-        P_3_2 <= std_logic_vector(to_signed(50, comp_i)); 
-        P_3_3 <= std_logic_vector(to_signed(50, comp_i));
+        P_1_1 <= std_logic_vector(to_unsigned(50, comp_i));
+        P_1_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
+        P_1_3 <= std_logic_vector(to_unsigned(50, comp_i));
+        P_2_1 <= std_logic_vector(to_unsigned(50, comp_i)); 
+        P_2_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
+        P_2_3 <= std_logic_vector(to_unsigned(50, comp_i));
+        P_3_1 <= std_logic_vector(to_unsigned(50, comp_i)); 
+        P_3_2 <= std_logic_vector(to_unsigned(50, comp_i)); 
+        P_3_3 <= std_logic_vector(to_unsigned(50, comp_i));
         
         F_1_1 <= std_logic_vector(to_signed(-2, coeff_f));
         F_1_2 <= std_logic_vector(to_signed(-2, coeff_f)); 
@@ -227,29 +217,6 @@ begin
         wait for CLK_PERIOD; 
         valid <= '0';
         wait for 100 ns;
-        
-        --test con immagine negativa e filtro positivo
-        --componenti immagine = -100, coefficienti filtro = 3
-        --valore atteso = -2700
-        P_1_1 <= std_logic_vector(to_signed(-100, comp_i));
-        P_1_2 <= std_logic_vector(to_signed(-100, comp_i));
-        P_1_3 <= std_logic_vector(to_signed(-100, comp_i));
-        P_2_1 <= std_logic_vector(to_signed(-100, comp_i));
-        P_2_2 <= std_logic_vector(to_signed(-100, comp_i));
-        P_2_3 <= std_logic_vector(to_signed(-100, comp_i));
-        P_3_1 <= std_logic_vector(to_signed(-100, comp_i));
-        P_3_2 <= std_logic_vector(to_signed(-100, comp_i));
-        P_3_3 <= std_logic_vector(to_signed(-100, comp_i));
-        
-        F_1_1 <= std_logic_vector(to_signed(3, coeff_f));
-        F_1_2 <= std_logic_vector(to_signed(3, coeff_f));
-        F_1_3 <= std_logic_vector(to_signed(3, coeff_f));
-        F_2_1 <= std_logic_vector(to_signed(3, coeff_f));
-        F_2_2 <= std_logic_vector(to_signed(3, coeff_f));
-        F_2_3 <= std_logic_vector(to_signed(3, coeff_f));
-        F_3_1 <= std_logic_vector(to_signed(3, coeff_f));
-        F_3_2 <= std_logic_vector(to_signed(3, coeff_f));
-        F_3_3 <= std_logic_vector(to_signed(3, coeff_f));
         
         --test con filtro con coefficienti = 1
         --componenti dell'immagine fissi a 0 tranne P_1_1 che fa un ciclo da -50 a 50
@@ -273,8 +240,8 @@ begin
         P_3_2 <= (others=>'0'); 
         P_3_3 <= (others=>'0');
 
-        for i in -50 to 50 loop
-            P_1_1 <= std_logic_vector(to_signed(i, comp_i));
+        for i in 55 to 60 loop
+            P_1_1 <= std_logic_vector(to_unsigned(i, comp_i));
             wait for CLK_PERIOD; 
             valid <= '1'; 
             wait for CLK_PERIOD; 
