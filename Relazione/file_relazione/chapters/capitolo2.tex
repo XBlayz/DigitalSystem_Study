@@ -1,0 +1,35 @@
+\maketitle
+\chapter{Il moltiplicatore di Booth}
+\section{Architettura del componente}
+Il  moltiplicatore di Booth funziona in modo diverso rispetto al moltiplicatore "carta e penna".
+
+Se si fa distinzione fra il moltiplicando (il primo termine della moltiplicazione) e il moltiplicatore (il secondo termine della moltiplicazione) il funzionamento del moltiplicatore è incentrato sulla suddivisione in gruppi dei bit che compongono il moltiplicatore.
+
+La suddivisione in gruppi parte dal bit più significativo e ogni gruppo deve avere un bit in comune con il gruppo successivo. Tutti i gruppi devono essere completi, quindi se restano posti vuoti nel gruppo dei bit meno significativi, questi dovrenno essere colmati dagli zeri.  
+
+Ogni gruppo verrà poi codificato seguendo uno schema arbitrario: l'importante è che ogni gruppo abbia una codifica diversa dagli altri. 
+
+Questa codifica sarà ciò che ci permetterà di svolgere il prodotto: il trucco è provare a sfruttare i prodotti "immediati" con i bit, che sono quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via. 
+
+Questi prodotti sono semplici da ottenere:
+\begin{itemize}
+	\item Prodotto per 0) $=>$ Il prodotto parziale avrà tutti i bit a 0;
+	\item Prodotto per 1 $=>$ Il prodotto parziale sarà uguale al moltiplicando;
+	\item Prodotto per -1 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce l'inversione dei bit e a cui viene sommato 1;
+	\item Prodotto per 2 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce uno shift sinistro;
+	\item Prodotto per -2 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce l'inversione dei bit, la somma di 1 e uno shift sinistro;
+\end{itemize}
+
+La codifica di ogni gruppo di bit del moltiplicatore verrà poi moltiplicata con tutti i bit del moltiplicando detrminando dei prodotti parziali. 
+
+Questi termini dovranno essere prima moltiplicati per il relativo peso del gruppo di cui fanno parte e poi sommati fra loro.
+
+Il peso di ogni gruppo è determinato da quello del bit centrale, in base al peso di ogni gruppo si fanno tanti shift sn quanti ne richiede la potenza del 2 relativa al bit e poi si può passare ai prodotti veri e propri fra il moltiplicando e i termini codificati che corrispondono al moltiplicatore.
+
+Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ il risultato del prodottto andrà espresso su $m+n$ bit.
+
+E' importante ricordare che i prodotti parziali devono essere estesi con segno in modo tale che \# shift sinistri + \# bit del prodotto parziale + \# bit dell'estensione con segno = $m+n$.
+
+Dopo aver raggiunto il numero di bit corretti si può passare a sommare tutti i prodotti parziali e si avrà ottenuto il risultato del prodotto iniziale.
+
+\section{Implementazione}
