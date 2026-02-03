@@ -9,6 +9,7 @@ entity buffer_line is
         clk   : in  std_logic;
         reset : in  std_logic;
         valid : in  std_logic;
+        flush : in  std_logic;
         data  : in  std_logic_vector(7 downto 0);
 
         d00, d01, d02, d10, d11, d12, d20, d21, d22 : out std_logic_vector(7 downto 0)
@@ -16,6 +17,7 @@ entity buffer_line is
 end buffer_line;
 
 architecture Behavioral of buffer_line is
+    signal d00s, d01s, d02s, d10s, d11s, d12s, d20s, d21s, d22s : std_logic_vector(7 downto 0);
     signal buffer1_out, buffer2_out : std_logic_vector(7 downto 0);
 
     -- Buffer di linea (FIFO)
@@ -28,14 +30,20 @@ begin
     begin
         if rising_edge(clk) then
             if reset = '0' then
-                d00 <= (others => '0');
-                d01 <= (others => '0');
-                d02 <= (others => '0');
+                d00s <= (others => '0');
+                d01s <= (others => '0');
+                d02s <= (others => '0');
             else
                 if valid = '1' then
-                    d00 <= data;
-                    d01 <= d00;
-                    d02 <= d01;
+                    -- Se l'immagine è terminata scarichiamo il buffer fino all'ultimo pixel caricando zeri
+                    if flush = '1' then
+                        d00s <= (others => '0');
+                    else
+                        d00s <= data;
+                    end if;
+
+                    d01s <= d00s;
+                    d02s <= d01s;
                 end if;
             end if;
         end if;
@@ -51,7 +59,7 @@ begin
                 end loop;
             else
                 if valid = '1' then
-                    buffer1(0) <= d02; -- Prende l'uscita dello stadio precedente
+                    buffer1(0) <= d02s; -- Prende l'uscita dello stadio precedente
                     for j in 1 to ncol-4 loop
                         buffer1(j) <= buffer1(j-1);
                     end loop;
@@ -67,14 +75,14 @@ begin
     begin
         if rising_edge(clk) then
             if reset = '0' then
-                d10 <= (others => '0');
-                d11 <= (others => '0');
-                d12 <= (others => '0');
+                d10s <= (others => '0');
+                d11s <= (others => '0');
+                d12s <= (others => '0');
             else
                 if valid = '1' then
-                    d10 <= buffer1_out;
-                    d11 <= d10;
-                    d12 <= d11;
+                    d10s <= buffer1_out;
+                    d11s <= d10s;
+                    d12s <= d11s;
                 end if;
             end if;
         end if;
@@ -90,7 +98,7 @@ begin
                 end loop;
             else
                 if valid = '1' then
-                    buffer2(0) <= d12;
+                    buffer2(0) <= d12s;
                     for j in 1 to ncol-4 loop
                         buffer2(j) <= buffer2(j-1);
                     end loop;
@@ -106,17 +114,28 @@ begin
     begin
         if rising_edge(clk) then
             if reset = '0' then
-                d20 <= (others => '0');
-                d21 <= (others => '0');
-                d22 <= (others => '0');
+                d20s <= (others => '0');
+                d21s <= (others => '0');
+                d22s <= (others => '0');
             else
                 if valid = '1' then
-                    d20 <= buffer2_out;
-                    d21 <= d20;
-                    d22 <= d21;
+                    d20s <= buffer2_out;
+                    d21s <= d20s;
+                    d22s <= d21s;
                 end if;
             end if;
         end if;
     end process;
+
+    -- OUTPUT
+    d00 <= d00s;
+    d01 <= d01s;
+    d02 <= d02s;
+    d10 <= d10s;
+    d11 <= d11s;
+    d12 <= d12s;
+    d20 <= d20s;
+    d21 <= d21s;
+    d22 <= d22s;
 
 end Behavioral;
