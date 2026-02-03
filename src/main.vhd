@@ -2,6 +2,20 @@ library ieee;
     use ieee.std_logic_1164.all;
 
 entity main is
+    generic (
+        ncol_img : integer := 32;
+        nrow_img : integer := 32;
+
+        kernel00 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel01 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel02 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel10 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel11 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+        kernel12 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel20 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel21 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+        kernel22 : STD_LOGIC_VECTOR(3 downto 0) := "0000"
+    );
     port (
         s_axis_clk      : in  std_logic;
         s_axis_rstn     : in  std_logic;
@@ -22,9 +36,6 @@ architecture Structural of main is
     constant coeff_f : POSITIVE := 4;
     constant n_adder : POSITIVE := comp_i+coeff_f;
 
-    constant ncol_img : POSITIVE := 32;
-    constant nrow_img : POSITIVE := 32;
-
     component buffer_line is
         generic(
             ncol : integer
@@ -33,6 +44,7 @@ architecture Structural of main is
             clk   : in  std_logic;
             reset : in  std_logic;
             valid : in  std_logic;
+            flush : in  std_logic;
             data  : in  std_logic_vector(7 downto 0);
 
             d00, d01, d02, d10, d11, d12, d20, d21, d22 : out std_logic_vector(7 downto 0)
@@ -41,9 +53,9 @@ architecture Structural of main is
 
     component booth_multiplier is
         generic(
-            componente_immagine : POSITIVE := 8;
-            coefficiente_filtro : POSITIVE := 4;
-            somma : POSITIVE := 12
+            componente_immagine : POSITIVE;
+            coefficiente_filtro : POSITIVE;
+            somma : POSITIVE
         );
         port (
             clk    : in  std_logic;
@@ -77,23 +89,39 @@ architecture Structural of main is
         );
     end component carry_save_adder_tree;
 
-    -- #TODO: State_Machine
+    component state_machine is
+        generic(
+            ncol_img        : integer;
+            nrow_img        : integer;
+            kernel_row_size : integer
+        );
+        port(
+            s_axis_clk      : in  std_logic;
+            s_axis_rstn     : in  std_logic;
+
+            s_axis_tvalid   : in  std_logic;
+            s_axis_tready   : out std_logic;
+            s_axis_tlast    : in  std_logic;
+
+            m_axis_tvalid   : out std_logic;
+            m_axis_tready   : in  std_logic;
+            m_axis_tlast    : out std_logic;
+
+            pipeline_en     : out std_logic;
+            window_valid    : out std_logic;
+            flush_pipeline  : out std_logic
+        );
+    end component state_machine;
+
+    signal s_pipeline_en    : std_logic;
+    signal s_window_valid   : std_logic;
+    signal s_flush_pipeline : std_logic;
 
     signal d00, d01, d02, d10, d11, d12, d20, d21, d22 : std_logic_vector(7 downto 0);
     signal M_1_1, M_1_2, M_1_3 : std_logic_vector(n_adder-1 downto 0);
     signal M_2_1, M_2_2, M_2_3 : std_logic_vector(n_adder-1 downto 0);
     signal M_3_1, M_3_2, M_3_3 : std_logic_vector(n_adder-1 downto 0);
     signal output_sum          : std_logic_vector(comp_i+coeff_f+4 downto 0);
-
-    constant kernel00 : std_logic_vector(7 downto 0) := "00000000"; -- #TODO
-    constant kernel01 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel02 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel10 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel11 : std_logic_vector(7 downto 0) := "00000000"; -- #TODO
-    constant kernel12 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel20 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel21 : std_logic_vector(7 downto 0) := "11111111"; -- #TODO
-    constant kernel22 : std_logic_vector(7 downto 0) := "00000000"; -- #TODO
 
 begin
     bl: buffer_line
@@ -102,7 +130,8 @@ begin
         )
 
         port map (
-            clk => s_axis_clk, reset => s_axis_rstn, valid => s_axis_tvalid, -- #TODO: Valid_input dalla state machine
+            clk => s_axis_clk, reset => s_axis_rstn, valid => s_pipeline_en,
+            flush => s_flush_pipeline,
             data => s_axis_tdata,
 
             d00 => d00, d01 => d01, d02 => d02,
@@ -118,7 +147,7 @@ begin
         )
 
         port map (
-            clk => s_axis_clk, reset => s_axis_rstn, valid => s_axis_tvalid, -- #TODO: Rimuovere reset, valid e clk
+            clk => s_axis_clk, reset => s_axis_rstn, valid => s_window_valid,
             P_1_1 => d00, P_1_2 => d01, P_1_3 => d02,
             P_2_1 => d10, P_2_2 => d11, P_2_3 => d12,
             P_3_1 => d20, P_3_2 => d21, P_3_3 => d22,
@@ -144,7 +173,28 @@ begin
             sum=>output_sum
         );
 
-    -- #TODO: Valid_output dalla state machine
-    -- output_sum -> m_axis_tdata
+    sm: state_machine
+        generic map(
+            ncol_img        => ncol_img,
+            nrow_img        => nrow_img,
+            kernel_row_size => 3
+        )
+
+        port map (
+            s_axis_clk      => s_axis_clk,
+            s_axis_rstn     => s_axis_rstn,
+            s_axis_tvalid   => s_axis_tvalid,
+            s_axis_tready   => s_axis_tready,
+            s_axis_tlast    => s_axis_tlast,
+            m_axis_tvalid   => m_axis_tvalid,
+            m_axis_tready   => m_axis_tready,
+            m_axis_tlast    => m_axis_tlast,
+            pipeline_en     => s_pipeline_en,
+            window_valid    => s_window_valid,
+            flush_pipeline  => s_flush_pipeline
+        );
+
+    -- #TODO: Usare output del sommatore e introdurre latch
+    m_axis_tdata <= "000000000" & d11;
 
 end architecture Structural;
