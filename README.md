@@ -14,12 +14,12 @@
 - [ ] MAC parallelo
     - [-] Implementazione
     - [ ] TB
-- [ ] Buffer line
+- [X] Buffer line
     - [X] Implementazione
-    - [-] TB
-- [ ] State Machine
-    - [-] Implementazione
-    - [ ] TB
+    - [X] TB
+- [X] State Machine
+    - [X] Implementazione
+    - [X] TB
 - [ ] Report
   - [ ] Caratterizzazione post implementation
   - [ ] Report di potenza
