@@ -118,6 +118,10 @@ architecture Structural of main is
     signal M_3_1, M_3_2, M_3_3 : std_logic_vector(n_adder-1 downto 0);
     signal output_sum          : std_logic_vector(comp_i+coeff_f+4 downto 0);
 
+    -- Latch output AXI signals
+    signal m_axis_tvalid_s : std_logic;
+    signal m_axis_tlast_s  : std_logic;
+
 begin
     bl: buffer_line
         generic map(
@@ -178,9 +182,9 @@ begin
             s_axis_tvalid   => s_axis_tvalid,
             s_axis_tready   => s_axis_tready,
             s_axis_tlast    => s_axis_tlast,
-            m_axis_tvalid   => m_axis_tvalid,
+            m_axis_tvalid   => m_axis_tvalid_s,
             m_axis_tready   => m_axis_tready,
-            m_axis_tlast    => m_axis_tlast,
+            m_axis_tlast    => m_axis_tlast_s,
             pipeline_en     => s_pipeline_en,
             window_valid    => s_window_valid,
             flush_pipeline  => s_flush_pipeline
@@ -195,6 +199,9 @@ begin
             elsif s_window_valid = '1' then
                 m_axis_tdata <= output_sum;
             end if;
+
+            m_axis_tvalid <= m_axis_tvalid_s;
+            m_axis_tlast  <= m_axis_tlast_s;
         end if;
     end process;
 
