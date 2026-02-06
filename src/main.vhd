@@ -20,13 +20,15 @@ entity main is
         s_axis_clk      : in  std_logic;
         s_axis_rstn     : in  std_logic;
         s_axis_tvalid   : in  std_logic;
-        s_axis_tlast    : in  std_logic;
+        s_axis_tlast    : in  std_logic; -- Input EOL
         s_axis_tready   : out std_logic;
+        s_axis_tuser    : in  std_logic; -- Input SOF
         s_axis_tdata    : in  std_logic_vector(7 downto 0);
 
         m_axis_tvalid   : out std_logic;
-        m_axis_tlast    : out std_logic;
+        m_axis_tlast    : out std_logic; -- Output EOL
         m_axis_tready   : in  std_logic;
+        m_axis_tuser    : out std_logic; -- Output SOF
         m_axis_tdata    : out std_logic_vector(8+4+4 downto 0) -- comp_i + coeff_f + 4
     );
 end entity main;
@@ -96,11 +98,13 @@ architecture Structural of main is
 
             s_axis_tvalid   : in  std_logic;
             s_axis_tready   : out std_logic;
-            s_axis_tlast    : in  std_logic;
+            s_axis_tlast    : in  std_logic; -- Input EOL
+            s_axis_tuser    : in  std_logic; -- Input SOF
 
             m_axis_tvalid   : out std_logic;
             m_axis_tready   : in  std_logic;
-            m_axis_tlast    : out std_logic;
+            m_axis_tlast    : out std_logic; -- Output EOL
+            m_axis_tuser    : out std_logic; -- Output SOF
 
             pipeline_en     : out std_logic;
             window_valid    : out std_logic;
@@ -119,8 +123,7 @@ architecture Structural of main is
     signal output_sum          : std_logic_vector(comp_i+coeff_f+4 downto 0);
 
     -- Latch output AXI signals
-    signal m_axis_tvalid_s : std_logic;
-    signal m_axis_tlast_s  : std_logic;
+    signal m_axis_tvalid_s, m_axis_tlast_s, m_axis_tuser_s : std_logic;
 
 begin
     bl: buffer_line
@@ -182,9 +185,11 @@ begin
             s_axis_tvalid   => s_axis_tvalid,
             s_axis_tready   => s_axis_tready,
             s_axis_tlast    => s_axis_tlast,
+            s_axis_tuser    => s_axis_tuser,
             m_axis_tvalid   => m_axis_tvalid_s,
             m_axis_tready   => m_axis_tready,
             m_axis_tlast    => m_axis_tlast_s,
+            m_axis_tuser    => m_axis_tuser_s,
             pipeline_en     => s_pipeline_en,
             window_valid    => s_window_valid,
             flush_pipeline  => s_flush_pipeline
@@ -202,6 +207,7 @@ begin
 
             m_axis_tvalid <= m_axis_tvalid_s;
             m_axis_tlast  <= m_axis_tlast_s;
+            m_axis_tuser  <= m_axis_tuser_s;
         end if;
     end process;
 

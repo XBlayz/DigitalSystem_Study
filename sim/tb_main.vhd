@@ -18,11 +18,13 @@ architecture testing of tb_main is
     signal s_axis_rstn   : std_logic := '0';
     signal s_axis_tvalid : std_logic := '0';
     signal s_axis_tlast  : std_logic := '0';
+    signal s_axis_tuser  : std_logic := '0';
     signal s_axis_tready : std_logic;
     signal s_axis_tdata  : std_logic_vector(7 downto 0) := (others => '0');
 
     signal m_axis_tvalid : std_logic;
     signal m_axis_tlast  : std_logic;
+    signal m_axis_tuser  : std_logic;
     signal m_axis_tready : std_logic := '1';
     signal m_axis_tdata  : std_logic_vector(8+4+4 downto 0); -- 16 bits
 
@@ -51,13 +53,15 @@ architecture testing of tb_main is
             s_axis_clk      : in  std_logic;
             s_axis_rstn     : in  std_logic;
             s_axis_tvalid   : in  std_logic;
-            s_axis_tlast    : in  std_logic;
+            s_axis_tlast    : in  std_logic; -- Input EOL
             s_axis_tready   : out std_logic;
+            s_axis_tuser    : in  std_logic; -- Input SOF
             s_axis_tdata    : in  std_logic_vector(7 downto 0);
 
             m_axis_tvalid   : out std_logic;
-            m_axis_tlast    : out std_logic;
+            m_axis_tlast    : out std_logic; -- Output EOL
             m_axis_tready   : in  std_logic;
+            m_axis_tuser    : out std_logic; -- Output SOF
             m_axis_tdata    : out std_logic_vector(8+4+4 downto 0)
         );
     end component main;
@@ -86,15 +90,17 @@ begin
             kernel21 => "0000",
             kernel22 => "0000"
         )
-        port map (
+         port map (
             s_axis_clk      => s_axis_clk,
             s_axis_rstn     => s_axis_rstn,
             s_axis_tvalid   => s_axis_tvalid,
             s_axis_tlast    => s_axis_tlast,
+            s_axis_tuser    => s_axis_tuser,
             s_axis_tready   => s_axis_tready,
             s_axis_tdata    => s_axis_tdata,
             m_axis_tvalid   => m_axis_tvalid,
             m_axis_tlast    => m_axis_tlast,
+            m_axis_tuser    => m_axis_tuser,
             m_axis_tready   => m_axis_tready,
             m_axis_tdata    => m_axis_tdata
         );
@@ -122,7 +128,7 @@ begin
 
         report "Inizio invio pixel (5x5)...";
 
-        -- 2. Sending data
+         -- 2. Sending data
         for row in 0 to NROW_IMG-1 loop
             for col in 0 to NCOL_IMG-1 loop
                 -- Pattern pixel: (riga * NCOL_IMG) + colonna (valore univoco)
@@ -136,6 +142,13 @@ begin
                     s_axis_tlast <= '1';
                 else
                     s_axis_tlast <= '0';
+                end if;
+
+                -- TUSER alto solo all'ultimo pixel dell'immagine (SOF)
+                if row = 0 and col = 0 then
+                    s_axis_tuser <= '1';
+                else
+                    s_axis_tuser <= '0';
                 end if;
 
                 -- Memorizza per verifica successiva
@@ -158,7 +171,7 @@ begin
         wait;
     end process;
 
-    -- ================================================================
+     -- ================================================================
     -- Reading OUTPUT data and storing in received_pixels
     -- ================================================================
     output_reader : process(s_axis_clk)
@@ -187,6 +200,11 @@ begin
                 if m_axis_tlast = '1' then
                     last_line_count <= last_line_count + 1;
                     report "M_AXIS_TLAST attivo (contatore: " & integer'image(last_line_count) & ")";
+                end if;
+
+                -- Monitora M_AXIS_TUSER (SOF)
+                if m_axis_tuser = '1' then
+                    report "M_AXIS_TUSER attivo (SOF - primo pixel della frame)";
                 end if;
 
                 output_count <= output_count + 1;
