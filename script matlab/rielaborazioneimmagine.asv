@@ -1,8 +1,8 @@
-output_data = load('temp_componenti_filtrateexcel.txt');
+output_data = load('output_image.txt');
 output_data(output_data > 255) = 255;
 output_data(output_data < 0)   = 0;
 
-immagine_filtrata = reshape(output_data, 32, 32);
+immagine_filtrata = reshape(output_data, 32, 32)';
 
 figure;
 subplot(1,2,1);
