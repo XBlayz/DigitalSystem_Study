@@ -3,14 +3,13 @@ library ieee;
 
 entity booth_multiplier is
 	generic (
-        a_nbit : POSITIVE := 8;
-		b_nbit : POSITIVE := 8
+        a_nbit : POSITIVE := 8
     );
 
 	port(
         a : in std_logic_vector(a_nbit - 1 downto 0);
-	    b : in std_logic_vector(b_nbit - 1 downto 0);
-	    r : out std_logic_vector(a_nbit + b_nbit - 1 downto 0)
+	    b : in std_logic_vector(4 - 1 downto 0);
+	    r : out std_logic_vector(a_nbit + 4 - 1 downto 0)
     );
 end booth_multiplier;
 
@@ -28,6 +27,7 @@ architecture Structural of booth_multiplier is
         );
     end component ripple_carry_adder;
 
+    constant b_nbit : POSITIVE := 4;
     constant r_size : POSITIVE := a_nbit + b_nbit;
 
     signal ext_b : std_logic_vector(b_nbit downto 0);
@@ -59,7 +59,7 @@ begin
             s => neg_a,
             cout => open
         );
-    a2 <= a & '0';
+    a2 <= a(a_nbit - 1) & a & '0';
     rca2 : ripple_carry_adder
         generic map (
             N => a_nbit + 2
@@ -76,9 +76,9 @@ begin
 	gen_booth: for i in 0 to (b_nbit/2)-1 generate
         signal sel_val : std_logic_vector(a_nbit + 1 downto 0);
     begin
-        process(b((i+1)*2 downto i*2), a)
+        process(ext_b((i+1)*2 downto i*2), zero, ext_a, a2, neg_a, neg_a2)
         begin
-            case b((i+1)*2 downto i*2) is
+            case ext_b((i+1)*2 downto i*2) is
                 -- Tabella codifica di Booth
                 when "000" | "111" => sel_val <= zero;    -- 0
                 when "001" | "010" => sel_val <= ext_a;   -- +A
@@ -94,7 +94,8 @@ begin
         begin
             if i*2 = 0 then
                 -- Caso base (i=0), nessun shift
-                p(i) <= (others => sel_val(a_nbit + 1)) & sel_val;
+                p(i)(sel_val'range) <= sel_val;
+                p(i)(p(i)'high downto sel_val'length) <= (others => sel_val(a_nbit + 1));
             else
                 -- Caso generale, shift di i*2 verso sinistra
                 p(i)(i*2 - 1 downto 0) <= (others => '0');                                      -- SHIFT
@@ -104,6 +105,19 @@ begin
         end process;
     end generate;
 
-    -- #TODO: Adder tree parametrico
+    -- Specializzazione del componente generico nel caso di `b'length=4`
+    -- Uso di semplice "Ripple Carry Adder" invece di "Adder Tree"
+    rca3: ripple_carry_adder
+        generic map (
+            N => r_size
+        )
+
+        port map (
+            a => p(0),
+            b => p(1),
+            cin => '0',
+            s => r,
+            cout => open
+        );
 
 end Structural;
