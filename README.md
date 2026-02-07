@@ -11,9 +11,9 @@
 - [X] Booth Multiplier
     - [X] Implementazione
     - [X] TB
-- [ ] MAC parallelo
-    - [-] Implementazione
-    - [ ] TB
+- [X] MAC parallelo
+    - [X] Implementazione
+    - [X] TB
 - [X] Buffer line
     - [X] Implementazione
     - [X] TB

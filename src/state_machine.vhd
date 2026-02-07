@@ -15,11 +15,13 @@ entity state_machine is
 
         s_axis_tvalid   : in  std_logic;
         s_axis_tready   : out std_logic;
-        s_axis_tlast    : in  std_logic; -- Input TLAST
+        s_axis_tlast    : in  std_logic; -- Input EOL
+        s_axis_tuser    : in  std_logic; -- Input SOF
 
         m_axis_tvalid   : out std_logic;
         m_axis_tready   : in  std_logic;
-        m_axis_tlast    : out std_logic; -- Output TLAST
+        m_axis_tlast    : out std_logic; -- Output EOL
+        m_axis_tuser    : out std_logic; -- Output SOF
 
         pipeline_en     : out std_logic;
         window_valid    : out std_logic;
@@ -29,7 +31,7 @@ end state_machine;
 
 architecture Behavioral of state_machine is
     -- Definizione Stati
-    type state_type is (IDLE, LOADING, RUNNING, FLUSH);
+    type state_type is (LOADING, RUNNING, FLUSH);
     signal current_state : state_type;
 
     -- Segnali interni
@@ -37,6 +39,7 @@ architecture Behavioral of state_machine is
     signal window_valid_s   : std_logic;
     signal flush_pipeline_s : std_logic;
     signal m_axis_tlast_s   : std_logic;
+    signal m_axis_tuser_s   : std_logic;
 
     -- Contatori
     -- Latency counter: conta quanto serve per riempire il buffer iniziale
@@ -60,87 +63,90 @@ begin
     -- Accetto dati in ingresso solo se non sto facendo FLUSH e l'uscita è pronta
     s_axis_tready <= '1' when (current_state /= FLUSH and m_axis_tready = '1') else '0';
 
-    -- 2. Macchina a Stati Principale
+    -- 2. Macchina a Stati Principale con SOF
     process(s_axis_clk)
     begin
         if rising_edge(s_axis_clk) then
+            -- Reset asincrono hardware (sempre utile)
             if s_axis_rstn = '0' then
-                current_state   <= IDLE;
+                current_state   <= LOADING; -- Partiamo diretti in LOADING
                 latency_counter <= 0;
                 in_row_counter  <= 0;
                 out_col_counter <= 0;
                 flush_pipeline_s<= '0';
                 m_axis_tlast_s  <= '0';
+                m_axis_tuser_s  <= '0';
+
             elsif pipeline_en_s = '1' then
 
-                -- Gestione TLAST output (generica per RUNNING e FLUSH)
-                if window_valid_s = '1' then
-                    if out_col_counter = ncol_img - 1 then
-                        out_col_counter <= 0;
-                        m_axis_tlast_s  <= '1';
-                    else
-                        out_col_counter <= out_col_counter + 1;
-                        m_axis_tlast_s  <= '0';
-                    end if;
+                -- LOGICA DI SINCRONIZZAZIONE SOF (Nuova parte)
+                -- Se arriva un TUSER valido, è SEMPRE l'inizio di un nuovo frame.
+                -- Resettiamo tutto indipendentemente dallo stato attuale.
+                if s_axis_tvalid = '1' and s_axis_tuser = '1' then
+                    current_state   <= LOADING;
+                    latency_counter <= 1; -- Abbiamo già il primo pixel
+                    in_row_counter  <= 0;
+                    out_col_counter <= 0;
+                    flush_pipeline_s<= '0'; -- Interrompe un eventuale flush in corso
+                    m_axis_tuser_s  <= '0'; -- Reset SOF output
+
                 else
-                    m_axis_tlast_s <= '0';
-                end if;
-
-                -- FSM Transitions
-                case current_state is
-
-                    when IDLE =>
-                        latency_counter <= 1; -- Iniziamo a contare il primo pixel
-                        in_row_counter  <= 0;
-                        out_col_counter <= 0;
-                        current_state   <= LOADING;
-
-                    when LOADING =>
-                        -- Contiamo input fino a riempire la latenza necessaria
-                        if latency_counter < LATENCY_TARGET then
-                            latency_counter <= latency_counter + 1;
+                    -- Gestione TLAST output (Invariata)
+                    if window_valid_s = '1' then
+                        if out_col_counter = ncol_img - 1 then
+                            out_col_counter <= 0;
+                            m_axis_tlast_s  <= '1';
                         else
-                            -- Latenza raggiunta, passiamo a regime
-                            current_state <= RUNNING;
-                            -- Primo pixel valido esce ora
-                            if ncol_img > 1 then
-                                out_col_counter <= 1;
+                            out_col_counter <= out_col_counter + 1;
+                            m_axis_tlast_s  <= '0';
+                        end if;
+                    else
+                        m_axis_tlast_s <= '0';
+                    end if;
+
+                    case current_state is
+                        when LOADING =>
+                            if latency_counter < LATENCY_TARGET then
+                                latency_counter <= latency_counter + 1;
                             else
-                                out_col_counter <= 0; -- Caso degenere img 1px
+                                current_state <= RUNNING;
+                                -- Setup contatori output...
+                                if ncol_img > 1 then out_col_counter <= 1; else out_col_counter <= 0; end if;
+                                -- Attiva SOF sul primo pixel valido di output
+                                m_axis_tuser_s <= '1';
                             end if;
-                        end if;
 
-                        -- Monitoraggio fine riga input
-                        if s_axis_tlast = '1' then
-                            in_row_counter <= in_row_counter + 1;
-                        end if;
-
-                    when RUNNING =>
-                        -- Monitoraggio input
-                        if s_axis_tlast = '1' then
-                            if in_row_counter = nrow_img - 1 then
-                                -- Abbiamo ricevuto l'ultimo pixel dell'immagine
-                                -- Passiamo a FLUSH per svuotare la pipeline (padding bottom)
-                                current_state    <= FLUSH;
-                                flush_pipeline_s <= '1'; -- Abilita generazione zeri interni
-                                -- Usiamo latency_counter per contare quanti pixel mancano da svuotare
-                                latency_counter  <= LATENCY_TARGET;
-                            else
+                            if s_axis_tlast = '1' then
                                 in_row_counter <= in_row_counter + 1;
                             end if;
-                        end if;
 
-                    when FLUSH =>
-                        -- Decrementiamo il contatore di svuotamento
-                        latency_counter <= latency_counter - 1;
+                        when RUNNING =>
+                            -- Disattiva SOF dopo il primo pixel valido
+                            if m_axis_tuser_s = '1' then
+                                m_axis_tuser_s <= '0';
+                            end if;
 
-                        -- Se abbiamo svuotato tutto
-                        if latency_counter = 0 then
-                            current_state    <= IDLE;
-                            flush_pipeline_s <= '0';
-                        end if;
+                            if s_axis_tlast = '1' then
+                                if in_row_counter = nrow_img - 1 then
+                                    current_state    <= FLUSH;
+                                    flush_pipeline_s <= '1';
+                                    latency_counter  <= LATENCY_TARGET;
+                                else
+                                    in_row_counter <= in_row_counter + 1;
+                                end if;
+                            end if;
 
-                end case;
+                        when FLUSH =>
+                            latency_counter <= latency_counter - 1;
+                            if latency_counter = 0 then
+                                -- Rimani in stato di attesa fino a prossimo SOF
+                                current_state    <= LOADING;
+                                latency_counter  <= 0;
+                                flush_pipeline_s <= '0';
+                            end if;
+
+                    end case;
+                end if;
             end if;
         end if;
     end process;
@@ -152,6 +158,7 @@ begin
     -- Assegnazione uscite
     m_axis_tvalid   <= window_valid_s; -- L'uscita è valida solo se window_valid è alto
     m_axis_tlast    <= m_axis_tlast_s;
+    m_axis_tuser    <= m_axis_tuser_s; -- Output SOF
 
     pipeline_en     <= pipeline_en_s;
     window_valid    <= window_valid_s;
