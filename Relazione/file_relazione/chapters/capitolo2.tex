@@ -7,14 +7,14 @@ Se si fa distinzione fra il moltiplicando (il primo termine della moltiplicazion
 
 La suddivisione in gruppi parte dal bit più significativo e ogni gruppo deve avere un bit in comune con il gruppo successivo. Tutti i gruppi devono essere completi, quindi se restano posti vuoti nel gruppo dei bit meno significativi, questi dovrenno essere colmati dagli zeri.  
 
-Viene definita un modo di codifica che "traduce" i gruppi dei bit in numeri signed che verranno moltiplicati (al posto di tutto il moltiplicatore) al moltiplicando.
+Viene definita una codifica che "traduce" i gruppi dei bit in numeri signed che verranno moltiplicati con il  moltiplicando.
 
 \begin{figure}[H] 
     \centering 
     \includegraphics[width=0.7\textwidth]{file_relazione/imgs/gruppi.png}
 \end{figure}
 
-Questa codifica sarà ciò che ci permetterà di svolgere il prodotto: quando i gruppi sono più grandi oppure non si usano gruppi ma si codifica l'intero moltiplicando il trucco è provare a sfruttare i prodotti "immediati" con i bit, che sono quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via. 
+Questa codifica sarà ciò che ci permetterà di svolgere il prodotto: il trucco è provare a sfruttare i prodotti "immediati", risolvibili con shift e negazioni, quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via. 
 
 Questi prodotti sono semplici da ottenere:
 \begin{itemize}
@@ -30,7 +30,7 @@ Questi prodotti sono semplici da ottenere:
 \end{itemize}
 \bigskip
 
-La codifica di ogni gruppo di bit del moltiplicatore verrà poi moltiplicata con tutti i bit del moltiplicando determinando dei prodotti parziali. 
+Il moltiplicando verrà moltiplicato con la codifica di ogni gruppo di bit del moltiplicatore determinando dei prodotti parziali. 
 
 Questi termini dovranno essere prima moltiplicati per il relativo peso del gruppo di cui fanno parte e poi sommati fra loro.
 
@@ -45,7 +45,13 @@ Dopo aver raggiunto il numero di bit corretti si può passare a sommare tutti i 
 
 \section{Implementazione}
 
-Il codice del componente booth\_multiplier da noi implementato funziona nel seguente modo:
+Il codice del moltiplicatore da noi implementato segue la logica del moltiplicatore di booth ma viene leggermente modificata per le dimensioni degli input forniti.
+
+Date le dimensioni dei coefficienti del filtro è più semplice andare a codificare i $2^4=16$ casi possibili per tutti i segnali entranti. 
+
+La buffer line scorre sull'immagine e invia i segnali al moltiplicatore: i coefficienti del filtro sono sempre gli stessi, che poi vengono codificati nel medesimo modo, e i pixel dell'immagine vengono inviati 9 alla volta secondo una finestra 3x3.
+
+Il moltiplicatore segue questo funzionamento:
 \begin{enumerate}
 	\item Prende in ingresso (oltre ai segnali clock, reset e valid utili per la sincronizzazione del circuito) i 9 segnali P\_x\_y con dimensione 8 bit che rappresentano le componenti in greyscale dell'immagine e i 9 segnali F\_x\_y con dimensione 4 bit che rappresentano i coefficienti del filtro.  Restituisce 9 segnali M\_x\_y che rappresentano le componenti  P\_x\_y*F\_x\_ con stesse x e y rappresentati su 8+4=12 bit.
 	\item Si va a codificare il filtro secondo tutte le combinazioni entranti possibili:
@@ -74,6 +80,6 @@ Il codice del componente booth\_multiplier da noi implementato funziona nel segu
 
 	\item Dato il numero di bit che deve essere raggiunto alla fine del moltiplicatore (12), dopo aver effettuato le operazioni necessarie, se restano posti non occupati deve essere fatto uno zero padding. 
 
-Questa operazione all'interno del codice risulta in un case  statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y in tutti i 16 casi possibili e si effettua lo zero padding laddove è necessario.
+Questa operazione all'interno del codice risulta in un case  statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i 16 casi possibili del filtro e si effettua lo zero padding laddove è necessario.
 \item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry.
 \end{enumerate}
