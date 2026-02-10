@@ -58,10 +58,6 @@ architecture Structural of main is
             somma : POSITIVE
         );
         port (
-            clk    : in  std_logic;
-            reset  : in  std_logic;
-            valid  : in  std_logic;
-
             -- 3x3 componenti immagine
             P_1_1, P_1_2, P_1_3 : in std_logic_vector(componente_immagine-1 downto 0);
             P_2_1, P_2_2, P_2_3 : in std_logic_vector(componente_immagine-1 downto 0);
@@ -147,7 +143,6 @@ begin
         )
 
         port map (
-            clk => s_axis_clk, reset => s_axis_rstn, valid => s_window_valid,
             P_1_1 => d00, P_1_2 => d01, P_1_3 => d02,
             P_2_1 => d10, P_2_2 => d11, P_2_3 => d12,
             P_3_1 => d20, P_3_2 => d21, P_3_3 => d22,

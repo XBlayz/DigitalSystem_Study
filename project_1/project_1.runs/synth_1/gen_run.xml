@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1770142478">
+<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1770745855" LaunchIncrCheckpoint="$PPRDIR/../vivado_proj/DigitalSystem_Study.srcs/utils_1/imports/synth_1/main.dcp">
   <File Type="PA-TCL" Name="main.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="main_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="main_reports.tcl"/>
@@ -13,7 +13,7 @@
     <Filter Type="Srcs"/>
     <File Path="$PSRCDIR/sources_1/imports/src/booth_multiplier.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/booth_multiplier.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/booth_multiplier.vhd"/>
         <Attr Name="ImportTime" Val="1770073643"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -21,7 +21,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/buffer_axis.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/buffer_axis.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/buffer_axis.vhd"/>
         <Attr Name="ImportTime" Val="1770135996"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -29,7 +29,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/carry_save_adder_tree.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/carry_save_adder_tree.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/carry_save_adder_tree.vhd"/>
         <Attr Name="ImportTime" Val="1770073643"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -37,7 +37,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/full_adder.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/full_adder.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/full_adder.vhd"/>
         <Attr Name="ImportTime" Val="1769208187"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -45,7 +45,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/ripple_carry_adder.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/ripple_carry_adder.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/ripple_carry_adder.vhd"/>
         <Attr Name="ImportTime" Val="1769208187"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -53,7 +53,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/state_machine.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/state_machine.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/state_machine.vhd"/>
         <Attr Name="ImportTime" Val="1770135996"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -61,7 +61,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/main.vhd">
       <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../../../progetto digitale/DigitalSystem_Study/src/main.vhd"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/main.vhd"/>
         <Attr Name="ImportTime" Val="1770135996"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -81,14 +81,20 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
     <Filter Type="Utils"/>
+    <File Path="$PPRDIR/../vivado_proj/DigitalSystem_Study.srcs/utils_1/imports/synth_1/main.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

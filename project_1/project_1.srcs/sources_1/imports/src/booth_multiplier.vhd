@@ -1,6 +1,5 @@
 library ieee;
     use ieee.std_logic_1164.all;
-    use ieee.numeric_std.all;
 
 entity booth_multiplier is
     generic(
@@ -9,10 +8,6 @@ entity booth_multiplier is
         somma : POSITIVE := 12
     );
     port (
-        clk    : in  std_logic;
-        reset  : in  std_logic;
-        valid  : in  std_logic;
-
         P_1_1, P_1_2, P_1_3 : in std_logic_vector(componente_immagine-1 downto 0);
         P_2_1, P_2_2, P_2_3 : in std_logic_vector(componente_immagine-1 downto 0);
         P_3_1, P_3_2, P_3_3 : in std_logic_vector(componente_immagine-1 downto 0);
@@ -43,38 +38,59 @@ architecture Structural of booth_multiplier is
     signal P_P_A_2_1, P_P_B_2_1, P_P_A_2_2, P_P_B_2_2, P_P_A_2_3, P_P_B_2_3 : std_logic_vector(somma-1 downto 0);
     signal P_P_A_3_1, P_P_B_3_1, P_P_A_3_2, P_P_B_3_2, P_P_A_3_3, P_P_B_3_3 : std_logic_vector(somma-1 downto 0);
 
+    signal inv_1_1, inv_1_2, inv_1_3 : std_logic_vector(componente_immagine downto 0);
+    signal inv_2_1, inv_2_2, inv_2_3 : std_logic_vector(componente_immagine downto 0);
+    signal inv_3_1, inv_3_2, inv_3_3 : std_logic_vector(componente_immagine downto 0);
+
     signal N_P_1_1, N_P_1_2, N_P_1_3 : std_logic_vector(componente_immagine downto 0);
     signal N_P_2_1, N_P_2_2, N_P_2_3 : std_logic_vector(componente_immagine downto 0);
     signal N_P_3_1, N_P_3_2, N_P_3_3 : std_logic_vector(componente_immagine downto 0);
 
+    signal zero: std_logic_vector(componente_immagine downto 0) := (others=>'0');
+
 begin
 
-    N_P_1_1 <= std_logic_vector(unsigned(not ('0' & P_1_1)) + 1);
-    N_P_1_2 <= std_logic_vector(unsigned(not ('0' & P_1_2)) + 1);
-    N_P_1_3 <= std_logic_vector(unsigned(not ('0' & P_1_3)) + 1);
-    N_P_2_1 <= std_logic_vector(unsigned(not ('0' & P_2_1)) + 1);
-    N_P_2_2 <= std_logic_vector(unsigned(not ('0' & P_2_2)) + 1);
-    N_P_2_3 <= std_logic_vector(unsigned(not ('0' & P_2_3)) + 1);
-    N_P_3_1 <= std_logic_vector(unsigned(not ('0' & P_3_1)) + 1);
-    N_P_3_2 <= std_logic_vector(unsigned(not ('0' & P_3_2)) + 1);
-    N_P_3_3 <= std_logic_vector(unsigned(not ('0' & P_3_3)) + 1);
+    inv_1_1 <= std_logic_vector(not ('0' & P_1_1));
+    inv_1_2 <= std_logic_vector(not ('0' & P_1_2));
+    inv_1_3 <= std_logic_vector(not ('0' & P_1_3));
+    inv_2_1 <= std_logic_vector(not ('0' & P_2_1));
+    inv_2_2 <= std_logic_vector(not ('0' & P_2_2));
+    inv_2_3 <= std_logic_vector(not ('0' & P_2_3));
+    inv_3_1 <= std_logic_vector(not ('0' & P_3_1));
+    inv_3_2 <= std_logic_vector(not ('0' & P_3_2));
+    inv_3_3 <= std_logic_vector(not ('0' & P_3_3));
 
-    process(clk)
+    RCA1: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_1_1, b=>zero, cin=>'1', s=>N_P_1_1, cout=>open);
+    RCA2: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_1_2, b=>zero, cin=>'1', s=>N_P_1_2, cout=>open);
+    RCA3: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_1_3, b=>zero, cin=>'1', s=>N_P_1_3, cout=>open);
+    RCA4: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_2_1, b=>zero, cin=>'1', s=>N_P_2_1, cout=>open);
+    RCA5: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_2_2, b=>zero, cin=>'1', s=>N_P_2_2, cout=>open);
+    RCA6: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_2_3, b=>zero, cin=>'1', s=>N_P_2_3, cout=>open);
+    RCA7: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_3_1, b=>zero, cin=>'1', s=>N_P_3_1, cout=>open);
+    RCA8: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_3_2, b=>zero, cin=>'1', s=>N_P_3_2, cout=>open);
+    RCA9: ripple_carry_adder generic map(N=>componente_immagine+1) port map(a=>inv_3_3, b=>zero, cin=>'1', s=>N_P_3_3, cout=>open);
+
+    process(P_1_1, P_1_2, P_1_3,
+            P_2_1, P_2_2, P_2_3, 
+            P_3_1, P_3_2, P_3_3,
+	    N_P_1_1, N_P_1_2, N_P_1_3,
+            N_P_2_1, N_P_2_2, N_P_2_3,    
+	    N_P_3_1, N_P_3_2, N_P_3_3,
+	    F_1_1, F_1_2, F_1_3,
+            F_2_1, F_2_2, F_2_3,
+            F_3_1, F_3_2, F_3_3)
     begin
-        if rising_edge(clk) then
-            if reset = '1' then
-                P_P_A_1_1 <= (others => '0'); P_P_B_1_1 <= (others => '0');
-                P_P_A_1_2 <= (others => '0'); P_P_B_1_2 <= (others => '0');
-                P_P_A_1_3 <= (others => '0'); P_P_B_1_3 <= (others => '0');
-                P_P_A_2_1 <= (others => '0'); P_P_B_2_1 <= (others => '0');
-                P_P_A_2_2 <= (others => '0'); P_P_B_2_2 <= (others => '0');
-                P_P_A_2_3 <= (others => '0'); P_P_B_2_3 <= (others => '0');
-                P_P_A_3_1 <= (others => '0'); P_P_B_3_1 <= (others => '0');
-                P_P_A_3_2 <= (others => '0'); P_P_B_3_2 <= (others => '0');
-                P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= (others => '0');
+            P_P_A_1_1 <= (others => '0'); P_P_B_1_1 <= (others => '0');
+            P_P_A_1_2 <= (others => '0'); P_P_B_1_2 <= (others => '0');
+            P_P_A_1_3 <= (others => '0'); P_P_B_1_3 <= (others => '0');
+            P_P_A_2_1 <= (others => '0'); P_P_B_2_1 <= (others => '0');
+            P_P_A_2_2 <= (others => '0'); P_P_B_2_2 <= (others => '0');
+            P_P_A_2_3 <= (others => '0'); P_P_B_2_3 <= (others => '0');
+            P_P_A_3_1 <= (others => '0'); P_P_B_3_1 <= (others => '0');
+            P_P_A_3_2 <= (others => '0'); P_P_B_3_2 <= (others => '0');
+            P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= (others => '0');
 
-            elsif valid = '1' then
-                case F_1_1 is
+            case F_1_1 is
                     when "0000" => P_P_A_1_1 <= (others => '0'); P_P_B_1_1 <= (others => '0');
                     when "0001" => P_P_A_1_1 <= "0000" & P_1_1; P_P_B_1_1 <= (others => '0');
                     when "0010" => P_P_A_1_1 <= N_P_1_1(componente_immagine) & N_P_1_1(componente_immagine)& N_P_1_1 & "0"; P_P_B_1_1 <= "00" & P_1_1 & "00";
@@ -253,19 +269,16 @@ begin
                     when "1111" => P_P_A_3_3 <= N_P_3_3(componente_immagine) & N_P_3_3(componente_immagine) & N_P_3_3(componente_immagine) & N_P_3_3; P_P_B_3_3 <= (others => '0');
                     when others => P_P_A_3_3 <= (others => '0'); P_P_B_3_3 <= (others => '0');
                 end case;
-
-            end if;
-        end if;
     end process;
 
-    RCA1: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_1, b => P_P_B_1_1, cin => '0', s => M_1_1, cout => open);
-    RCA2: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_2, b => P_P_B_1_2, cin => '0', s => M_1_2, cout => open);
-    RCA3: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_3, b => P_P_B_1_3, cin => '0', s => M_1_3, cout => open);
-    RCA4: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_1, b => P_P_B_2_1, cin => '0', s => M_2_1, cout => open);
-    RCA5: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_2, b => P_P_B_2_2, cin => '0', s => M_2_2, cout => open);
-    RCA6: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_3, b => P_P_B_2_3, cin => '0', s => M_2_3, cout => open);
-    RCA7: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_1, b => P_P_B_3_1, cin => '0', s => M_3_1, cout => open);
-    RCA8: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_2, b => P_P_B_3_2, cin => '0', s => M_3_2, cout => open);
-    RCA9: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_3, b => P_P_B_3_3, cin => '0', s => M_3_3, cout => open);
+    RCA10: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_1, b => P_P_B_1_1, cin => '0', s => M_1_1, cout => open);
+    RCA11: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_2, b => P_P_B_1_2, cin => '0', s => M_1_2, cout => open);
+    RCA12: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_1_3, b => P_P_B_1_3, cin => '0', s => M_1_3, cout => open);
+    RCA13: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_1, b => P_P_B_2_1, cin => '0', s => M_2_1, cout => open);
+    RCA14: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_2, b => P_P_B_2_2, cin => '0', s => M_2_2, cout => open);
+    RCA15: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_2_3, b => P_P_B_2_3, cin => '0', s => M_2_3, cout => open);
+    RCA16: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_1, b => P_P_B_3_1, cin => '0', s => M_3_1, cout => open);
+    RCA17: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_2, b => P_P_B_3_2, cin => '0', s => M_3_2, cout => open);
+    RCA18: ripple_carry_adder generic map(N => somma) port map(a => P_P_A_3_3, b => P_P_B_3_3, cin => '0', s => M_3_3, cout => open);
 
 end architecture Structural;
