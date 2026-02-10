@@ -1,40 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1770745855" LaunchIncrCheckpoint="$PPRDIR/../vivado_proj/DigitalSystem_Study.srcs/utils_1/imports/synth_1/main.dcp">
-  <File Type="PA-TCL" Name="main.tcl"/>
-  <File Type="RDS-PROPCONSTRS" Name="main_drc_synth.rpt"/>
-  <File Type="REPORTS-TCL" Name="main_reports.tcl"/>
-  <File Type="RDS-RDS" Name="main.vds"/>
-  <File Type="RDS-UTIL" Name="main_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="main_utilization_synth.pb"/>
-  <File Type="RDS-DCP" Name="main.dcp"/>
-  <File Type="VDS-TIMINGSUMMARY" Name="main_timing_summary_synth.rpt"/>
-  <File Type="VDS-TIMING-PB" Name="main_timing_summary_synth.pb"/>
+<GenRun Id="synth_1" LaunchPart="xc7z020clg400-1" LaunchTime="1770748965" LaunchIncrCheckpoint="$PPRDIR/../vivado_proj/DigitalSystem_Study.srcs/utils_1/imports/synth_1/main.dcp">
+  <File Type="PA-TCL" Name="booth_multiplier.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="booth_multiplier_drc_synth.rpt"/>
+  <File Type="REPORTS-TCL" Name="booth_multiplier_reports.tcl"/>
+  <File Type="RDS-RDS" Name="booth_multiplier.vds"/>
+  <File Type="RDS-UTIL" Name="booth_multiplier_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="booth_multiplier_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="booth_multiplier.dcp"/>
+  <File Type="VDS-TIMINGSUMMARY" Name="booth_multiplier_timing_summary_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="booth_multiplier_timing_summary_synth.pb"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
-    <File Path="$PSRCDIR/sources_1/imports/src/booth_multiplier.vhd">
-      <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../src/booth_multiplier.vhd"/>
-        <Attr Name="ImportTime" Val="1770073643"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PSRCDIR/sources_1/imports/src/buffer_axis.vhd">
-      <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../src/buffer_axis.vhd"/>
-        <Attr Name="ImportTime" Val="1770135996"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PSRCDIR/sources_1/imports/src/carry_save_adder_tree.vhd">
-      <FileInfo>
-        <Attr Name="ImportPath" Val="$PPRDIR/../src/carry_save_adder_tree.vhd"/>
-        <Attr Name="ImportTime" Val="1770073643"/>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
     <File Path="$PSRCDIR/sources_1/imports/src/full_adder.vhd">
       <FileInfo>
         <Attr Name="ImportPath" Val="$PPRDIR/../src/full_adder.vhd"/>
@@ -51,8 +27,35 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PSRCDIR/sources_1/imports/src/booth_multiplier.vhd">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/booth_multiplier.vhd"/>
+        <Attr Name="ImportTime" Val="1770073643"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/src/buffer_axis.vhd">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/buffer_axis.vhd"/>
+        <Attr Name="ImportTime" Val="1770135996"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/imports/src/carry_save_adder_tree.vhd">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="ImportPath" Val="$PPRDIR/../src/carry_save_adder_tree.vhd"/>
+        <Attr Name="ImportTime" Val="1770073643"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PSRCDIR/sources_1/imports/src/state_machine.vhd">
       <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="ImportPath" Val="$PPRDIR/../src/state_machine.vhd"/>
         <Attr Name="ImportTime" Val="1770135996"/>
         <Attr Name="UsedIn" Val="synthesis"/>
@@ -61,6 +64,7 @@
     </File>
     <File Path="$PSRCDIR/sources_1/imports/src/main.vhd">
       <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="ImportPath" Val="$PPRDIR/../src/main.vhd"/>
         <Attr Name="ImportTime" Val="1770135996"/>
         <Attr Name="UsedIn" Val="synthesis"/>
@@ -69,8 +73,7 @@
     </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="main"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="booth_multiplier"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
