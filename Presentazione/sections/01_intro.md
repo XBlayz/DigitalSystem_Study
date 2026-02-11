@@ -58,7 +58,7 @@ Moltiplicatori di **Booth** e **Carry Save Adder** tree
 Oltre alla _pipeline_, i due componenti principali sono i circuiti moltiplicatori e sommatori implementati rispettivamente:
 
 - **Booth Multiplier**: moltiplicatore con _pre-computazione_ e selezione tramite codifica di **Booth**
-- **Carry Save Adder tree**: albero di somma **Carry Save** con **Ripple Carry** finale
+- **Carry Save Adder tree**: albero di somma **Carry Save** con **Carry Select** finale
 
 ### Circuito di controllo
 Per gestire la _pipeline_ e le due interfacce **AXI-Stream** di ingresso e uscita abbiamo implementato una **Finite State Machine** che:
