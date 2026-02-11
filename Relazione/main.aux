@@ -15,18 +15,30 @@
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Implementazione}{4}{section.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Alcune note sui prodotti}{6}{subsection.2.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Il testing}{7}{section.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}FSM ed AXI-Stream}{8}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}BufferLine}{8}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementazione della FSM e Interfacce AXI-Stream}{8}{section.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Architettura della FSM}{8}{subsection.3.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Gestione del Protocollo AXI4-Stream}{9}{subsection.3.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{9}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Master (Uscita)}{10}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Sincronizzazione e Rimozione dello stato IDLE}{10}{subsection.3.1.3}\protected@file@percent }
-\newlabel{lst:sof_logic}{{3.1}{10}{Gestione sincrona del SOF e reset implicito}{lstlisting.3.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Gestione sincrona del SOF e reset implicito}{10}{lstlisting.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Controllo del Dataflow e Backpressure}{11}{subsection.3.1.4}\protected@file@percent }
-\newlabel{lst:pipeline_en}{{3.2}{11}{Logica di abilitazione pipeline e gestione backpressure}{lstlisting.3.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Logica di abilitazione pipeline e gestione backpressure}{11}{lstlisting.3.2}\protected@file@percent }
-\gdef \@abspage@last{12}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Buffer e Pipeline: L'architettura Sliding Window}{8}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Architettura del Dataflow}{8}{subsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Implementazione degli Shift Register Arrays}{9}{subsection.3.1.2}\protected@file@percent }
+\newlabel{lst:linebuffer}{{3.1}{9}{Definizione e processo di shift dei Line Buffer}{lstlisting.3.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Definizione e processo di shift dei Line Buffer}{9}{lstlisting.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Gestione del Flush e Padding}{10}{subsection.3.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logica di Inserimento Zeri}{10}{section*.2}\protected@file@percent }
+\newlabel{lst:flush_logic}{{3.2}{10}{Multiplexer di ingresso per gestione Flush e Padding}{lstlisting.3.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Multiplexer di ingresso per gestione Flush e Padding}{10}{lstlisting.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}FSM ed AXI-Stream}{11}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Implementazione della FSM e Interfacce AXI-Stream}{11}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Architettura della FSM}{11}{subsection.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Gestione del Protocollo AXI4-Stream}{12}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{12}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Master (Uscita)}{13}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Sincronizzazione e Rimozione dello stato IDLE}{13}{subsection.4.1.3}\protected@file@percent }
+\newlabel{lst:sof_logic}{{4.1}{13}{Gestione sincrona del SOF e reset implicito}{lstlisting.4.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}Gestione sincrona del SOF e reset implicito}{13}{lstlisting.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Controllo del Dataflow e Backpressure}{14}{subsection.4.1.4}\protected@file@percent }
+\newlabel{lst:pipeline_en}{{4.2}{14}{Logica di abilitazione pipeline e gestione backpressure}{lstlisting.4.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.2}Logica di abilitazione pipeline e gestione backpressure}{14}{lstlisting.4.2}\protected@file@percent }
+\gdef \@abspage@last{15}

@@ -5,11 +5,17 @@
 \contentsline {section}{\numberline {2.1}Implementazione}{4}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Alcune note sui prodotti}{6}{subsection.2.1.1}%
 \contentsline {section}{\numberline {2.2}Il testing}{7}{section.2.2}%
-\contentsline {chapter}{\numberline {3}FSM ed AXI-Stream}{8}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Implementazione della FSM e Interfacce AXI-Stream}{8}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Architettura della FSM}{8}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Gestione del Protocollo AXI4-Stream}{9}{subsection.3.1.2}%
-\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{9}{section*.2}%
-\contentsline {subsubsection}{Interfaccia Master (Uscita)}{10}{section*.3}%
-\contentsline {subsection}{\numberline {3.1.3}Sincronizzazione e Rimozione dello stato IDLE}{10}{subsection.3.1.3}%
-\contentsline {subsection}{\numberline {3.1.4}Controllo del Dataflow e Backpressure}{11}{subsection.3.1.4}%
+\contentsline {chapter}{\numberline {3}BufferLine}{8}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Buffer e Pipeline: L'architettura Sliding Window}{8}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Architettura del Dataflow}{8}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Implementazione degli Shift Register Arrays}{9}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Gestione del Flush e Padding}{10}{subsection.3.1.3}%
+\contentsline {subsubsection}{Logica di Inserimento Zeri}{10}{section*.2}%
+\contentsline {chapter}{\numberline {4}FSM ed AXI-Stream}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Implementazione della FSM e Interfacce AXI-Stream}{11}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Architettura della FSM}{11}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Gestione del Protocollo AXI4-Stream}{12}{subsection.4.1.2}%
+\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{12}{section*.3}%
+\contentsline {subsubsection}{Interfaccia Master (Uscita)}{13}{section*.4}%
+\contentsline {subsection}{\numberline {4.1.3}Sincronizzazione e Rimozione dello stato IDLE}{13}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Controllo del Dataflow e Backpressure}{14}{subsection.4.1.4}%
