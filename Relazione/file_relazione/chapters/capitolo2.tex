@@ -1,20 +1,70 @@
 \maketitle
-\chapter{Il moltiplicatore di Booth}
-\section{Architettura del componente}
-Il  moltiplicatore di Booth funziona in modo diverso rispetto al moltiplicatore "carta e penna".
+\chapter{Il moltiplicatore}
+\section{Implementazione}
+La differenza principale con il moltiplicatore di Booth è che non si va a suddividere in gruppi di bit il moltiplicatore, ma si vanno a codificare tutti i possibili casi che possono accadere.
 
-Se si fa distinzione fra il moltiplicando (il primo termine della moltiplicazione) e il moltiplicatore (il secondo termine della moltiplicazione) il funzionamento del moltiplicatore è incentrato sulla suddivisione in gruppi dei bit che compongono il moltiplicatore.
+La nostra implementazione va a sfruttare i $2^4=16$ casi possibili per ogni coefficiente del filtro F\_x\_y.
 
-La suddivisione in gruppi parte dal bit più significativo e ogni gruppo deve avere un bit in comune con il gruppo successivo. Tutti i gruppi devono essere completi, quindi se restano posti vuoti nel gruppo dei bit meno significativi, questi dovrenno essere colmati dagli zeri.  
+La buffer line scorre sull'immagine e invia i segnali al moltiplicatore: i coefficienti del filtro sono sempre gli stessi, che poi vengono codificati nel medesimo modo, e i pixel dell'immagine vengono inviati 9 alla volta secondo una finestra 3x3.
 
-Viene definita una codifica che "traduce" i gruppi dei bit in numeri signed che verranno moltiplicati con il  moltiplicando.
-
+Di seguito la entity:
 \begin{figure}[H] 
     \centering 
-    \includegraphics[width=0.7\textwidth]{file_relazione/imgs/gruppi.png}
+    \includegraphics[width=0.8\textwidth]{file_relazione/imgs/entity_mul.png}
 \end{figure}
 
-Questa codifica sarà ciò che ci permetterà di svolgere il prodotto: il trucco è provare a sfruttare i prodotti "immediati", risolvibili con shift e negazioni, quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via. 
+Le entrate si suddividono in questo modo:
+\begin{itemize}
+	\item  i segnali P\_x\_y sono i pixel dell'immagine che hanno dimensione 8 bit
+	\item i segnali F\_x\_y sono i coefficcienti del filtro con dimensione 4 bit
+\end{itemize} 
+
+Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ bit il risultato del prodottto andrà espresso in $m+n$ bit.
+
+Le uscite sono invece i segnali M\_x\_y con dimensione $m+n=8+4=12$ bit.
+
+\bigskip
+Il moltiplicatore segue questo funzionamento:
+\begin{itemize}
+	\item L'operazione principale che abbiamo effettuato è la codifica dei 16 possibili valori che può assumere ogni coefficiente del filtro;
+	\item Si codificano i 2 prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente. 
+		   Dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per P\_x\_y separatamente ottenendo i 				  segnali P\_P\_A\_x\_y e P\_P\_B\_x\_y secondo la seguente tabella:
+\begin{table}[H]
+\centering
+\makebox[\textwidth][c]{
+	\begin{tabular}{cccccc}
+Case filtro & Numero da codificare & A  & B  & P\_P\_A\_x\_y                                        & P\_P\_B\_x\_y               \\ \hline
+0000                    & 0                    & 0  & 0  & 000000000000                                         & 000000000000                \\ \hline
+0001                    & 1                    & 1  & 0  & 0000 P\_x\_y                                         & 000000000000                \\ \hline
+0010                    & 2                    & -2 & 4  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 00 P\_x\_y 00               \\ \hline
+0011                    & 3                    & -1 & 4  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 00 P\_x\_y 00               \\ \hline
+0100                    & 4                    & 0  & 4  & 000000000000                                         & 00 P\_x\_y 00               \\ \hline
+0101                    & 5                    & 1  & 4  & 0000 P\_x\_y                                         & 00 P\_x\_y 00               \\ \hline
+0110                    & 6                    & -2 & 8  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 0 P\_x\_y 000               \\ \hline
+0111                    & 7                    & -1 & 8  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 0 P\_x\_y 000               \\ \hline
+1000                    & -8                   & 0  & -8 & 000000000000                                         & N\_P\_x\_y 000              \\ \hline
+1001                    & -7                   & 1  & -8 & 0000 P\_x\_y                                         & N\_P\_x\_y 000              \\ \hline
+1010                    & -6                   & -2 & -4 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
+1011                    & -5                   & -1 & -4 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
+1100                    & -4                   & 0  & -4 & 000000000000                                         & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
+1101                    & -3                   & 1  & -4 & 0000 P\_x\_y                                         & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
+1110                    & -2                   & -2 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 000000000000 \\ \hline
+1111                    & -1                  & -1 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 000000000000 \\ \hline
+	\end{tabular}
+}
+\end{table}
+
+Da notare che N\_P\_x\_y  ha dimensione 9 bit ed esprime la negazione del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso una batteria di Ripple Carry Adder, uno per ogni pixel e si utilizza quando i prodotti parziali P\_P\_A\_x\_y oppure P\_P\_B\_x\_y sono negativi.
+
+Da ricordare che P\_P\_A\_x\_y e P\_P\_B\_x\_y devono essere di 12 bit quindi vanno gestiti bene i prodotti da effettuare attraverso gli shift sinistri e l'estensione che deve portare ogni segnale alla dimensione giusta. 
+
+Questa operazione all'interno del codice risulta in 9 case statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
+
+\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry.
+\end{itemize}
+
+\subsection{Alcune note sui prodotti}
+I prodotti vengono effettuati in modo intelligente, provando a sfruttare operazioni immediate come shift sinistri e negazioni, quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via, nello stesso modo in cui si calcolano nel moltiplicatore di Booth. 
 
 Questi prodotti sono semplici da ottenere:
 \begin{itemize}
@@ -28,58 +78,20 @@ Questi prodotti sono semplici da ottenere:
 
  e così via.
 \end{itemize}
-\bigskip
 
-Il moltiplicando verrà moltiplicato con la codifica di ogni gruppo di bit del moltiplicatore determinando dei prodotti parziali. 
+La strategia è quella di utilizzare A e B per ottenere i prodotti non immediati (ad esempio 3, 5, 6, 7 e così via) combinando i prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y attraverso la somma finale. 
 
-Questi termini dovranno essere prima moltiplicati per il relativo peso del gruppo di cui fanno parte e poi sommati fra loro.
+Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4, si determinano i parziali da sommare insieme e si avrà ottenuto il pixel filtrato.
 
-Il peso di ogni gruppo è determinato da quello del bit centrale, in base al peso di ogni gruppo si fanno tanti shift sinistri quanti ne richiede la potenza del 2 relativa al bit e poi si può passare ai prodotti veri e propri fra il moltiplicando e i termini codificati che corrispondono al moltiplicatore.
+\section{Il testing}
+Si allegano ora i risultati del testbench effettuato in cui figurano i risultati correttamente calcolati:
 
-\bigskip
-Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ bit il risultato del prodottto andrà espresso in $m+n$ bit.
-
-E' importante ricordare che i prodotti parziali devono essere estesi con segno in modo tale che \# shift sinistri + \# bit del prodotto parziale + \# bit dell'estensione con segno = $m+n$.
-
-Dopo aver raggiunto il numero di bit corretti si può passare a sommare tutti i prodotti parziali e si avrà ottenuto il risultato del prodotto iniziale.
-
-\section{Implementazione}
-
-Il codice del moltiplicatore da noi implementato segue la logica del moltiplicatore di booth ma viene leggermente modificata per le dimensioni degli input forniti.
-
-Date le dimensioni dei coefficienti del filtro è più semplice andare a codificare i $2^4=16$ casi possibili per tutti i segnali entranti. 
-
-La buffer line scorre sull'immagine e invia i segnali al moltiplicatore: i coefficienti del filtro sono sempre gli stessi, che poi vengono codificati nel medesimo modo, e i pixel dell'immagine vengono inviati 9 alla volta secondo una finestra 3x3.
-
-Il moltiplicatore segue questo funzionamento:
-\begin{enumerate}
-	\item Prende in ingresso (oltre ai segnali clock, reset e valid utili per la sincronizzazione del circuito) i 9 segnali P\_x\_y con dimensione 8 bit che rappresentano le componenti in greyscale dell'immagine e i 9 segnali F\_x\_y con dimensione 4 bit che rappresentano i coefficienti del filtro.  Restituisce 9 segnali M\_x\_y che rappresentano le componenti  P\_x\_y*F\_x\_ con stesse x e y rappresentati su 8+4=12 bit.
-	\item Si va a codificare il filtro secondo tutte le combinazioni entranti possibili:
-\begin{table}[H]
-\begin{tabular}{ccll}
-\multicolumn{1}{l}{Coefficienti del fitro} & \multicolumn{1}{l}{Numero da codificare} & A  & B \\
-0000                                       & 0                                        & 0  & 0 \\
-0001                                       & 1                                        & 1  & 0 \\
-0010                                       & 2                                        & -2  & 4 \\
-0011                                       & 3                                        & -1 & 4 \\
-0100                                       & 4                                        & 0  & 4 \\
-0101                                       & 5                                        & 1  & 4 \\
-0110                                       & 6                                        & -2 & 8 \\
-0111                                       & 7                                        & -1 & 8 \\
-1000                                        & -8                                      & 0 & -8 \\
-1001                                        & -7                                      & 1 & -8 \\
-1010                                        & -6                                      & -2 & -4 \\
-1011                                        & -5                                      & -1 & -4 \\
-1100                                        & -4                                      & 0  & -4 \\
-1101                                        & -3                                      & 1 & -4 \\
-1110                                        & -2                                      & -2 & 0 \\
-1111                                        & -1                                      & -1 & 0                    
-\end{tabular}
-\end{table}
-	\item Dalla tabella si notano due coefficienti: A e B. Dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per la componente dell'immagine corrispondente (che quindi subisce shift sinistri e/o negazione) e vengono salvati in P\_P\_A\_x\_y e P\_P\_B\_x\_y. 
-
-	\item Dato il numero di bit che deve essere raggiunto alla fine del moltiplicatore (12), dopo aver effettuato le operazioni necessarie, se restano posti non occupati deve essere fatto uno zero padding. 
-
-Questa operazione all'interno del codice risulta in un case  statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i 16 casi possibili del filtro e si effettua lo zero padding laddove è necessario.
-\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry.
-\end{enumerate}
+\begin{figure}[H]  
+	\hspace{-1.5 cm}
+    \includegraphics[width=1.2\textwidth]{file_relazione/imgs/tb_mul(1).png}
+\end{figure}
+\begin{figure}[H] 
+	\vspace{-1 cm}
+	\hspace{-1.5 cm}
+    \includegraphics[width=1.2\textwidth]{file_relazione/imgs/tb_mul(2).png}
+\end{figure}

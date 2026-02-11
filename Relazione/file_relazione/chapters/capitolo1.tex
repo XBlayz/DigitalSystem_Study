@@ -5,17 +5,17 @@ La traccia richiedeva l'implementazione di un circuito per il filtraggio di un'i
 
 Il filtro deve essere composto da 3x3 coefficienti (scelti in modo arbitrario dal gruppo di lavoro) rappresentati su 4 bit in complemento a 2. 
 
-La finestra di convoluzione ha la stessa dimensione del filtro, quindi 3x3 e scorre lungo tutta l'immagine per filtrare un pixel alla volta. 
+La finestra di convoluzione ha la stessa dimensione del filtro, quindi 3x3 e scorre lungo tutta l'immagine per filtrare un pixel alla volta; il procedimento di invio dei dati e riempimento del buffer line è gestito dalla state machine attraverso alcuni segnali che verranno descritti successivamente. 
 
 L'operazione di filtraggio deve essere condotta utilizzando un anchor point centrale quindi il pixel che subisce l'operazione di filtraggio è quello che si trova al centro della finestra.
 
 \bigskip
-L'immagine viene gestita attraverso il Buffer Line che restituisce i pixel di 3 righe allineati, pronti per essere inviati al moltiplicatore. 
+L'immagine viene gestita attraverso il Buffer Line che restituisce i pixel di 3 righe allineati, pronti per essere inviati al moltiplicatore.
 
-I buffer e i vettori vengono inizializzati a 0 per garantire lo zero padding laddove ce n'è bisogno, quindi lungo i bordi dell'immagine.
+Viene rivolta particolare attenzione per i pixel che si trovano lungo i bordi e che nella finestra di convoluzione subiscono zero padding, che viene garantito dall'inizializzazione a 0 del buffer e dei vettori del componente. 
 
 Il filtraggio vero e proprio avviene attraverso l'operazione di convoluzione: i pixel dell'immagine vengono moltiplicati con il coefficiente corrispondente del filtro e infine tutti i prodotti parziali vengono sommati insieme. 
-Il risultato sarà il pixel centrale filtrato con il Filtro Gaussiano e Gaussian Blur che ha come coefficienti:
+Il risultato sarà il pixel centrale filtrato con il Filtro Gaussiano o Gaussian Blur che ha come coefficienti:
 \begin{table}[H]
 \begin{tabular}{ccc}
 \multicolumn{1}{l}{2} & \multicolumn{1}{l}{1} & \multicolumn{1}{l}{2} \\
@@ -24,4 +24,14 @@ Il risultato sarà il pixel centrale filtrato con il Filtro Gaussiano e Gaussian
 \end{tabular}
 \end{table}
 
-Per il testing abbiamo optato per l'immagine "Lena" che è stata processata con un semplice script matlab per estrarre le componenti numeriche dei pixel che saranno poi pronte per essere convertite in bit e inserite come input nel circuito.
+Per il testing abbiamo optato per diverse immagini, tra cui alcune figure semplici che fanno risaltare molto l'influenza del filtro.
+
+
+ Per processare le immagini sono stati scritti diversi script MATLAB tra cui 
+
+\begin{itemize}
+	\item uno per creare semplici immagini da impiegare nel circuito;
+	\item uno per ridimensionare immagini (prese da internet) nel formato 32x32 pixel;
+	\item uno per estrarre le componenti numeriche di ogni immagine che saranno poi pronte per essere convertite in bit e inserite come 			input nel circuito;
+	\item uno per rielaborare le componenti numeriche e ricostruire l'immagine filtrata.
+\end{itemize}
