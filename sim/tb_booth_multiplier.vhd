@@ -103,25 +103,25 @@ begin
         p <= (others => '0');
         f <= (others => '0');
 
-        wait for 40 ns;
+        wait for 20 ns;
 
         --test sui massimi valori possibili
         -- immagine=255, filtro = +7
         --risultati attesi = 1785
         p <= std_logic_vector(to_unsigned(255, comp_i));
         f <= std_logic_vector(to_signed(7, coeff_f));
-        wait for 100 ns;
+        wait for 50 ns;
 
 
         --test sul minimo possibile
         --immagine = 255, filtro = -8
         --risultato atteso = -2040
         f <= std_logic_vector(to_signed(-8, coeff_f));
-	wait for 100 ns;
+	wait for 50 ns;
 
         --test sullo 0: immagine = 0, filtro =-8
         p <= (others => '0');
-	wait for 100 ns;
+	wait for 50 ns;
 
         --iterazione per tutti ivalori del filtro e immagine a 255
         p <= std_logic_vector(to_unsigned(255, 8));
@@ -130,7 +130,7 @@ begin
 	    wait for 50 ns;
         end loop;
 
-        wait for 100 ns;
+        wait for 20 ns;
         stop_simulation <= true;
         wait;
 

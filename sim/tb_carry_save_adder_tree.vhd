@@ -14,7 +14,7 @@ architecture testing of tb_carry_save_adder_tree is
            i_3_1, i_3_2, i_3_3 : STD_LOGIC_VECTOR(n-1 downto 0) := (others => '0');
     signal sum_out : STD_LOGIC_VECTOR(n+4 downto 0);
 
-    component CSA_tree is
+    component carry_save_adder_tree is
         generic (N : POSITIVE);
 
         port (i_1_1, i_1_2, i_1_3,
@@ -22,10 +22,10 @@ architecture testing of tb_carry_save_adder_tree is
               i_3_1, i_3_2, i_3_3 : in  STD_LOGIC_VECTOR(N-1 downto 0);
               sum                 : out STD_LOGIC_VECTOR(N+4 downto 0)
         );
-   end component CSA_tree;
+   end component carry_save_adder_tree;
 
 begin
-    CSAt: CSA_tree
+    CSAt: carry_save_adder_tree
         generic map(N=>n)
 
         port map( i_1_1=>i_1_1, i_1_2=>i_1_2, i_1_3=>i_1_3,

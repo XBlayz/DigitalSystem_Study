@@ -1,6 +1,5 @@
 library ieee;
     use ieee.std_logic_1164.all;
-    use ieee.numeric_std.all;
 
 entity carry_save_adder_tree is
     generic (N : POSITIVE := 12);
@@ -38,17 +37,20 @@ architecture Structural of carry_save_adder_tree is
 
     -- Secondo livello (dimensione = 14)
     signal vr_2_1, vs_2_1 : STD_LOGIC_VECTOR(N+1 downto 0);
-    signal vr_2_2, vs_2_2 : STD_LOGIC_VECTOR(N+1 downto 0);
-    signal temp : STD_LOGIC_VECTOR(N+2 downto 0);
+    signal vs_2_2 : STD_LOGIC_VECTOR(N+1 downto 0);
+    signal vr_2_2 : STD_LOGIC_VECTOR(N+2 downto 0);
 
     -- Terzo livello (dimensione = 15)
     signal vr_3_1, vs_3_1 : STD_LOGIC_VECTOR(N+2 downto 0);
 
     -- Quarto livello (dimensione = 16)
     signal vr_4_1, vs_4_1 : STD_LOGIC_VECTOR(N+3 downto 0);
-    signal rca_s_out : STD_LOGIC_VECTOR (N+3 downto 0);
-    signal rca_c_out : STD_LOGIC;
 
+    signal sum_rca_0 : STD_LOGIC_VECTOR (7 downto 0);
+    signal c_out_rca_0 : STD_LOGIC;
+
+    signal sum_RCA_1    : std_logic_vector(7 downto 0);
+    signal sum_RCA_2    : std_logic_vector(7 downto 0);
 
 begin
     vr_1_1(0) <= '0';
@@ -116,8 +118,8 @@ begin
     end generate secondo_sommatore_Lev2;
     vs_2_2(N+1) <= vs_2_2(N);
 
--- estendo con segno per portarli alla stessa dimensione per dopo
-    temp <= vr_2_2(N+1) & vr_2_2;
+    -- estendo con segno per portarli alla stessa dimensione per dopo
+    vr_2_2(N+2) <= vr_2_2(N+1);
 
     vr_3_1(0) <= '0';
     sommatore_Lev3: for i in 0 to N+1 generate
@@ -138,22 +140,51 @@ begin
             port map(
                 a=>vs_3_1(i),
                 b=>vr_3_1(i),
-                cin=>temp(i),
+                cin=>vr_2_2(i),
                 s=>vs_4_1(i),
                 cout=>vr_4_1(i+1)
             );
     end generate sommatore_Lev4;
     vs_4_1(N+3)<= vs_4_1(N+2);
 
-    sommatore_Lev5: ripple_carry_adder
-        generic map(N => N+4)
-            port map(
-                a    => vs_4_1,
-                b    => vr_4_1,
-                cin  => '0',
-                s    => rca_s_out,
-                cout => rca_c_out
-            );
-    sum <= rca_s_out(N+3) & rca_s_out;
+--questo rca fa la somma per la met� meno significativa degli ingressi
+    RCA_0: ripple_carry_adder
+        generic map(N => 8)
+        port map(
+            a    => vs_4_1(7 downto 0),
+            b    => vr_4_1(7 downto 0),
+            cin  => '0',
+            s    => sum_RCA_0,
+            cout => c_out_RCA_0   --questo segnale serve per la selezione del sommatore dopo
+        );
+
+-- questo somma la met� pi� significativa degli ingressi con cin=0
+    RCA_1: ripple_carry_adder
+        generic map(N => 8)
+        port map(
+            a    => vs_4_1(15 downto 8),
+            b    => vr_4_1(15 downto 8),
+            cin  => '0',
+            s    => sum_RCA_1,
+            cout => open
+        );
+
+-- questo somma la met� pi� significativa degli ingressi con cin=1
+    RCA_2: ripple_carry_adder
+        generic map(N => 8)
+        port map(
+            a    => vs_4_1(15 downto 8),
+            b    => vr_4_1(15 downto 8),
+            cin  => '1',
+            s    => sum_RCA_2,
+            cout => open
+        );
+
+--selettore per capire quale sommatore utilizzare per la met� pi� significativa
+    with c_out_RCA_0 select
+        sum <= sum_RCA_1(7) & sum_RCA_1 & sum_RCA_0 when '0',
+               sum_RCA_2(7) & sum_RCA_2 & sum_RCA_0 when '1',
+               (others => '0') when others;
+
 
 end Structural;

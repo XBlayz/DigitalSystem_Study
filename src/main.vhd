@@ -53,27 +53,26 @@ architecture Structural of main is
         );
     end component buffer_line;
 
-    component booth_multiplier_matrix is
+    component booth_multiplier is
         generic(
-            img_nbit : POSITIVE
+            componente_immagine : POSITIVE;
+            coefficiente_filtro : POSITIVE;
+            somma : POSITIVE
         );
         port (
-            -- Componenti immagine 3x3
-            P_1_1, P_1_2, P_1_3 : in std_logic_vector(img_nbit-1 downto 0);
-            P_2_1, P_2_2, P_2_3 : in std_logic_vector(img_nbit-1 downto 0);
-            P_3_1, P_3_2, P_3_3 : in std_logic_vector(img_nbit-1 downto 0);
+            P_1_1, P_1_2, P_1_3 : in std_logic_vector(componente_immagine-1 downto 0);
+            P_2_1, P_2_2, P_2_3 : in std_logic_vector(componente_immagine-1 downto 0);
+            P_3_1, P_3_2, P_3_3 : in std_logic_vector(componente_immagine-1 downto 0);
 
-            -- Filtro 3x3
-            F_1_1, F_1_2, F_1_3 : in std_logic_vector(4-1 downto 0);
-            F_2_1, F_2_2, F_2_3 : in std_logic_vector(4-1 downto 0);
-            F_3_1, F_3_2, F_3_3 : in std_logic_vector(4-1 downto 0);
+            F_1_1, F_1_2, F_1_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
+            F_2_1, F_2_2, F_2_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
+            F_3_1, F_3_2, F_3_3 : in std_logic_vector(coefficiente_filtro-1 downto 0);
 
-            -- Risultato
-            M_1_1, M_1_2, M_1_3 : out std_logic_vector(img_nbit+4-1 downto 0);
-            M_2_1, M_2_2, M_2_3 : out std_logic_vector(img_nbit+4-1 downto 0);
-            M_3_1, M_3_2, M_3_3 : out std_logic_vector(img_nbit+4-1 downto 0)
+            M_1_1, M_1_2, M_1_3 : out std_logic_vector(somma-1 downto 0);
+            M_2_1, M_2_2, M_2_3 : out std_logic_vector(somma-1 downto 0);
+            M_3_1, M_3_2, M_3_3 : out std_logic_vector(somma-1 downto 0)
         );
-    end component booth_multiplier_matrix;
+    end component booth_multiplier;
 
     component carry_save_adder_tree is
         generic (N : POSITIVE := 12);
@@ -141,9 +140,11 @@ begin
             d20 => d20, d21 => d21, d22 => d22
         );
 
-    bm: booth_multiplier_matrix
+    bm: booth_multiplier
         generic map (
-            img_nbit => comp_i
+            componente_immagine => comp_i,
+            coefficiente_filtro => coeff_f,
+            somma => n_adder
         )
 
         port map (
