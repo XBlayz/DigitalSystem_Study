@@ -6,6 +6,7 @@ title: Introduzione e Architettura
 ---
 
 # 1. Introduzione e Architettura
+Analisi preliminari e suddivisione dei lavori
 
 ---
 layout: two-cols-header
