@@ -66,7 +66,7 @@ Il design agisce come un nodo di elaborazione stream (slave in ingresso, master 
 
 - **Handshake**: `s_axis_tready` viene asserito quando la pipeline può avanzare (non siamo in `FLUSH` e l'uscita non è **bloccata**)
 - **SOF (`tuser`)**: Campionato per avviare la pipeline
-- **EOL (`tlast`)**: Campionato per contare le righe in ingresso e innescare la fase di `FLUSH` alla fine dell'immagine
+- **EOL (`tlast`)**: Campionato per contare le righe in ingresso e innescare la fase di `FLUSH` al caricamento dell'ultimo pixel
 
 </div>
 
@@ -94,7 +94,7 @@ Invece di avere uno stato inattivo la FSM si ferma fino a quando non arriva un *
 -- Processo Sincrono della FSM
 if rising_edge(s_axis_clk) then
     if s_axis_rstn = '0' then
-        current_state <= LOADING;
+        current_state <- LOADING;
         -- Reset registri...
 
     elsif pipeline_en_s = '1' then
@@ -102,10 +102,10 @@ if rising_edge(s_axis_clk) then
         -- LOGICA DI SINCRONIZZAZIONE SOF
         -- Se arriva un TUSER valido, è SEMPRE l'inizio di un nuovo frame.
         if s_axis_tvalid = '1' and s_axis_tuser = '1' then
-            current_state   <= LOADING;
-            latency_counter <= 1; -- Abbiamo già il primo pixel
-            flush_pipeline_s<= '0'; -- Interrompe flush precedenti
-            m_axis_tuser_s  <= '0';
+            current_state    <- LOADING;
+            latency_counter  <- 1; -- Abbiamo già il primo pixel
+            flush_pipeline_s <- '0'; -- Interrompe flush precedenti
+            m_axis_tuser_s   <- '0';
             -- Reset contatori...
         else
             -- Evoluzione normale degli stati (LOADING, RUNNING, FLUSH)
@@ -121,16 +121,16 @@ La logica combinatoria che governa l'abilitazione dei registri (`pipeline_en`) �
 
 ```vhdl {2-4|6-7|all}
 -- 1. Controllo Pipeline (Avanzamento Globale)
-pipeline_en_s <= '1' when ((s_axis_tvalid = '1' or current_state = FLUSH)
+pipeline_en_s <- '1' when ((s_axis_tvalid = '1' or current_state = FLUSH)
                            and (m_axis_tready = '1' or window_valid_s = '0'))
                      else '0';
 
 -- 2. Handshake Ingresso (TREADY)
-s_axis_tready <= '1' when (current_state /= FLUSH and m_axis_tready = '1') else '0';
+s_axis_tready <- '1' when (current_state /= FLUSH and m_axis_tready = '1') else '0';
 
 ```
 
 ### Analisi della Backpressure
 Il segnale `m_axis_tready` in ingresso indica se il ricevitore a valle può accettare dati.
-Se va basso (`'0'`) mentre la finestra è valida, **`pipeline_en_s` va a `'0'**`.
+Se va basso (`'0'`) mentre la finestra è valida, `pipeline_en_s` va a `'0'`.
 L'intero datapath si _"congela"_, preservando i risultati parziali senza perdere alcun pixel, per poi ripartire istantaneamente appena il ricevitore torna pronto.
