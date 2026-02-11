@@ -8,10 +8,38 @@ La nostra implementazione va a sfruttare i $2^4=16$ casi possibili per ogni coef
 La buffer line scorre sull'immagine e invia i segnali al moltiplicatore: i coefficienti del filtro sono sempre gli stessi, che poi vengono codificati nel medesimo modo, e i pixel dell'immagine vengono inviati 9 alla volta secondo una finestra 3x3.
 
 Di seguito la entity:
-\begin{figure}[H] 
-    \centering 
-    \includegraphics[width=0.8\textwidth]{file_relazione/imgs/entity_mul.png}
-\end{figure}
+\begin{lstlisting}[language=VHDL, caption={Entity del moltiplicatore}, label={lst:linebuffer}]
+	entity booth_multiplier is
+    		generic(
+        			componente_immagine : POSITIVE := 8;
+        			coefficiente_filtro : POSITIVE := 4;
+        			somma : POSITIVE := 12
+   		 );
+    		port (
+        			P_1_1, P_1_2, P_1_3 : in std_logic_vector(
+									componente_immagine-1 downto 0);
+        			P_2_1, P_2_2, P_2_3 : in std_logic_vector(
+									componente_immagine-1 downto 0);
+        			P_3_1, P_3_2, P_3_3 : in std_logic_vector(
+									componente_immagine-1 downto 0);
+
+        			F_1_1, F_1_2, F_1_3 : in std_logic_vector(
+									coefficiente_filtro-1 downto 0);
+        			F_2_1, F_2_2, F_2_3 : in std_logic_vector(
+									coefficiente_filtro-1 downto 0);
+        			F_3_1, F_3_2, F_3_3 : in std_logic_vector(
+									coefficiente_filtro-1 downto 0);
+
+        			M_1_1, M_1_2, M_1_3 : out std_logic_vector(
+									somma-1 downto 0);
+        			M_2_1, M_2_2, M_2_3 : out std_logic_vector(
+									somma-1 downto 0);
+       			 M_3_1, M_3_2, M_3_3 : out std_logic_vector(
+									somma-1 downto 0)
+    		);
+	end entity booth_multiplier;
+
+\end{lstlisting}
 
 Le entrate si suddividono in questo modo:
 \begin{itemize}
@@ -87,11 +115,11 @@ Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricor
 Si allegano ora i risultati del testbench effettuato in cui figurano i risultati correttamente calcolati:
 
 \begin{figure}[H]  
-	\hspace{-1.5 cm}
-    \includegraphics[width=1.2\textwidth]{file_relazione/imgs/tb_mul(1).png}
+	\hspace{-3.5 cm}
+    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/tb_mul(1).png}
 \end{figure}
 \begin{figure}[H] 
 	\vspace{-1 cm}
-	\hspace{-1.5 cm}
-    \includegraphics[width=1.2\textwidth]{file_relazione/imgs/tb_mul(2).png}
+	\hspace{-3.5 cm}
+    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/tb_mul(2).png}
 \end{figure}
