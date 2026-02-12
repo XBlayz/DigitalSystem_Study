@@ -131,3 +131,88 @@ s_axis_tready <- '1' when (current_state /= FLUSH and m_axis_tready = '1') else 
 Il segnale `m_axis_tready` in ingresso indica se il ricevitore a valle può accettare dati.
 Se va basso (`'0'`) mentre la finestra è valida, `pipeline_en_s` va a `'0'`.
 L'intero datapath si _"congela"_, preservando i risultati parziali senza perdere alcun pixel, per poi ripartire istantaneamente appena il ricevitore torna pronto.
+
+---
+level: 2
+---
+
+# Strategia di verifica di funzionamento
+Abbiamo creato una testbench per verificare il corretto funzionamento della FSM insieme alla `buffer_line`
+
+<div class="grid grid-cols-2 gap-8">
+<div>
+
+### Setup di Simulazione
+Per facilitare il debug visivo delle waveform, abbiamo ridotto i parametri rispetto al design reale:
+- **Immagine:** _5x5_ pixel (invece di _32x32_)
+- **Pattern Dati:** Incrementale
+    - *Pixel*: $Row \times Width + Col$ (0, 1, 2, ...)
+    - _Nessuna elaborazione_
+- **Obiettivo:** Verificare i casi limite (Start of Frame, End of Line, Flush finale)
+
+</div>
+<div>
+
+```mermaid
+graph TD
+    subgraph "Testbench Scope"
+        GEN[Stimulus Gen]
+
+        subgraph "DUT"
+            FSM[State Machine]
+            BUF[Buffer Line]
+        end
+
+        GEN -- "AXI In (Valid/Last/Data)" --> FSM
+        FSM -- "Control (En/Flush)" --> BUF
+        GEN -- "Data Copy" --> BUF
+        BUF -- "Window 3x3" --> WAVE[Waveform]
+    end
+
+```
+
+<!-- #TODO: Immagine waveform -->
+
+</div>
+</div>
+
+---
+level: 2
+---
+
+# Generazione Stimoli e Handshake
+Il processo di stimolo emula il flusso dati **AXI-Stream** in ingresso e legge il flusso dati **AXI-Stream** in uscita
+
+Inoltre viene simulata la _backpressure_ e l'esecuzione del _flush_ anche in non validità dell'ingresso per testare la **robustezza** della FSM.
+
+<div class="grid grid-cols-2 gap-4">
+<div>
+
+```vhdl {all|6-10}
+-- Generazione Immagine 5x5
+for row in 0 to NROW-1 loop
+  for col in 0 to NCOL-1 loop
+    -- Data = Indice univoco
+    s_axis_tdata  <= std_logic_vector(...);
+    s_axis_tvalid <= '1';
+
+    -- Wait for Handshake (Backpressure)
+    wait until rising_edge(clk);
+    while s_axis_tready = '0' loop
+       wait until rising_edge(clk);
+    end loop;
+  end loop;
+end loop;
+
+```
+
+</div>
+<div>
+
+### Punti Chiave della Verifica
+
+1. **Handshake Compliance:** Il loop `while` garantisce che il testbench si fermi se la FSM abbassa `tready` (es. durante il reset)
+2. **Fase di Flush:** Al termine dei loop (dopo il pixel 24), `tvalid` va a 0. Verifichiamo che la FSM attivi il `flush_pipeline` e che il buffer continui a avanzare inserendo zeri (padding) fino allo svuotamento completo
+
+</div>
+</div>
