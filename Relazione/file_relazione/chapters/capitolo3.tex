@@ -10,7 +10,7 @@ Per poter fare ciò si hanno diverse strade, tra cui un classico sommatore “ca
 Questo approccio interrompe dunque la catena di trasporto del riporto per ogni somma, andando ad iterare questa proceduta fino ad ottenere in uscita due soli vettori da sommare. Sarà solo a questo punto che si avrà una sola catena di riporto, andando dunque a risparmiare tanto tempo a livello complessivo. Essendo questo progetto incentrato sull’efficienza, dando il giusto peso all’utilizzo delle risorse, è stato dunque scelto un approccio Carry Save per l’albero di somma mentre, per lo step finale, è stato scelto una somma mediante un modulo Carry Select Adder. Questo per via del numero di bit favorevole che ha permesso di adottare il seguente approccio senza avere sbilanciamenti o verso le troppe risorse o verso un tempo di elaborazione eccessivamente alto.
 
 L’albero di somma sarà formato da nove operandi in ingresso corrispondenti ai prodotti parziali e saranno rappresentati da altrettanti segnali in std\_logic\_vector a 12-bit.
-In uscita, per come verrà spiegato in seguito, si avrà un segnale in std\_logic\_vector a 17-bit.
+In uscita, per come verrà spiegato in seguito, si avrà un segnale in std\_logic\_vector a 16-bit.
 
 \begin{figure}[H]
 	\centering
@@ -30,7 +30,7 @@ Mentre, in VHDL, il blocco sarà descritto nel seguente modo:
         i_3_1, i_3_2, i_3_3 : in  std_logic_vector(
 								N-1 downto 0);
         sum                 : out std_logic_vector(
-								N+4 downto 0)
+								N+3 downto 0)
     );
 	end carry_save_adder_tree;
 \end{lstlisting}
@@ -91,4 +91,92 @@ Unendo tutte le varie parti si otterrà dunque il seguente circuito, corrisponde
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{file_relazione/imgs/csa.png}
+\end{figure}
+
+\section{Il testing}
+Verrà fatto adesso un rapido testbench sul modulo appena descritto, andando a confermare i risultati ottenuti nel worst case positivo e negativo, assicurandosi di non avere problemi in uscita.
+Immaginando di avere il valore massimo sui pixel, ovvero +255 a 8-bit in rappresentazione unsigned pari “11111111”, verrà analizzato il caso in cui i coefficienti del filtro saranno tutti pari al massimo valore positivo e il caso in cui saranno tutti pari al minimo valore negativo.
+
+\subsection{Caso positivo}
+Essendo i coefficienti del filtro a 4-bit rappresentati in complemento a due, essi potranno assumere come valore massimo il numero decimale +7. Effettuando quindi un filtraggio tra nove pixel pari a +255 a 8-bit unsigned e nove coefficienti pari a +7 a 4-bit signed, in uscita otterremo nove operandi tutti pari +1785 a 12-bit di tipo signed.  Andando poi ad effettuare la somma, in uscita si dovrà ottenere il valore +16065 a 16-bit di tipo signed. In forma tabellare:
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
++255 & +255 & +255 \\ \hline
++255 & +255 & +255 \\ \hline
++255 & +255 & +255 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
++7 & +7 & +7 \\ \hline
++7 & +7 & +7 \\ \hline
++7 & +7 & +7 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
++1785 & +1785 & +1785 \\ \hline
++1785 & +1785 & +1785 \\ \hline
++1785 & +1785 & +1785 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|}
+\hline
+16065 \\ \hline
+\end{tabular}
+\end{table}
+
+Visualizzando il timing su Vivado:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{file_relazione/imgs/tb_add(1).jpeg}
+\end{figure}
+
+\subsection{Caso negativo}
+Essendo i coefficienti del filtro a 4-bit rappresentati in complemento a due, essi potranno assumere come valore minimo il numero decimale -8. Effettuando quindi un filtraggio tra nove pixel pari a +255 a 8-bit unsigned e nove coefficienti pari a -8 a 4-bit signed, in uscita otterremo nove operandi tutti pari a -2040 a 12-bit di tipo signed. Andando poi ad effettuare la somma, in uscita si dovrà ottenere il valore -18360 a 16-bit di tipo signed. In forma tabellare:
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
++255 & +255 & +255 \\ \hline
++255 & +255 & +255 \\ \hline
++255 & +255 & +255 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
+-8 & -8 & -8 \\ \hline
+-8 & -8 & -8 \\ \hline
+-8 & -8 & -8 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|}
+\hline
+-2040			     & -2040 & -2040 \\ \hline
+-2040                       & -2040 & -2040 \\ \hline
+-2040                       & -2040 & -2040 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|c|}
+\hline
+-18360 \\ \hline
+\end{tabular}
+\end{table}
+
+Visualizzando il timing su Vivado:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{file_relazione/imgs/tb_add(2).jpeg}
 \end{figure}
