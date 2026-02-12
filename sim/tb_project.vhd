@@ -7,11 +7,15 @@ entity tb_project is
 end entity tb_project;
 
 architecture testing of tb_project is
-    -- Testing parameters (32x32 image)
-    constant CLK_PERIOD       : time := 10 ns; -- 100 MHz
-    constant NCOL_IMG         : integer := 32;  -- Columns
-    constant NROW_IMG         : integer := 32;  -- Rows
-    constant KERNEL_SIZE      : integer := 3;  -- 3x3 kernel
+    -- Testing parameters
+    constant CLK_PERIOD       : time := 10 ns;
+    constant NCOL_IMG         : integer := 32;
+    constant NROW_IMG         : integer := 32;
+
+    -- FILE I/O SETTINGS
+    -- Assicurati che questi file esistano nella cartella della simulazione
+    file input_file  : text open read_mode  is "input_image.txt";
+    file output_file : text open write_mode is "output_image.txt";
 
     -- Testing signals
     signal s_axis_clk    : std_logic := '0';
@@ -53,19 +57,11 @@ architecture testing of tb_project is
         );
     end component main_static;
 
-    -- Pixel array for verification
-    type pixel_array is array (0 to NROW_IMG-1, 0 to NCOL_IMG-1) of std_logic_vector(7 downto 0);
-    signal sent_pixels   : pixel_array;
-
-    -- Pixel array to store received output
-    type output_pixel_array is array (0 to NROW_IMG-1, 0 to NCOL_IMG-1) of std_logic_vector(16 downto 0);
-    signal received_pixels : output_pixel_array;
-
 begin
     -- Component instantiation
     main_inst: main_static
          port map (
-            s_axis_clk      => not(s_axis_clk),
+            s_axis_clk      => not(s_axis_clk), -- #TODO: Da verificare
             s_axis_rstn     => s_axis_rstn,
             s_axis_tvalid   => s_axis_tvalid,
             s_axis_tlast    => s_axis_tlast,
@@ -88,203 +84,92 @@ begin
         wait for CLK_PERIOD/2;
     end process;
 
-    -- Generation INPUT data
+    -- ================================================================
+    -- PROCESS 1: LETTURA FILE E INVIO DATI
+    -- ================================================================
     stimulus : process
         variable row, col : integer;
-        variable pixel_val : std_logic_vector(7 downto 0);
 
+        variable file_line : line;
+        variable pixel_int : integer;
+        variable pixel_slv : std_logic_vector(7 downto 0);
     begin
         -- 1. Initial reset
         s_axis_rstn <= '0';
         wait for CLK_PERIOD * 10;
         s_axis_rstn <= '1';
-        --wait for CLK_PERIOD * 2;
+        -- Cambio segnali nel falling edge
         wait until falling_edge(s_axis_clk);
 
-        report "Inizio invio pixel (32x32)...";
+        report "Inizio lettura file e invio pixel...";
 
          -- 2. Sending data
         for row in 0 to NROW_IMG-1 loop
             for col in 0 to NCOL_IMG-1 loop
-                -- Pattern pixel: (riga * NCOL_IMG) + colonna (valore univoco)
-                pixel_val := std_logic_vector(to_unsigned(row * NCOL_IMG + col, 8));
+                -- LETTURA DAL FILE
+                if not endfile(input_file) then
+                    readline(input_file, file_line); -- Legge una riga
+                    read(file_line, pixel_int);      -- Legge l'intero dalla riga
+                    pixel_slv := std_logic_vector(to_unsigned(pixel_int, 8));
+                else
+                    report "Attenzione: Fine del file raggiunta prima del previsto!" severity warning;
+                    pixel_slv := (others => '0'); -- Padding con neri
+                end if;
 
-                s_axis_tdata  <= pixel_val;
+                -- PILOTAGGIO SEGNALI
+                s_axis_tdata  <= pixel_slv;
                 s_axis_tvalid <= '1';
 
-                -- TLAST alto solo all'ultimo pixel della riga
+                -- Gestione TLAST (Fine riga)
                 if col = NCOL_IMG-1 then
                     s_axis_tlast <= '1';
                 else
                     s_axis_tlast <= '0';
                 end if;
 
-                -- TUSER alto solo all'ultimo pixel dell'immagine (SOF)
+                -- Gestione TUSER (Start of Frame)
                 if row = 0 and col = 0 then
                     s_axis_tuser <= '1';
                 else
                     s_axis_tuser <= '0';
                 end if;
 
-                -- Memorizza per verifica successiva
-                sent_pixels(row, col) <= pixel_val;
-
-                -- Attendi handshake (tvalid & tready)
+                -- Attesa Handshake (Rising Edge)
                 wait until rising_edge(s_axis_clk);
                 while s_axis_tready = '0' loop
                     wait until rising_edge(s_axis_clk);
                 end loop;
 
+                -- Ritorno al falling edge per il prossimo dato
                 wait until falling_edge(s_axis_clk);
 
-                pixel_count <= pixel_count + 1;
             end loop;
         end loop;
 
-        -- 3. Ending transmission
+        -- 3. Fine invio
         s_axis_tvalid <= '0';
-        report "Trasmissione completata. Attesa completamento elaborazione...";
-
+        s_axis_tlast  <= '0';
+        report "Invio file completato.";
         wait;
     end process;
 
     -- ================================================================
-    -- Reading OUTPUT data and storing in received_pixels
+    -- PROCESS 2: RICEZIONE DATI E SCRITTURA SU FILE
     -- ================================================================
-    output_reader : process(s_axis_clk)
-        variable curr_out_row : integer := 0;
-        variable curr_out_col : integer := 0;
+    output_writer : process(s_axis_clk)
+        variable out_line : line;
+        variable out_int  : integer;
     begin
         if rising_edge(s_axis_clk) then
             if s_axis_rstn = '1' and m_axis_tvalid = '1' and m_axis_tready = '1' then
-                -- Store received pixel in output array
-                if curr_out_row <= NROW_IMG-1 and curr_out_col <= NCOL_IMG-1 then
-                    received_pixels(curr_out_row, curr_out_col) <= m_axis_tdata;
-                    report "Salvato pixel @ (" & integer'image(curr_out_row) & ", " &
-                           integer'image(curr_out_col) & "): " &
-                           integer'image(to_integer(unsigned(m_axis_tdata)));
-                end if;
+                -- Converti il dato ricevuto in intero
+                out_int := to_integer(signed(m_axis_tdata));
 
-                -- Aggiorna coordinate output
-                if curr_out_col = NCOL_IMG-1 then
-                    curr_out_col := 0;
-                    curr_out_row := curr_out_row + 1;
-                else
-                    curr_out_col := curr_out_col + 1;
-                end if;
-
-                -- Monitora M_AXIS_TLAST
-                if m_axis_tlast = '1' then
-                    last_line_count <= last_line_count + 1;
-                    report "M_AXIS_TLAST attivo (contatore: " & integer'image(last_line_count) & ")";
-                end if;
-
-                -- Monitora M_AXIS_TUSER (SOF)
-                if m_axis_tuser = '1' then
-                    report "M_AXIS_TUSER attivo (SOF - primo pixel della frame)";
-                end if;
-
-                output_count <= output_count + 1;
+                -- Scrivi sul file
+                write(out_line, out_int);       -- Scrive il numero nella linea buffer
+                writeline(output_file, out_line); -- Scrive la linea buffer nel file
             end if;
         end if;
     end process;
-
-    -- ================================================================
-    -- Simulation termination and final verification
-    -- ================================================================
-    sim_termination : process
-        variable all_pixels_match : boolean := true;
-        variable row, col : integer;
-        variable expected_val : std_logic_vector(16 downto 0);
-        variable actual_val : std_logic_vector(16 downto 0);
-    begin
-        -- Attende che m_axis_tlast sia attivo per il numero di righe attese
-        -- Per un'immagine 32x32, ci dovrebbero essere 5 righe di output
-        wait until last_line_count = NROW_IMG;
-        wait for CLK_PERIOD * 5; -- Attesa per completamento pipeline
-
-        report "=== Verifica finale immagini ===";
-        report "Immagine in ingresso (32x32):";
-        for row in 0 to NROW_IMG-1 loop
-            for col in 0 to NCOL_IMG-1 loop
-                report "R" & integer'image(row) & "C" & integer'image(col) & ": " &
-                       integer'image(to_integer(unsigned(sent_pixels(row, col))));
-            end loop;
-        end loop;
-
-        report "Immagine in uscita (32x32):";
-        for row in 0 to NROW_IMG-1 loop
-            for col in 0 to NCOL_IMG-1 loop
-                report "R" & integer'image(row) & "C" & integer'image(col) & ": " &
-                       integer'image(to_integer(unsigned(received_pixels(row, col))));
-            end loop;
-        end loop;
-
-        -- Verifica se le due immagini sono uguali
-        report "=== Confronto immagini ===";
-        all_pixels_match := true;
-        for row in 0 to NROW_IMG-1 loop
-            for col in 0 to NCOL_IMG-1 loop
-                expected_val := std_logic_vector(resize(unsigned(sent_pixels(row, col)), 17));
-                actual_val := received_pixels(row, col);
-
-                if expected_val /= actual_val then
-                    report "ERRORE: Pixel (" & integer'image(row) & "," & integer'image(col) & ")" &
-                           " - Atteso: " & integer'image(to_integer(unsigned(expected_val))) &
-                           ", Ricevuto: " & integer'image(to_integer(unsigned(actual_val)))
-                           severity error;
-                    all_pixels_match := false;
-                else
-                    report "OK: Pixel (" & integer'image(row) & "," & integer'image(col) & ")" &
-                           " - Valore: " & integer'image(to_integer(unsigned(expected_val)));
-                end if;
-            end loop;
-        end loop;
-
-        if all_pixels_match then
-            report "=== VERIFICA SUPERATA ===" severity note;
-            report "Tutte le finestre valide contengono il pixel centrale atteso";
-        else
-            report "=== VERIFICA FALLITA ===" severity error;
-            report "Alcuni pixel nella finestra non corrispondono al pixel centrale";
-        end if;
-
-        report "Simulazione completata. Total pixels sent: " & integer'image(pixel_count);
-        report "Total outputs received: " & integer'image(output_count);
-        wait;
-    end process;
-
-    -- ================================================================
-    -- Processo di monitoraggio segnali di interesse
-    -- ================================================================
-    signal_monitor : process(s_axis_clk)
-    begin
-        if rising_edge(s_axis_clk) then
-            -- Monitora handshake input
-            if s_axis_tvalid = '1' and s_axis_tready = '1' then
-                report "S_AXIS handshake @ " & time'image(now) &
-                       ", Pixel: " & integer'image(to_integer(unsigned(s_axis_tdata)));
-            end if;
-
-            -- Monitora handshake output
-            if m_axis_tvalid = '1' and m_axis_tready = '1' then
-                report "M_AXIS handshake @ " & time'image(now) &
-                       ", Output: " & integer'image(to_integer(unsigned(m_axis_tdata)));
-            end if;
-        end if;
-    end process;
-
-    -- ================================================================
-    -- Processo di Controllo Backpressure (Opzionale)
-    -- ================================================================
-    -- Per testare il flusso con tready variabile, decommentare:
-    -- backpressure : process
-    -- begin
-    --     m_axis_tready <= '1';
-    --     wait for CLK_PERIOD * 10;
-    --     m_axis_tready <= '0';  -- Blocca per 3 cicli
-    --     wait for CLK_PERIOD * 3;
-    --     m_axis_tready <= '1';
-    -- end process;
 
 end testing;
