@@ -71,9 +71,7 @@ A livello grafico:
 Infine si avranno due vettori finali da 16-bit che, una volta sommati, daranno luogo al risultato finale. Prima di ottenere ciò andranno sommati bit a bit i due vettori con un metodo classico, e quindi con una catena di riporto.
 
 \section{Il Carry Select Adder}
-Per la seguente somma è stato scelto un Carry Select Adder con moduli di Ripple Carry Adder ad 8-bit ciascuno, trovando dunque il giusto compromesso tra risorse, potenza dissipata e tempo di elaborazione. 
-
-Il Carry Select Adder, inoltre, sarà una versione semplificata rispetto a quella canonica poiché non faremo uso dell’ultimo riporto in uscita. Questo perché il risultato sarà a diciassette bit totali con estensione del segno a sinistra del MSB, dunque il riporto non verrà sfruttato. Essendo inoltre il riporto un segnale di selezione per il MUX del riporto, neanche quest’ultimo verrà integrato nel circuito.
+Per la seguente somma è stato scelto un Carry Select Adder con moduli di Ripple Carry Adder ad 8-bit ciascuno, trovando dunque il giusto compromesso tra risorse, potenza dissipata e tempo di elaborazione. Il Carry Select Adder, inoltre, sarà una versione semplificata rispetto a quella canonica poiché non faremo uso dell’ultimo riporto in uscita. Questo perché il risultato sarà a 16-bit totali e già esteso nel modo opportuno. Dunque, il riporto non verrà sfruttato in quanto i valori massimo e minimo ottenibili rientreranno senza problemi all’interno del range permesso dai 16-bit con rappresentazione signed. Essendo inoltre il riporto un segnale di selezione per il MUX del riporto, neanche quest’ultimo verrà integrato nel circuito.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\textwidth]{file_relazione/imgs/interno_csa(5).png}
@@ -87,7 +85,7 @@ L’implementazione del CSA in versione semplificata sarà la seguente:
 \end{figure}
 
 \section{Il circuito finale}
-Unendo tutte le varie parti si otterrà dunque il seguente circuito, corrispondente ad un sommatore a nove operandi da dodici bit ciascuno con approccio Carry Save Adder e sommatore a Carry Select Adder finale:
+Unendo tutte le varie parti si otterrà dunque il seguente circuito, corrispondente ad un sommatore a nove operandi da dodici bit ciascuno di tipo signed con approccio Carry Save Adder e sommatore a Carry Select Adder finale:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{file_relazione/imgs/csa.png}
