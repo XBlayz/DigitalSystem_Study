@@ -8,7 +8,7 @@ entity carry_save_adder_tree is
         i_1_1, i_1_2, i_1_3 : in  std_logic_vector(N-1 downto 0);
         i_2_1, i_2_2, i_2_3 : in  std_logic_vector(N-1 downto 0);
         i_3_1, i_3_2, i_3_3 : in  std_logic_vector(N-1 downto 0);
-        sum                 : out std_logic_vector(N+4 downto 0)
+        sum                 : out std_logic_vector(N+3 downto 0)
     );
 end carry_save_adder_tree;
 
@@ -147,7 +147,7 @@ begin
     end generate sommatore_Lev4;
     vs_4_1(N+3)<= vs_4_1(N+2);
 
---questo rca fa la somma per la met� meno significativa degli ingressi
+--questo rca fa la somma per la met  meno significativa degli ingressi
     RCA_0: ripple_carry_adder
         generic map(N => 8)
         port map(
@@ -158,7 +158,7 @@ begin
             cout => c_out_RCA_0   --questo segnale serve per la selezione del sommatore dopo
         );
 
--- questo somma la met� pi� significativa degli ingressi con cin=0
+-- questo somma la met  pi  significativa degli ingressi con cin=0
     RCA_1: ripple_carry_adder
         generic map(N => 8)
         port map(
@@ -169,7 +169,7 @@ begin
             cout => open
         );
 
--- questo somma la met� pi� significativa degli ingressi con cin=1
+-- questo somma la met  pi  significativa degli ingressi con cin=1
     RCA_2: ripple_carry_adder
         generic map(N => 8)
         port map(
@@ -180,10 +180,10 @@ begin
             cout => open
         );
 
---selettore per capire quale sommatore utilizzare per la met� pi� significativa
+--selettore per capire quale sommatore utilizzare per la met  pi  significativa
     with c_out_RCA_0 select
-        sum <= sum_RCA_1(7) & sum_RCA_1 & sum_RCA_0 when '0',
-               sum_RCA_2(7) & sum_RCA_2 & sum_RCA_0 when '1',
+        sum <= sum_RCA_1 & sum_RCA_0 when '0',
+               sum_RCA_2 & sum_RCA_0 when '1',
                (others => '0') when others;
 
 

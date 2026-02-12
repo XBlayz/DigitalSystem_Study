@@ -30,7 +30,7 @@ architecture testing of tb_project is
     signal m_axis_tlast  : std_logic;
     signal m_axis_tuser  : std_logic;
     signal m_axis_tready : std_logic := '1';
-    signal m_axis_tdata  : std_logic_vector(8+4+4 downto 0); -- 16 bits
+    signal m_axis_tdata  : std_logic_vector((8+4+4)-1 downto 0); -- 16 bits
 
     -- Auxiliary signals
     signal pixel_count   : integer := 0;
@@ -53,7 +53,7 @@ architecture testing of tb_project is
             m_axis_tlast    : out std_logic; -- Output EOL
             m_axis_tready   : in  std_logic;
             m_axis_tuser    : out std_logic; -- Output SOF
-            m_axis_tdata    : out std_logic_vector(8+4+4 downto 0)
+            m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0)
         );
     end component main_static;
 
