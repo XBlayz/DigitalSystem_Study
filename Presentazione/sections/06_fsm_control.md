@@ -144,7 +144,7 @@ Abbiamo creato una testbench per verificare il corretto funzionamento della FSM 
 
 ### Setup di Simulazione
 Per facilitare il debug visivo delle waveform, abbiamo ridotto i parametri rispetto al design reale:
-- **Immagine:** _5x5_ pixel (invece di _32x32_)
+- **Immagine:** 5x5 pixel (invece di 32x32)
 - **Pattern Dati:** Incrementale
     - *Pixel*: $Row \times Width + Col$ (0, 1, 2, ...)
     - _Nessuna elaborazione_
@@ -193,8 +193,8 @@ Inoltre viene simulata la _backpressure_ e l'esecuzione del _flush_ anche in non
 for row in 0 to NROW-1 loop
   for col in 0 to NCOL-1 loop
     -- Data = Indice univoco
-    s_axis_tdata  <= std_logic_vector(...);
-    s_axis_tvalid <= '1';
+    s_axis_tdata  <- std_logic_vector(...);
+    s_axis_tvalid <- '1';
 
     -- Wait for Handshake (Backpressure)
     wait until rising_edge(clk);
@@ -212,7 +212,7 @@ end loop;
 ### Punti Chiave della Verifica
 
 1. **Handshake Compliance:** Il loop `while` garantisce che il testbench si fermi se la FSM abbassa `tready` (es. durante il reset)
-2. **Fase di Flush:** Al termine dei loop (dopo il pixel 24), `tvalid` va a 0. Verifichiamo che la FSM attivi il `flush_pipeline` e che il buffer continui a avanzare inserendo zeri (padding) fino allo svuotamento completo
+2. **Fase di Flush:** Al termine dei loop, `tvalid` va a 0. Verifichiamo che la FSM attivi il `flush_pipeline` e che il buffer continui a avanzare inserendo zeri (padding) fino allo svuotamento completo
 
 </div>
 </div>
