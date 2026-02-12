@@ -14,8 +14,8 @@ architecture testing of tb_project is
 
     -- FILE I/O SETTINGS
     -- Assicurati che questi file esistano nella cartella della simulazione
-    file input_file  : text open read_mode  is "lena32_vettore.txt";
-    file output_file : text open write_mode is "filtered_lena32_vettore.txt";
+    file input_file  : text open read_mode  is "image.txt";
+    file output_file : text open write_mode is "filtered_image.txt";
 
     -- Testing signals
     signal s_axis_clk    : std_logic := '0';
@@ -30,7 +30,7 @@ architecture testing of tb_project is
     signal m_axis_tlast  : std_logic;
     signal m_axis_tuser  : std_logic;
     signal m_axis_tready : std_logic := '1';
-    signal m_axis_tdata  : std_logic_vector((8+4+4)-1 downto 0); -- 16 bits
+    signal m_axis_tdata  : std_logic_vector(8+4+4-1 downto 0); -- 16 bits
 
     -- Auxiliary signals
     signal pixel_count   : integer := 0;
@@ -53,7 +53,7 @@ architecture testing of tb_project is
             m_axis_tlast    : out std_logic; -- Output EOL
             m_axis_tready   : in  std_logic;
             m_axis_tuser    : out std_logic; -- Output SOF
-            m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0)
+            m_axis_tdata    : out std_logic_vector(8+4+4-1 downto 0)
         );
     end component main_static;
 
@@ -61,7 +61,7 @@ begin
     -- Component instantiation
     main_inst: main_static
          port map (
-            s_axis_clk      => not(s_axis_clk), -- #TODO: Da verificare
+            s_axis_clk      => s_axis_clk,
             s_axis_rstn     => s_axis_rstn,
             s_axis_tvalid   => s_axis_tvalid,
             s_axis_tlast    => s_axis_tlast,

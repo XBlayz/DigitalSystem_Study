@@ -26,7 +26,7 @@ architecture testing of tb_main is
     signal m_axis_tlast  : std_logic;
     signal m_axis_tuser  : std_logic;
     signal m_axis_tready : std_logic := '1';
-    signal m_axis_tdata  : std_logic_vector((8+4+4)-1 downto 0); -- 16 bits
+    signal m_axis_tdata  : std_logic_vector(8+4+4-1 downto 0); -- 16 bits
 
     -- Auxiliary signals
     signal pixel_count   : integer := 0;
@@ -62,7 +62,7 @@ architecture testing of tb_main is
             m_axis_tlast    : out std_logic; -- Output EOL
             m_axis_tready   : in  std_logic;
             m_axis_tuser    : out std_logic; -- Output SOF
-            m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0) -- comp_i + coeff_f + 4
+            m_axis_tdata    : out std_logic_vector(8+4+4-1 downto 0)
         );
     end component main;
 
@@ -71,7 +71,7 @@ architecture testing of tb_main is
     signal sent_pixels   : pixel_array;
 
     -- Pixel array to store received output
-    type output_pixel_array is array (0 to NROW_IMG-1, 0 to NCOL_IMG-1) of std_logic_vector(16 downto 0);
+    type output_pixel_array is array (0 to NROW_IMG-1, 0 to NCOL_IMG-1) of std_logic_vector(8+4+4-1 downto 0);
     signal received_pixels : output_pixel_array;
 
 begin

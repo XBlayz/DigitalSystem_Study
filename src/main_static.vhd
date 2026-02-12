@@ -17,7 +17,7 @@ entity main_static is
         m_axis_tlast    : out std_logic;
         m_axis_tready   : in  std_logic;
         m_axis_tuser    : out std_logic;
-        m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0) -- comp_i + coeff_f + 4
+        m_axis_tdata    : out std_logic_vector(8+4+4-1 downto 0)
     );
 end entity main_static;
 
@@ -65,7 +65,7 @@ architecture Instantiation of main_static is
             m_axis_tlast    : out std_logic;
             m_axis_tready   : in  std_logic;
             m_axis_tuser    : out std_logic;
-            m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0) -- comp_i + coeff_f + 4
+            m_axis_tdata    : out std_logic_vector(8+4+4-1 downto 0)
         );
     end component main;
 
