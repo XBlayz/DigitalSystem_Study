@@ -8,7 +8,7 @@ end entity tb_project;
 
 architecture testing of tb_project is
     -- Testing parameters
-    constant CLK_PERIOD       : time := 50 ns;
+    constant CLK_PERIOD       : time := 10 ns;
     constant NCOL_IMG         : integer := 32;
     constant NROW_IMG         : integer := 32;
 
