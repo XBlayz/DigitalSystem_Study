@@ -16,29 +16,26 @@ Il modulo `buffer_line` trasforma il flusso seriale di pixel in una matrice 3x3 
 
 ```mermaid
 graph LR
-    %% Stili
-    classDef reg fill:#3498db,stroke:#2980b9,color:white;
-    classDef buf fill:#e67e22,stroke:#d35400,color:white;
-    classDef inout fill:#2ecc71,stroke:#27ae60,color:white;
-
     IN([Input Data]) --> D00
 
     subgraph "Row 0"
         D00[d00] --> D01[d01] --> D02[d02]
     end
 
-    D02 --> B1{{Line Buffer 0 Shift Reg}} --> D10
+    D02 --> B1{{FIFO 0}} --> D10
 
     subgraph "Row 1"
         D10[d10] --> D11[d11] --> D12[d12]
     end
 
-    D12 --> B2{{Line Buffer 1 Shift Reg}} --> D20
+    D12 --> B2{{FIFO 1}} --> D20
 
     subgraph "Row 2"
         D20[d20] --> D21[d21] --> D22[d22]
     end
 ```
+
+<!-- #TODO: immagine implementazione -->
 
 I dati viaggiano dalla porta AXI-Stream di ingresso verso l'ultima posizione, caricando l'immagine in ordine inverso nei registri di finestra (`d22` pixel precedente a `d00`).
 
