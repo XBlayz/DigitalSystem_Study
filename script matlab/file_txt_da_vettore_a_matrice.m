@@ -1,8 +1,10 @@
-input_file = 'LENA_FILTRATA_ERRORE.txt'; 
-output_file = 'LENA_FILTRATA_ERRORE_MATRIX.txt'; 
+input_file = 'filtered_image1.txt'; 
+output_file = 'filtered_image1_matrix.txt'; 
+rows = 32;
+cols = 32;
 
 data_vector = load(input_file);
-matrix_transposed = reshape(data_vector, 32, 32)'; 
+matrix_transposed = reshape(data_vector, rows, cols)'; 
 
 fid = fopen(output_file, 'w');
 for i = 1:rows

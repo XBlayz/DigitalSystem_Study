@@ -1,4 +1,4 @@
-output_data = load('filtered_image.txt');
+output_data = load('filtered_image1_matrix.txt');
 % output_data(output_data > 255) = 255;
 % output_data(output_data < 0)   = 0;
 output_data = output_data/16;
