@@ -171,7 +171,7 @@ begin
         wait;
     end process;
 
-     -- ================================================================
+    -- ================================================================
     -- Reading OUTPUT data and storing in received_pixels
     -- ================================================================
     output_reader : process(s_axis_clk)
@@ -301,13 +301,13 @@ begin
     -- Processo di Controllo Backpressure (Opzionale)
     -- ================================================================
     -- Per testare il flusso con tready variabile, decommentare:
-    -- backpressure : process
-    -- begin
-    --     m_axis_tready <= '1';
-    --     wait for CLK_PERIOD * 10;
-    --     m_axis_tready <= '0';  -- Blocca per 3 cicli
-    --     wait for CLK_PERIOD * 3;
-    --     m_axis_tready <= '1';
-    -- end process;
+    backpressure : process
+    begin
+        m_axis_tready <= '1';
+        wait for CLK_PERIOD * 10;
+        m_axis_tready <= '0';  -- Blocca per 3 cicli
+        wait for CLK_PERIOD * 3;
+        m_axis_tready <= '1';
+    end process;
 
 end testing;
