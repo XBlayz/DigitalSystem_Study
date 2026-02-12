@@ -1,14 +1,14 @@
 \maketitle
 \chapter{Il moltiplicatore}
 \section{Implementazione}
-La differenza principale con il moltiplicatore di Booth è che non si va a suddividere in gruppi di bit il moltiplicatore, ma si vanno a codificare tutti i possibili casi che possono accadere.
+La differenza principale con il moltiplicatore di Booth è che non si va a suddividere in gruppi di bit il moltiplicatore, ma si vanno a codificare tutti i possibili valori che possono assumere i coefficienti del filtro.
 
 La nostra implementazione va a sfruttare i $2^4=16$ casi possibili per ogni coefficiente del filtro F\_x\_y.
 
-La buffer line scorre sull'immagine e invia i segnali al moltiplicatore: i coefficienti del filtro sono sempre gli stessi, che poi vengono codificati nel medesimo modo, e i pixel dell'immagine vengono inviati 9 alla volta secondo una finestra 3x3.
+La buffer line scorre sull'immagine e invia i dati al moltiplicatore, nove alla volta secondo una finestra 3x3, i coefficienti del filtro invece restano fissi e vengono codificati.
 
 Di seguito la entity:
-\begin{lstlisting}[language=VHDL, caption={Entity del moltiplicatore}, label={lst:linebuffer}]
+\begin{lstlisting}[language=VHDL, caption={Entity del moltiplicatore}]
 	entity booth_multiplier is
     		generic(
         			componente_immagine : POSITIVE := 8;
@@ -43,19 +43,19 @@ Di seguito la entity:
 
 Le entrate si suddividono in questo modo:
 \begin{itemize}
-	\item  i segnali P\_x\_y sono i pixel dell'immagine che hanno dimensione 8 bit
-	\item i segnali F\_x\_y sono i coefficcienti del filtro con dimensione 4 bit
+	\item  i segnali P\_x\_y sono i pixel dell'immagine che hanno dimensione 8-bit
+	\item i segnali F\_x\_y sono i coefficcienti del filtro con dimensione 4-bit
 \end{itemize} 
 
-Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ bit il risultato del prodottto andrà espresso in $m+n$ bit.
+Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ bit il risultato del prodottto andrà espresso in $m+n$-bit.
 
-Le uscite sono invece i segnali M\_x\_y con dimensione $m+n=8+4=12$ bit.
+Le uscite sono invece i segnali M\_x\_y con dimensione $m+n=8+4=12$-bit.
 
 \bigskip
 Il moltiplicatore segue questo funzionamento:
 \begin{itemize}
-	\item L'operazione principale che abbiamo effettuato è la codifica dei 16 possibili valori che può assumere ogni coefficiente del filtro;
-	\item Si codificano i 2 prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente. 
+	\item L'operazione principale che abbiamo effettuato è la codifica dei sedici possibili valori che può assumere ogni coefficiente del filtro;
+	\item Si codificano i due prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente. 
 		   Dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per P\_x\_y separatamente ottenendo i 				  segnali P\_P\_A\_x\_y e P\_P\_B\_x\_y secondo la seguente tabella:
 \begin{table}[H]
 \centering
@@ -78,17 +78,20 @@ Case filtro & Numero da codificare & A  & B  & P\_P\_A\_x\_y                    
 1101                    & -3                   & 1  & -4 & 0000 P\_x\_y                                         & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
 1110                    & -2                   & -2 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 000000000000 \\ \hline
 1111                    & -1                  & -1 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 000000000000 \\ \hline
+others                  & 0                   & 0 & 0 & 000000000000                                               &000000000000 \\ \hline
 	\end{tabular}
 }
 \end{table}
 
-Da notare che N\_P\_x\_y  ha dimensione 9 bit ed esprime la negazione del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso una batteria di Ripple Carry Adder, uno per ogni pixel e si utilizza quando i prodotti parziali P\_P\_A\_x\_y oppure P\_P\_B\_x\_y sono negativi.
+Da notare che N\_P\_x\_y  ha dimensione 9-bit ed esprime il complemento a due del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso un Ripple Carry Adder (in pratica rappresenta la versione negativa del segnale iniziale), e si utilizza quando i prodotti parziali P\_P\_A\_x\_y oppure P\_P\_B\_x\_y sono negativi.
 
-Da ricordare che P\_P\_A\_x\_y e P\_P\_B\_x\_y devono essere di 12 bit quindi vanno gestiti bene i prodotti da effettuare attraverso gli shift sinistri e l'estensione che deve portare ogni segnale alla dimensione giusta. 
+Da ricordare che P\_P\_A\_x\_y e P\_P\_B\_x\_y devono essere di 12-bit quindi vanno gestiti efficientemente i prodotti da effettuare attraverso gli shift sinistri e l'estensione che deve portare ogni segnale alla dimensione giusta. 
 
-Questa operazione all'interno del codice risulta in 9 case statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
+Questa operazione all'interno del codice risulta in nove case statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
 
-\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry.
+\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry. 
+
+Il risultato delle somme saranno i nove operandi a 12-bit pronti per essere inviati al circuito Carry Save Adder Tree che provvedderà a sommarli insieme e a determinare il valore del pixel filtrato.
 \end{itemize}
 
 \subsection{Alcune note sui prodotti}
@@ -109,7 +112,13 @@ Questi prodotti sono semplici da ottenere:
 
 La strategia è quella di utilizzare A e B per ottenere i prodotti non immediati (ad esempio 3, 5, 6, 7 e così via) combinando i prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y attraverso la somma finale. 
 
-Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4, si determinano i parziali da sommare insieme e si avrà ottenuto il pixel filtrato.
+Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4, si determinano i parziali da sommare insieme, quindi si otterranno i nove valori da inserire come input nel Carry Save.
+
+La circuito finale avrà questa struttura:
+\begin{figure}[H]  
+	\hspace{-3.5 cm}
+    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/mul.png}
+\end{figure}
 
 \section{Il testing}
 Si allegano ora i risultati del testbench effettuato in cui figurano i risultati correttamente calcolati:
