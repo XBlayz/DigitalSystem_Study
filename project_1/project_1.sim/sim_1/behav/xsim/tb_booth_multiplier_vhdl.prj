@@ -1,9 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../project_1.srcs/sources_1/imports/src/booth_multiplier.vhd" \
-"../../../../project_1.srcs/sources_1/imports/src/full_adder.vhd" \
-"../../../../project_1.srcs/sources_1/imports/src/ripple_carry_adder.vhd" \
-"../../../../project_1.srcs/sim_1/imports/sim/tb_booth_multiplier.vhd" \
-
-# Do not sort compile order
-nosort
