@@ -17,10 +17,11 @@ Viene rivolta particolare attenzione per i pixel che si trovano lungo i bordi e 
 Il filtraggio vero e proprio avviene attraverso l'operazione di convoluzione: i pixel dell'immagine vengono moltiplicati con il coefficiente corrispondente del filtro e infine tutti i prodotti parziali vengono sommati insieme. 
 Il risultato sarà il pixel centrale filtrato con il Filtro Gaussiano o Gaussian Blur che ha come coefficienti:
 \begin{table}[H]
-\begin{tabular}{ccc}
-\multicolumn{1}{l}{2} & \multicolumn{1}{l}{1} & \multicolumn{1}{l}{2} \\
-2                     & 4                     & 2                     \\
-1                     & 2                     & 1                    
+\begin{tabular}{|c|c|c|}
+\hline
+1 & 2 & 1 \\ \hline
+2 & 4 & 2 \\ \hline
+1 & 2 & 1 \\ \hline
 \end{tabular}
 \end{table}
 
