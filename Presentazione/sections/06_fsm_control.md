@@ -25,7 +25,6 @@ Ogni stato gestisce 3 segnali relativi alla pipeline:
 - `flush_pipeline`: gestisce se leggere un nuovo pixel o _zero_ in ingresso alla pipeline
 
 </div>
-
 <div class="flex justify-center mt-8">
 
 ```mermaid
@@ -69,7 +68,6 @@ Il design agisce come un nodo di elaborazione stream (slave in ingresso, master 
 - **EOL (`tlast`)**: Campionato per contare le righe in ingresso e innescare la fase di `FLUSH` al caricamento dell'ultimo pixel
 
 </div>
-
 <div>
 
 ### AXI Master (Uscita)
@@ -119,7 +117,7 @@ level: 2
 # Controllo Pipeline e Backpressure
 La logica combinatoria che governa l'abilitazione dei registri (`pipeline_en`) è il cuore del dataflow
 
-```vhdl {2-4|6-7|all}
+```vhdl {1-4|6-7|all}
 -- 1. Controllo Pipeline (Avanzamento Globale)
 pipeline_en_s <- '1' when ((s_axis_tvalid = '1' or current_state = FLUSH)
                            and (m_axis_tready = '1' or window_valid_s = '0'))
@@ -127,7 +125,6 @@ pipeline_en_s <- '1' when ((s_axis_tvalid = '1' or current_state = FLUSH)
 
 -- 2. Handshake Ingresso (TREADY)
 s_axis_tready <- '1' when (current_state /= FLUSH and m_axis_tready = '1') else '0';
-
 ```
 
 ### Analisi della Backpressure
