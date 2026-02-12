@@ -191,8 +191,8 @@ Il vettore di test copre le criticità del ripple carry:
 
 1. **Zero + Zero**: Verifica reset/base
 2. **Somma standard**: Verifica funzionalità aritmetica
-3. **Overflow (8-bit)**: Verifica che il riporto esca correttamente dal MSB
-4. **Propagazione Completa**: Verifica il ritardo e la correttezza quando il riporto deve attraversare tutta la catena
+3. **Overflow (8-bit)**: Verifica che il riporto esca correttamente dal MSB ($C_{out}=1$)
+4. **Propagazione Completa**: Verifica il ritardo e la correttezza quando il riporto deve attraversare tutta la catena ($C_{in} \rightarrow C_{out}$)
 
 </div>
 </div>
