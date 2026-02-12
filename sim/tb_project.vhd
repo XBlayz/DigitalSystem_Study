@@ -14,8 +14,8 @@ architecture testing of tb_project is
 
     -- FILE I/O SETTINGS
     -- Assicurati che questi file esistano nella cartella della simulazione
-    file input_file  : text open read_mode  is "input_image.txt";
-    file output_file : text open write_mode is "output_image.txt";
+    file input_file  : text open read_mode  is "lena32_vettore.txt";
+    file output_file : text open write_mode is "filtered_lena32_vettore.txt";
 
     -- Testing signals
     signal s_axis_clk    : std_logic := '0';

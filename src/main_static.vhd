@@ -26,31 +26,31 @@ architecture Instantiation of main_static is
     constant ncol_img : integer := 32;
     constant nrow_img : integer := 32;
 
-    constant kernel00 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel01 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel02 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel10 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel11 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
-    constant kernel12 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel20 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel21 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    constant kernel22 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+    constant kernel00 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+    constant kernel01 : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+    constant kernel02 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+    constant kernel10 : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+    constant kernel11 : STD_LOGIC_VECTOR(3 downto 0) := "0100";
+    constant kernel12 : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+    constant kernel20 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
+    constant kernel21 : STD_LOGIC_VECTOR(3 downto 0) := "0010";
+    constant kernel22 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
 
     -- Generic component
     component main is
         generic (
-            ncol_img : integer := 32;
-            nrow_img : integer := 32;
+            ncol_img : integer;
+            nrow_img : integer;
 
-            kernel00 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel01 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel02 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel10 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel11 : STD_LOGIC_VECTOR(3 downto 0) := "0001";
-            kernel12 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel20 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel21 : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-            kernel22 : STD_LOGIC_VECTOR(3 downto 0) := "0000"
+            kernel00 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel01 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel02 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel10 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel11 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel12 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel20 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel21 : STD_LOGIC_VECTOR(3 downto 0);
+            kernel22 : STD_LOGIC_VECTOR(3 downto 0)
         );
         port (
             s_axis_clk      : in  std_logic;
