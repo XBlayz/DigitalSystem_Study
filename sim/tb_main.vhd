@@ -124,7 +124,8 @@ begin
         s_axis_rstn <= '0';
         wait for CLK_PERIOD * 10;
         s_axis_rstn <= '1';
-        wait for CLK_PERIOD * 2;
+        --wait for CLK_PERIOD * 2;
+        wait until falling_edge(s_axis_clk);
 
         report "Inizio invio pixel (5x5)...";
 
@@ -159,6 +160,8 @@ begin
                 while s_axis_tready = '0' loop
                     wait until rising_edge(s_axis_clk);
                 end loop;
+
+                wait until falling_edge(s_axis_clk);
 
                 pixel_count <= pixel_count + 1;
             end loop;
