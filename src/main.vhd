@@ -202,7 +202,7 @@ begin
         if rising_edge(s_axis_clk) then
             if s_axis_rstn = '0' then
                 m_axis_tdata <= (others => '0');
-            elsif s_window_valid = '1' then
+            elsif s_window_valid = '1' and m_axis_tready = '1' then
                 m_axis_tdata <= output_sum;
             end if;
 
