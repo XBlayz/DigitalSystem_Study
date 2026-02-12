@@ -31,7 +31,7 @@ architecture testing of tb_multiplier_adder is
            M_3_1, M_3_2, M_3_3 : std_logic_vector(n_adder-1 downto 0);
 
     --uscita sommatore (Pixel filtrato)
-    signal sum_out : std_logic_vector(n_adder+3 downto 0);
+    signal sum_out : std_logic_vector(n_adder+4 downto 0);
     signal p : std_logic_vector(comp_i-1 downto 0);
     signal f : std_logic_vector(coeff_f-1 downto 0);
 
@@ -62,16 +62,16 @@ architecture testing of tb_multiplier_adder is
         );
     end component booth_multiplier;
 
-    component carry_save_adder_tree is
+    component CSA_tree is
         generic (N : POSITIVE := 12);
 
         port (
             i_1_1, i_1_2, i_1_3 : in  std_logic_vector(N-1 downto 0);
             i_2_1, i_2_2, i_2_3 : in  std_logic_vector(N-1 downto 0);
             i_3_1, i_3_2, i_3_3 : in  std_logic_vector(N-1 downto 0);
-            sum                 : out std_logic_vector(N+3 downto 0)
+            sum                 : out std_logic_vector(N+4 downto 0)
         );
-    end component carry_save_adder_tree;
+    end component CSA_tree;
 
 begin
     P_1_1 <= p;
@@ -116,7 +116,7 @@ begin
             M_3_1 => M_3_1, M_3_2 => M_3_2, M_3_3 => M_3_3
         );
 
-    CSAt: carry_save_adder_tree
+    CSAt: CSA_tree
         generic map(N=>n_adder)
 
         port map( i_1_1=>M_1_1, i_1_2=>M_1_2, i_1_3=>M_1_3,

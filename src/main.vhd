@@ -29,7 +29,7 @@ entity main is
         m_axis_tlast    : out std_logic; -- Output EOL
         m_axis_tready   : in  std_logic;
         m_axis_tuser    : out std_logic; -- Output SOF
-        m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0) -- comp_i + coeff_f + 4
+        m_axis_tdata    : out std_logic_vector(8+4+4 downto 0) -- comp_i + coeff_f + 4
     );
 end entity main;
 
@@ -81,7 +81,7 @@ architecture Structural of main is
             i_1_1, i_1_2, i_1_3 : in  std_logic_vector(N-1 downto 0);
             i_2_1, i_2_2, i_2_3 : in  std_logic_vector(N-1 downto 0);
             i_3_1, i_3_2, i_3_3 : in  std_logic_vector(N-1 downto 0);
-            sum                 : out std_logic_vector(N+3 downto 0)
+            sum                 : out std_logic_vector(N+4 downto 0)
         );
     end component carry_save_adder_tree;
 
@@ -119,7 +119,7 @@ architecture Structural of main is
     signal M_1_1, M_1_2, M_1_3 : std_logic_vector(n_adder-1 downto 0);
     signal M_2_1, M_2_2, M_2_3 : std_logic_vector(n_adder-1 downto 0);
     signal M_3_1, M_3_2, M_3_3 : std_logic_vector(n_adder-1 downto 0);
-    signal output_sum          : std_logic_vector(comp_i+coeff_f+3 downto 0);
+    signal output_sum          : std_logic_vector(comp_i+coeff_f+4 downto 0);
 
     -- Latch output AXI signals
     signal m_axis_tvalid_s, m_axis_tlast_s, m_axis_tuser_s : std_logic;
