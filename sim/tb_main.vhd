@@ -26,7 +26,7 @@ architecture testing of tb_main is
     signal m_axis_tlast  : std_logic;
     signal m_axis_tuser  : std_logic;
     signal m_axis_tready : std_logic := '1';
-    signal m_axis_tdata  : std_logic_vector(8+4+4 downto 0); -- 16 bits
+    signal m_axis_tdata  : std_logic_vector((8+4+4)-1 downto 0); -- 16 bits
 
     -- Auxiliary signals
     signal pixel_count   : integer := 0;
@@ -62,7 +62,7 @@ architecture testing of tb_main is
             m_axis_tlast    : out std_logic; -- Output EOL
             m_axis_tready   : in  std_logic;
             m_axis_tuser    : out std_logic; -- Output SOF
-            m_axis_tdata    : out std_logic_vector(8+4+4 downto 0)
+            m_axis_tdata    : out std_logic_vector((8+4+4)-1 downto 0) -- comp_i + coeff_f + 4
         );
     end component main;
 
@@ -124,7 +124,8 @@ begin
         s_axis_rstn <= '0';
         wait for CLK_PERIOD * 10;
         s_axis_rstn <= '1';
-        wait for CLK_PERIOD * 2;
+        --wait for CLK_PERIOD * 2;
+        wait until falling_edge(s_axis_clk);
 
         report "Inizio invio pixel (5x5)...";
 
@@ -160,6 +161,8 @@ begin
                     wait until rising_edge(s_axis_clk);
                 end loop;
 
+                wait until falling_edge(s_axis_clk);
+
                 pixel_count <= pixel_count + 1;
             end loop;
         end loop;
@@ -171,7 +174,7 @@ begin
         wait;
     end process;
 
-     -- ================================================================
+    -- ================================================================
     -- Reading OUTPUT data and storing in received_pixels
     -- ================================================================
     output_reader : process(s_axis_clk)
@@ -301,13 +304,13 @@ begin
     -- Processo di Controllo Backpressure (Opzionale)
     -- ================================================================
     -- Per testare il flusso con tready variabile, decommentare:
-    -- backpressure : process
-    -- begin
-    --     m_axis_tready <= '1';
-    --     wait for CLK_PERIOD * 10;
-    --     m_axis_tready <= '0';  -- Blocca per 3 cicli
-    --     wait for CLK_PERIOD * 3;
-    --     m_axis_tready <= '1';
-    -- end process;
+    backpressure : process
+    begin
+        m_axis_tready <= '1';
+        wait for CLK_PERIOD * 10;
+        m_axis_tready <= '0';  -- Blocca per 3 cicli
+        wait for CLK_PERIOD * 3;
+        m_axis_tready <= '1';
+    end process;
 
 end testing;
