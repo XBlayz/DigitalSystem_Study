@@ -86,3 +86,70 @@ Analizzando il codice nel Listing \ref{lst:pipeline_en}, l'abilitazione avviene 
 \end{enumerate}
 
 Se \texttt{m\_axis\_tready} scende a livello logico basso mentre è presente un dato valido in uscita, il segnale \texttt{pipeline\_en\_s} viene deasserito. Questo causa l'arresto immediato di tutti i registri a scorrimento e dei buffer, preservando lo stato interno del filtro fino a quando la congestione a valle non viene risolta.
+
+\section{Verifica Funzionale: Integrazione FSM e Buffer Line}
+
+Al fine di validare l'interazione tra la logica di controllo (FSM) e la pipeline di memoria (\textit{Buffer Line}), è stata sviluppata una testbench specifica. L'obiettivo principale è verificare la correttezza del protocollo AXI-Stream (gestione dell'handshake) e la coerenza dei dati in uscita durante le fasi critiche di \textit{Start of Frame} e \textit{Flush}.
+
+\subsection{Setup di Simulazione}
+Per facilitare l'analisi visiva delle waveform e il debug, i parametri del design sono stati ridotti rispetto alla configurazione di sintesi finale. Il setup di simulazione prevede:
+
+\begin{itemize}
+	\item \textbf{Dimensione Immagine:} Ridotta a $5 \times 5$ pixel (rispetto ai $32 \times 32$ o superiori del target reale). Questo permette di osservare un intero frame in un intervallo di tempo limitato.
+	\item \textbf{Pattern Dati:} Generazione di un gradiente incrementale prevedibile. Il valore del pixel è calcolato come:
+	\[
+	P(row, col) = (row \times N_{col}) + col
+	\]
+	In questo modo, la sequenza di ingresso è composta da valori progressivi (0, 1, 2, \dots, 24), rendendo immediata l'identificazione di eventuali disallineamenti o perdite di dati nella pipeline.
+	\item \textbf{Obiettivo:} La simulazione si concentra sui casi limite (corner cases): l'allineamento iniziale, la gestione della backpressure e il riempimento automatico (padding) durante la fase finale di flush.
+\end{itemize}
+
+\begin{figure}[htbp]
+	\centering
+	% Assicurati che il percorso dell'immagine sia corretto
+	\includegraphics[width=\textwidth]{file_relazione/imgs/TB_waveforme_BL+FSM.png}
+	\caption{Waveform della simulazione: interazione tra FSM e Buffer Line durante la fase di Flush.}
+	\label{fig:tb_waveform}
+\end{figure}
+
+\subsection{Generazione degli Stimoli e Handshake AXI}
+Il processo di stimolo della testbench emula una sorgente AXI-Stream Master. Un aspetto cruciale della verifica è la simulazione della \textit{backpressure}: il testbench non si limita a inviare dati, ma rispetta rigorosamente i segnali di controllo provenienti dal DUT (Device Under Test).
+
+Nel Listing \ref{lst:tb_process} è riportato lo snippet VHDL che gestisce la generazione del frame. È fondamentale notare il loop di attesa su \texttt{s\_axis\_tready}: se la FSM abbassa il segnale di pronto (ad esempio durante un reset o una stallo interno), il generatore di stimoli sospende l'invio, garantendo la conformità al protocollo.
+
+\begin{lstlisting}[language=VHDL, caption={Processo di generazione stimoli con gestione Handshake AXI}, label={lst:tb_process}]
+	-- Processo di Stimolo: Generazione Immagine 5x5
+	process
+	begin
+	-- Attesa reset...
+	wait until rising_edge(clk);
+	
+	for row in 0 to NROW-1 loop
+	for col in 0 to NCOL-1 loop
+	-- Generazione Dato: Indice univoco per tracciabilita'
+	s_axis_tdata  <= std_logic_vector(to_unsigned(row * NCOL + col, 8));
+	s_axis_tvalid <= '1';
+	
+	-- Gestione Handshake (Backpressure Compliance)
+	-- Il dato rimane valido finche' la FSM non e' pronta (tready = '1')
+	loop
+	wait until rising_edge(clk);
+	exit when s_axis_tready = '1';
+	end loop;
+	
+	end loop;
+	end loop;
+	
+	-- Fine Frame: Disabilitazione validita' e attesa completamento flush
+	s_axis_tvalid <= '0';
+	wait for 100 ns;
+	-- ...
+	end process;
+\end{lstlisting}
+
+\subsection{Esiti della Verifica}
+La simulazione ha confermato i seguenti comportamenti chiave:
+\begin{enumerate}
+	\item \textbf{Robustezza all'Handshake:} Il sistema gestisce correttamente le pause nel flusso dati. Quando \texttt{s\_axis\_tvalid} viene deasserito o quando la FSM deasserisce \texttt{s\_axis\_tready}, nessun dato viene perso o duplicato.
+	\item \textbf{Automatismo del Flush:} Al termine dei loop di generazione (quando l'ultimo pixel valido entra nel sistema), la FSM rileva correttamente la condizione di fine frame. Come visibile in Figura \ref{fig:tb_waveform}, il segnale \texttt{flush\_pipeline} viene attivato internamente, forzando l'ingresso dei buffer a zero (padding). Questo permette alla finestra $3 \times 3$ di scorrere correttamente fino all'ultimo pixel dell'immagine, garantendo che l'output abbia le stesse dimensioni dell'input.
+\end{enumerate}
