@@ -168,10 +168,9 @@ graph TD
         GEN -- "Data Copy" --> BUF
         BUF -- "Window 3x3" --> WAVE[Waveform]
     end
-
 ```
 
-<!-- #TODO: Immagine waveform -->
+![Testbench](../img/TB_waveforme_BL+FSM.png)
 
 </div>
 </div>
