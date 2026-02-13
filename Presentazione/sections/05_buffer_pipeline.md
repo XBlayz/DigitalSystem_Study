@@ -35,8 +35,6 @@ graph LR
     end
 ```
 
-<!-- #TODO: immagine implementazione -->
-
 I dati viaggiano dalla porta AXI-Stream di ingresso verso l'ultima posizione, caricando l'immagine in ordine inverso nei registri di finestra (`d22` pixel precedente a `d00`).
 
 ---

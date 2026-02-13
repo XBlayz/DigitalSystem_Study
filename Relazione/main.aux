@@ -6,39 +6,80 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \babel@aux{italian}{}
 \babel@aux{italian}{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduzione}{2}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduzione}{3}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Il moltiplicatore}{4}{chapter.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Componenti Base}{5}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Implementazione}{4}{section.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Alcune note sui prodotti}{6}{subsection.2.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Il testing}{7}{section.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}BufferLine}{8}{chapter.3}\protected@file@percent }
+\newlabel{chap:componenti_base}{{2}{5}{Componenti Base}{chapter.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Full Adder}{5}{section.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Logica Implementativa}{5}{subsection.2.1.1}\protected@file@percent }
+\newlabel{lst:full_adder}{{2.1}{6}{Entity e Architecture del Full Adder}{lstlisting.2.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}Entity e Architecture del Full Adder}{6}{lstlisting.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}N-Bit Ripple Carry Adder (RCA)}{6}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Architettura Parametrica}{6}{subsection.2.2.1}\protected@file@percent }
+\newlabel{lst:rca}{{2.2}{6}{Ripple Carry Adder parametrico}{lstlisting.2.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.2}Ripple Carry Adder parametrico}{6}{lstlisting.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Strategie di Testing}{7}{section.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Unit Testing: Full Adder (Exhaustive)}{7}{subsection.2.3.1}\protected@file@percent }
+\newlabel{lst:tb_fa}{{2.3}{7}{Testbench Full Adder con Tabella della Verità}{lstlisting.2.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.3}Testbench Full Adder con Tabella della Verità}{7}{lstlisting.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Unit Testing: Ripple Carry Adder (Directed)}{8}{subsection.2.3.2}\protected@file@percent }
+\newlabel{lst:tb_rca_cases}{{2.4}{8}{Corner Cases per RCA}{lstlisting.2.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.4}Corner Cases per RCA}{8}{lstlisting.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Il Carry Save Adder Tree}{9}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Buffer e Pipeline: L'architettura Sliding Window}{8}{section.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Architettura del Dataflow}{8}{subsection.3.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Implementazione degli Shift Register Arrays}{9}{subsection.3.1.2}\protected@file@percent }
-\newlabel{lst:linebuffer}{{3.1}{9}{Definizione e processo di shift dei Line Buffer}{lstlisting.3.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Definizione e processo di shift dei Line Buffer}{9}{lstlisting.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Gestione del Flush e Padding}{10}{subsection.3.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Logica di Inserimento Zeri}{10}{section*.2}\protected@file@percent }
-\newlabel{lst:flush_logic}{{3.2}{10}{Multiplexer di ingresso per gestione Flush e Padding}{lstlisting.3.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Multiplexer di ingresso per gestione Flush e Padding}{10}{lstlisting.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}FSM ed AXI-Stream}{11}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementazione}{9}{section.3.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Entity del circuito sommatore}{10}{lstlisting.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Il Carry Select Adder}{14}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Il circuito finale}{16}{section.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Il testing}{17}{section.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Caso positivo}{18}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Caso negativo}{19}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Il Carry Save Adder Tree}{21}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Implementazione della FSM e Interfacce AXI-Stream}{11}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Architettura della FSM}{11}{subsection.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Gestione del Protocollo AXI4-Stream}{12}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{12}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Master (Uscita)}{13}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Sincronizzazione e Rimozione dello stato IDLE}{13}{subsection.4.1.3}\protected@file@percent }
-\newlabel{lst:sof_logic}{{4.1}{13}{Gestione sincrona del SOF e reset implicito}{lstlisting.4.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}Gestione sincrona del SOF e reset implicito}{13}{lstlisting.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Controllo del Dataflow e Backpressure}{14}{subsection.4.1.4}\protected@file@percent }
-\newlabel{lst:pipeline_en}{{4.2}{14}{Logica di abilitazione pipeline e gestione backpressure}{lstlisting.4.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.2}Logica di abilitazione pipeline e gestione backpressure}{14}{lstlisting.4.2}\protected@file@percent }
-\gdef \@abspage@last{15}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Implementazione}{21}{section.4.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.1}Entity del circuito sommatore}{22}{lstlisting.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Il Carry Select Adder}{26}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Il circuito finale}{28}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Il testing}{29}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Caso positivo}{30}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Caso negativo}{31}{subsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}BufferLine}{33}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Buffer e Pipeline: L'architettura Sliding Window}{33}{section.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Architettura del Dataflow}{33}{subsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Implementazione degli Shift Register Arrays}{34}{subsection.5.1.2}\protected@file@percent }
+\newlabel{lst:linebuffer}{{5.1}{34}{Definizione e processo di shift dei Line Buffer}{lstlisting.5.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}Definizione e processo di shift dei Line Buffer}{34}{lstlisting.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}Gestione del Flush e Padding}{35}{subsection.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Logica di Inserimento Zeri}{35}{section*.2}\protected@file@percent }
+\newlabel{lst:flush_logic}{{5.2}{35}{Multiplexer di ingresso per gestione Flush e Padding}{lstlisting.5.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.2}Multiplexer di ingresso per gestione Flush e Padding}{35}{lstlisting.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}FSM ed AXI-Stream}{36}{chapter.6}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Implementazione della FSM e Interfacce AXI-Stream}{36}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Architettura della FSM}{36}{subsection.6.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Gestione del Protocollo AXI4-Stream}{37}{subsection.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{37}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Interfaccia Master (Uscita)}{38}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.3}Sincronizzazione e Rimozione dello stato IDLE}{38}{subsection.6.1.3}\protected@file@percent }
+\newlabel{lst:sof_logic}{{6.1}{38}{Gestione sincrona del SOF e reset implicito}{lstlisting.6.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.1}Gestione sincrona del SOF e reset implicito}{38}{lstlisting.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.4}Controllo del Dataflow e Backpressure}{39}{subsection.6.1.4}\protected@file@percent }
+\newlabel{lst:pipeline_en}{{6.2}{39}{Logica di abilitazione pipeline e gestione backpressure}{lstlisting.6.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.2}Logica di abilitazione pipeline e gestione backpressure}{39}{lstlisting.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Verifica Funzionale: Integrazione FSM e Buffer Line}{39}{section.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Setup di Simulazione}{40}{subsection.6.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Generazione degli Stimoli e Handshake AXI}{40}{subsection.6.2.2}\protected@file@percent }
+\newlabel{lst:tb_process}{{6.3}{40}{Processo di generazione stimoli con gestione Handshake AXI}{lstlisting.6.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6.3}Processo di generazione stimoli con gestione Handshake AXI}{40}{lstlisting.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Waveform della simulazione: interazione tra FSM e Buffer Line durante la fase di Flush.}}{41}{figure.6.1}\protected@file@percent }
+\newlabel{fig:tb_waveform}{{6.1}{41}{Waveform della simulazione: interazione tra FSM e Buffer Line durante la fase di Flush}{figure.6.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Esiti della Verifica}{42}{subsection.6.2.3}\protected@file@percent }
+\gdef \@abspage@last{43}
