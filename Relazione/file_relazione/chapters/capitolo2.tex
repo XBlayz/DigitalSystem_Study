@@ -1,134 +1,136 @@
-\maketitle
-\chapter{Il moltiplicatore}
-\section{Implementazione}
-La differenza principale con il moltiplicatore di Booth è che non si va a suddividere in gruppi di bit il moltiplicatore, ma si vanno a codificare tutti i possibili valori che possono assumere i coefficienti del filtro.
+\chapter{Componenti Base}
+\label{chap:componenti_base}
 
-La nostra implementazione va a sfruttare i $2^4=16$ casi possibili per ogni coefficiente del filtro F\_x\_y.
+In questo capitolo vengono descritti i blocchi aritmetici fondamentali progettati ed implementati per costituire la base delle elaborazioni successive.
 
-La buffer line scorre sull'immagine e invia i dati al moltiplicatore, nove alla volta secondo una finestra 3x3, i coefficienti del filtro invece restano fissi e vengono codificati.
+\section{Full Adder}
+L'elemento atomico per le operazioni aritmetiche è il Full Adder, un circuito combinatorio in grado di calcolare la somma di tre bit: due addendi ($A$, $B$) e un riporto in ingresso ($C_{in}$).
 
-Di seguito la entity:
-\begin{lstlisting}[language=VHDL, caption={Entity del moltiplicatore}]
-	entity booth_multiplier is
-    		generic(
-        			componente_immagine : POSITIVE := 8;
-        			coefficiente_filtro : POSITIVE := 4;
-        			somma : POSITIVE := 12
-   		 );
-    		port (
-        			P_1_1, P_1_2, P_1_3 : in std_logic_vector(
-									componente_immagine-1 downto 0);
-        			P_2_1, P_2_2, P_2_3 : in std_logic_vector(
-									componente_immagine-1 downto 0);
-        			P_3_1, P_3_2, P_3_3 : in std_logic_vector(
-									componente_immagine-1 downto 0);
 
-        			F_1_1, F_1_2, F_1_3 : in std_logic_vector(
-									coefficiente_filtro-1 downto 0);
-        			F_2_1, F_2_2, F_2_3 : in std_logic_vector(
-									coefficiente_filtro-1 downto 0);
-        			F_3_1, F_3_2, F_3_3 : in std_logic_vector(
-									coefficiente_filtro-1 downto 0);
 
-        			M_1_1, M_1_2, M_1_3 : out std_logic_vector(
-									somma-1 downto 0);
-        			M_2_1, M_2_2, M_2_3 : out std_logic_vector(
-									somma-1 downto 0);
-       			 M_3_1, M_3_2, M_3_3 : out std_logic_vector(
-									somma-1 downto 0)
-    		);
-	end entity booth_multiplier;
+\subsection{Logica Implementativa}
+Per l'implementazione su FPGA è stata scelta una descrizione \textit{behavioral}. Sebbene le equazioni canoniche siano:
+\begin{equation}
+	S = A \oplus B \oplus C_{in}
+\end{equation}
+\begin{equation}
+	C_{out} = (A \cdot B) + (C_{in} \cdot (A \oplus B))
+\end{equation}
 
+Il codice VHDL sfrutta il segnale di propagazione $P$ per ottimizzare l'inferenza della logica di riporto (Carry Logic), fondamentale per le prestazioni temporali:
+\begin{itemize}
+	\item Se $P = 1$ ($A \neq B$), il riporto $C_{out}$ è determinato da $C_{in}$.
+	\item Se $P = 0$ ($A = B$), il riporto $C_{out}$ è uguale ad $A$.
+\end{itemize}
+
+\begin{lstlisting}[language=VHDL, caption={Entity e Architecture del Full Adder}, label={lst:full_adder}]
+	entity full_adder is
+		port (
+			a, b, cin : in  STD_LOGIC;
+			s, cout   : out STD_LOGIC
+		);
+	end entity full_adder;
+	
+	architecture behavioral of full_adder is
+		signal p : STD_LOGIC;
+		begin
+		-- Calcolo Propagate
+		p <= a xor b;
+		s <= p xor cin;
+	
+		-- Mux-based Carry logic (Efficiente su FPGA)
+		cout <= cin when p = '1' else a;
+	end architecture behavioral;
 \end{lstlisting}
 
-Le entrate si suddividono in questo modo:
+\section{N-Bit Ripple Carry Adder (RCA)}
+Per sommare vettori di bit, la struttura più semplice è il Ripple Carry Adder, ottenuto collegando in cascata $N$ istanze di Full Adder.
+
+
+
+\subsection{Architettura Parametrica}
+Il componente è stato reso generico attraverso il parametro `N`. L'uso del costrutto \texttt{generate} permette di istanziare dinamicamente la catena di addizionatori in base alla larghezza di bit desiderata a tempo di sintesi.
+
 \begin{itemize}
-	\item  i segnali P\_x\_y sono i pixel dell'immagine che hanno dimensione 8-bit
-	\item i segnali F\_x\_y sono i coefficcienti del filtro con dimensione 4-bit
-\end{itemize} 
-
-Se il moltiplicando e il moltiplicatore sono composti rispettivamente da $m$ ed $n$ bit il risultato del prodottto andrà espresso in $m+n$-bit.
-
-Le uscite sono invece i segnali M\_x\_y con dimensione $m+n=8+4=12$-bit.
-
-\bigskip
-Il moltiplicatore segue questo funzionamento:
-\begin{itemize}
-	\item L'operazione principale che abbiamo effettuato è la codifica dei sedici possibili valori che può assumere ogni coefficiente del filtro;
-	\item Si codificano i due prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente. 
-		   Dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per P\_x\_y separatamente ottenendo i 				  segnali P\_P\_A\_x\_y e P\_P\_B\_x\_y secondo la seguente tabella:
-\begin{table}[H]
-\centering
-\makebox[\textwidth][c]{
-	\begin{tabular}{cccccc}
-Case filtro & Numero da codificare & A  & B  & P\_P\_A\_x\_y                                        & P\_P\_B\_x\_y               \\ \hline
-0000                    & 0                    & 0  & 0  & 000000000000                                         & 000000000000                \\ \hline
-0001                    & 1                    & 1  & 0  & 0000 P\_x\_y                                         & 000000000000                \\ \hline
-0010                    & 2                    & -2 & 4  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 00 P\_x\_y 00               \\ \hline
-0011                    & 3                    & -1 & 4  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 00 P\_x\_y 00               \\ \hline
-0100                    & 4                    & 0  & 4  & 000000000000                                         & 00 P\_x\_y 00               \\ \hline
-0101                    & 5                    & 1  & 4  & 0000 P\_x\_y                                         & 00 P\_x\_y 00               \\ \hline
-0110                    & 6                    & -2 & 8  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 0 P\_x\_y 000               \\ \hline
-0111                    & 7                    & -1 & 8  & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 0 P\_x\_y 000               \\ \hline
-1000                    & -8                   & 0  & -8 & 000000000000                                         & N\_P\_x\_y 000              \\ \hline
-1001                    & -7                   & 1  & -8 & 0000 P\_x\_y                                         & N\_P\_x\_y 000              \\ \hline
-1010                    & -6                   & -2 & -4 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
-1011                    & -5                   & -1 & -4 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
-1100                    & -4                   & 0  & -4 & 000000000000                                         & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
-1101                    & -3                   & 1  & -4 & 0000 P\_x\_y                                         & N\_P\_x\_y(8) N\_P\_x\_y 00 \\ \hline
-1110                    & -2                   & -2 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y 0             & 000000000000 \\ \hline
-1111                    & -1                  & -1 & 0 & N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y(8) N\_P\_x\_y & 000000000000 \\ \hline
-others                  & 0                   & 0 & 0 & 000000000000                                               &000000000000 \\ \hline
-	\end{tabular}
-}
-\end{table}
-
-Da notare che N\_P\_x\_y  ha dimensione 9-bit ed esprime il complemento a due del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso un Ripple Carry Adder (in pratica rappresenta la versione negativa del segnale iniziale), e si utilizza quando i prodotti parziali P\_P\_A\_x\_y oppure P\_P\_B\_x\_y sono negativi.
-
-Da ricordare che P\_P\_A\_x\_y e P\_P\_B\_x\_y devono essere di 12-bit quindi vanno gestiti efficientemente i prodotti da effettuare attraverso gli shift sinistri e l'estensione che deve portare ogni segnale alla dimensione giusta. 
-
-Questa operazione all'interno del codice risulta in nove case statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
-
-\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry. 
-
-Il risultato delle somme saranno i nove operandi a 12-bit pronti per essere inviati al circuito Carry Save Adder Tree che provvedderà a sommarli insieme e a determinare il valore del pixel filtrato.
+	\item \textbf{Vantaggi:} Semplicità implementativa e occupazione d'area ridotta.
+	\item \textbf{Svantaggi:} Ritardo di propagazione lineare ($T_{delay} \propto N$), poiché il riporto deve attraversare l'intera catena dal LSB al MSB.
 \end{itemize}
 
-\subsection{Alcune note sui prodotti}
-I prodotti vengono effettuati in modo intelligente, provando a sfruttare operazioni immediate come shift sinistri e negazioni, quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via, nello stesso modo in cui si calcolano nel moltiplicatore di Booth. 
+\begin{lstlisting}[language=VHDL, caption={Ripple Carry Adder parametrico}, label={lst:rca}]
+	entity ripple_carry_adder is
+		generic ( N : POSITIVE ); 
+		port ( 
+			a, b : in  std_logic_vector(N-1 downto 0);
+			cin  : in  std_logic;
+			s    : out std_logic_vector(N-1 downto 0);
+			cout : out std_logic
+		);
+	end entity ripple_carry_adder;
+	
+	architecture structural of ripple_carry_adder is
+		signal c : std_logic_vector(N downto 0);
+		begin
+		c(0) <= cin; -- Carry in iniziale
+	
+		loop_n: for i in 0 to N - 1 generate
+			fa_i: entity work.full_adder
+			port map (
+				a    => a(i),
+				b    => b(i),
+				cin  => c(i),
+				s    => s(i),
+				cout => c(i + 1) -- Chain connection
+			);
+		end generate loop_n;
+	
+		cout <= c(N); -- Ultimo riporto
+	end architecture structural;
+\end{lstlisting}
 
-Questi prodotti sono semplici da ottenere:
-\begin{itemize}
-	\item Prodotto per 0 $=>$ Il prodotto parziale avrà tutti i bit a 0;
-	\item Prodotto per 1 $=>$ Il prodotto parziale sarà uguale al moltiplicando;
-	\item Prodotto per -1 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce l'inversione dei bit e a cui viene sommato 1;
-	\item Prodotto per 2 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce uno shift sinistro;
-	\item Prodotto per -2 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce l'inversione dei bit, la somma di 1 e uno shift sinistro;
-	\item Prodotto per 4 $=>$  Il prodotto parziale sarà uguale al moltiplicando che subisce due shift sinistri;
-	\item Prodotto per -4 $=>$ Il prodotto parziale sarà uguale al moltiplicando che subisce l'inversione dei bit, la somma di 1 e due shift sinistri;
+\section{Strategie di Testing}
+La verifica dei componenti aritmetici ha seguito due approcci distinti in base alla complessità dello spazio degli stati.
 
- e così via.
-\end{itemize}
+\subsection{Unit Testing: Full Adder (Exhaustive)}
+Poiché il Full Adder ha solo 3 ingressi ($2^3 = 8$ casi totali), è stato possibile implementare un test esaustivo iterando su una \textbf{Truth Table} completa. La testbench è \textit{self-checking}: confronta l'uscita del DUT (Device Under Test) con il valore atteso memorizzato nella tabella.
 
-La strategia è quella di utilizzare A e B per ottenere i prodotti non immediati (ad esempio 3, 5, 6, 7 e così via) combinando i prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y attraverso la somma finale. 
+\begin{lstlisting}[language=VHDL, caption={Testbench Full Adder con Tabella della Verità}, label={lst:tb_fa}]
+	type truth_table_type is array (0 to 7) of std_logic_vector(4 downto 0);
+	
+	constant TRUTH_TABLE : truth_table_type := (
+	"000" & "00", -- 0+0+0 = 0 (C=0)
+	"011" & "10", -- 0+1+1 = 0 (C=1)
+	"111" & "11", -- 1+1+1 = 1 (C=1)
+	-- ... altri casi ...
+	others => (others => '0')
+	);
+	
+	-- Loop di simulazione
+	-- (Codice omesso per brevita', itera su TRUTH_TABLE)
+\end{lstlisting}
 
-Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4, si determinano i parziali da sommare insieme, quindi si otterranno i nove valori da inserire come input nel Carry Save.
+\subsection{Unit Testing: Ripple Carry Adder (Directed)}
+Per l'addizionatore a $N$ bit, verificare tutte le combinazioni ($2^{2N+1}$) è impraticabile. Si è optato per un \textit{Directed Testing} focalizzato sui "Corner Cases" (casi limite) critici per la propagazione del riporto.
 
-La circuito finale avrà questa struttura:
-\begin{figure}[H]  
-	\hspace{-3.5 cm}
-    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/mul.png}
-\end{figure}
+\begin{lstlisting}[language=VHDL, caption={Corner Cases per RCA}, label={lst:tb_rca_cases}]
+	constant TRUTH_TABLE : truth_table_type := (
+	-- Caso Base: 5 + 5 = 10
+	2 => std_logic_vector(x"05") & std_logic_vector(x"05") & '0' & ...
+	
+	-- Caso Overflow (Carry Out generation):
+	-- 255 (FF) + 1 (01) = 0 (00) con Carry=1
+	3 => std_logic_vector(x"FF") &
+	std_logic_vector(x"01") &
+	'0' & -- Cin
+	'1' & -- Expected Cout
+	std_logic_vector(x"00"), -- Expected Sum
+	
+	-- Altri casi...
+	others => (others => '0')
+	);
+\end{lstlisting}
 
-\section{Il testing}
-Si allegano ora i risultati del testbench effettuato in cui figurano i risultati correttamente calcolati:
-
-\begin{figure}[H]  
-	\hspace{-3.5 cm}
-    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/tb_mul(1).png}
-\end{figure}
-\begin{figure}[H] 
-	\vspace{-1 cm}
-	\hspace{-3.5 cm}
-    \includegraphics[width=1.5\textwidth]{file_relazione/imgs/tb_mul(2).png}
-\end{figure}
+Gli scenari validati includono:
+\begin{enumerate}
+	\item \textbf{Overflow:} Verifica che il riporto esca correttamente dal MSB ($C_{out}=1$).
+	\item \textbf{Propagazione Completa:} Verifica il caso peggiore di ritardo, dove un riporto generato al bit 0 deve propagarsi fino all'uscita $C_{out}$ (es. $011..1 + 000..1$).
+\end{enumerate}

@@ -1,35 +1,43 @@
 \babel@toc {italian}{}\relax 
 \babel@toc {italian}{}\relax 
 \contentsline {chapter}{\numberline {1}Introduzione}{3}{chapter.1}%
-\contentsline {chapter}{\numberline {2}Il Carry Save Adder Tree}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Implementazione}{5}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Il Carry Select Adder}{10}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Il circuito finale}{12}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Il testing}{13}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Caso positivo}{14}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Caso negativo}{15}{subsection.2.4.2}%
-\contentsline {chapter}{\numberline {3}Il Carry Save Adder Tree}{17}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Implementazione}{17}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Il Carry Select Adder}{22}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Il circuito finale}{24}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Il testing}{25}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Caso positivo}{26}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Caso negativo}{27}{subsection.3.4.2}%
-\contentsline {chapter}{\numberline {4}BufferLine}{29}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Buffer e Pipeline: L'architettura Sliding Window}{29}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Architettura del Dataflow}{29}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Implementazione degli Shift Register Arrays}{30}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Gestione del Flush e Padding}{31}{subsection.4.1.3}%
-\contentsline {subsubsection}{Logica di Inserimento Zeri}{31}{section*.2}%
-\contentsline {chapter}{\numberline {5}FSM ed AXI-Stream}{32}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Implementazione della FSM e Interfacce AXI-Stream}{32}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Architettura della FSM}{32}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Gestione del Protocollo AXI4-Stream}{33}{subsection.5.1.2}%
-\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{33}{section*.3}%
-\contentsline {subsubsection}{Interfaccia Master (Uscita)}{34}{section*.4}%
-\contentsline {subsection}{\numberline {5.1.3}Sincronizzazione e Rimozione dello stato IDLE}{34}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Controllo del Dataflow e Backpressure}{35}{subsection.5.1.4}%
-\contentsline {section}{\numberline {5.2}Verifica Funzionale: Integrazione FSM e Buffer Line}{35}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Setup di Simulazione}{36}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Generazione degli Stimoli e Handshake AXI}{36}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}Esiti della Verifica}{38}{subsection.5.2.3}%
+\contentsline {chapter}{\numberline {2}Componenti Base}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Full Adder}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Logica Implementativa}{5}{subsection.2.1.1}%
+\contentsline {section}{\numberline {2.2}N-Bit Ripple Carry Adder (RCA)}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Architettura Parametrica}{6}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3}Strategie di Testing}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Unit Testing: Full Adder (Exhaustive)}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Unit Testing: Ripple Carry Adder (Directed)}{8}{subsection.2.3.2}%
+\contentsline {chapter}{\numberline {3}Il Carry Save Adder Tree}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Implementazione}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Il Carry Select Adder}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Il circuito finale}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Il testing}{17}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Caso positivo}{18}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Caso negativo}{19}{subsection.3.4.2}%
+\contentsline {chapter}{\numberline {4}Il Carry Save Adder Tree}{21}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Implementazione}{21}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Il Carry Select Adder}{26}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Il circuito finale}{28}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Il testing}{29}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Caso positivo}{30}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Caso negativo}{31}{subsection.4.4.2}%
+\contentsline {chapter}{\numberline {5}BufferLine}{33}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Buffer e Pipeline: L'architettura Sliding Window}{33}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Architettura del Dataflow}{33}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Implementazione degli Shift Register Arrays}{34}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Gestione del Flush e Padding}{35}{subsection.5.1.3}%
+\contentsline {subsubsection}{Logica di Inserimento Zeri}{35}{section*.2}%
+\contentsline {chapter}{\numberline {6}FSM ed AXI-Stream}{36}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Implementazione della FSM e Interfacce AXI-Stream}{36}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Architettura della FSM}{36}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Gestione del Protocollo AXI4-Stream}{37}{subsection.6.1.2}%
+\contentsline {subsubsection}{Interfaccia Slave (Ingresso)}{37}{section*.3}%
+\contentsline {subsubsection}{Interfaccia Master (Uscita)}{38}{section*.4}%
+\contentsline {subsection}{\numberline {6.1.3}Sincronizzazione e Rimozione dello stato IDLE}{38}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}Controllo del Dataflow e Backpressure}{39}{subsection.6.1.4}%
+\contentsline {section}{\numberline {6.2}Verifica Funzionale: Integrazione FSM e Buffer Line}{39}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Setup di Simulazione}{40}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Generazione degli Stimoli e Handshake AXI}{40}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Esiti della Verifica}{42}{subsection.6.2.3}%
