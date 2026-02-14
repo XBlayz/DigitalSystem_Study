@@ -12,8 +12,7 @@ L'operazione di filtraggio deve essere condotta utilizzando un anchor point cent
 \bigskip
 L'immagine viene gestita attraverso il Buffer Line che restituisce i pixel di 3 righe allineati, pronti per essere inviati al moltiplicatore.
 
-Viene rivolta particolare attenzione per i pixel che si trovano lungo i bordi e che nella finestra di convoluzione subiscono zero padding, che viene garantito dall'inizializzazione a 0 del buffer e dei vettori del componente. 
-
+Viene rivolta particolare attenzione per i pixel che si trovano lungo i bordi e che nella finestra di convoluzione subiscono zero padding ai bordi superiori ed inferiori e vengono gestiti con la modalità toroidale ai bordi sinistri e destri.
 Il filtraggio vero e proprio avviene attraverso l'operazione di convoluzione: i pixel dell'immagine vengono moltiplicati con il coefficiente corrispondente del filtro e infine tutti i prodotti parziali vengono sommati insieme. 
 Il risultato sarà il pixel centrale filtrato con il Filtro Gaussiano o Gaussian Blur che ha come coefficienti:
 \begin{table}[H]
