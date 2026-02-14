@@ -55,8 +55,8 @@ Le uscite sono invece i segnali M\_x\_y con dimensione $m+n=8+4=12$-bit.
 Il moltiplicatore segue questo funzionamento:
 \begin{itemize}
 	\item L'operazione principale che abbiamo effettuato è la codifica dei sedici possibili valori che può assumere ogni coefficiente del filtro;
-	\item Si codificano i due prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente. 
-	Dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per P\_x\_y separatamente ottenendo i 				  segnali P\_P\_A\_x\_y e P\_P\_B\_x\_y secondo la seguente tabella:
+	\item Si codificano i due prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y per ogni pixel e relativo coefficiente: 
+	dato l'elevato numero dei casi possibili diventa complesso offrire una codifica diretta quindi si utilizzano A e B che vengono ciascuno moltiplicati per P\_x\_y separatamente e si ottengono i segnali P\_P\_A\_x\_y e P\_P\_B\_x\_y secondo la seguente tabella:
 	\begin{table}[H]
 		\centering
 		\makebox[\textwidth][c]{
@@ -83,19 +83,21 @@ Il moltiplicatore segue questo funzionamento:
 		}
 	\end{table}
 	
-	Da notare che N\_P\_x\_y  ha dimensione 9-bit ed esprime il complemento a due del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso un Ripple Carry Adder (in pratica rappresenta la versione negativa del segnale iniziale), e si utilizza quando i prodotti parziali P\_P\_A\_x\_y oppure P\_P\_B\_x\_y sono negativi.
+	Da notare che N\_P\_x\_y  ha dimensione 9-bit ed esprime il complemento a due del pixel P\_x\_y, quindi corrisponde alla sua inversione dei singoli bit e alla somma di '1' attraverso un Ripple Carry Adder (in pratica rappresenta la versione negativa del segnale iniziale), e si utilizza quando i prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y sono negativi.
 	
 	Da ricordare che P\_P\_A\_x\_y e P\_P\_B\_x\_y devono essere di 12-bit quindi vanno gestiti efficientemente i prodotti da effettuare attraverso gli shift sinistri e l'estensione che deve portare ogni segnale alla dimensione giusta. 
 	
-	Questa operazione all'interno del codice risulta in nove case statement in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
+	Questa operazione all'interno del codice risulta in nove case statement (uno per ogni coefficiente del filtro) in cui si codificano le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y per tutti i coefficienti del filtro.
 	
 	\item L'ultimo passaggio è la somma fra le componenti P\_P\_A\_x\_y e P\_P\_B\_x\_y calcolata per tutti gli ingressi attraverso dei semplici circuiti sommatori Ripple Carry. 
 	
-	Il risultato delle somme saranno i nove operandi a 12-bit pronti per essere inviati al circuito Carry Save Adder Tree che provvedderà a sommarli insieme e a determinare il valore del pixel filtrato.
+	Il risultato delle somme saranno i nove operandi a 12-bit pronti per essere inviati al circuito Carry Save Adder Tree che provvedderà a sommarli insieme e a determinare il valore del pixel filtrato, corrispondente al pixel P\_2\_2 in ingresso.
 \end{itemize}
 
 \subsection{Alcune note sui prodotti}
-I prodotti vengono effettuati in modo intelligente, provando a sfruttare operazioni immediate come shift sinistri e negazioni, quindi quelli per 0, +1, -1, +2, -2, +4, -4 e così via, nello stesso modo in cui si calcolano nel moltiplicatore di Booth. 
+I prodotti vengono effettuati in modo intelligente, provando a sfruttare operazioni immediate come shift sinistri e negazioni.
+
+Fra i prodotti da calcolare si privilegiano quelli per 0, +1, -1, +2, -2, +4, -4 e così via, nello medesimo modo in cui si calcolano nel moltiplicatore di Booth. 
 
 Questi prodotti sono semplici da ottenere:
 \begin{itemize}
@@ -109,19 +111,76 @@ Questi prodotti sono semplici da ottenere:
 	
 	e così via.
 \end{itemize}
+\subsection{Un esempio}
+La strategia è quella di utilizzare A e B per ottenere i prodotti combinando i parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y attraverso la loro somma finale. 
 
-La strategia è quella di utilizzare A e B per ottenere i prodotti non immediati (ad esempio 3, 5, 6, 7 e così via) combinando i prodotti parziali P\_P\_A\_x\_y e P\_P\_B\_x\_y attraverso la somma finale. 
+Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4 e si determinano i parziali da sommare insieme:
+\begin{itemize}
+	\item P\_P\_A\_x\_y = P\_x\_y * 1 $=>$ P\_P\_A\_x\_y = P\_x\_y 
+	\item P\_P\_B\_x\_y = P\_x\_y * 4 $=>$ Si effettuano due shift sinistri a P\_x\_y  $=>$ P\_P\_B\_x\_y = P\_x\_y 0 0
+\end{itemize}
+Allo stesso tempo si estendono i parziali per portarli alla dimensione 12-bit ricordando che P\_x\_y  ha dimensione 8-bit. 
 
-Ad esempio nel caso in cui il coefficiente abbia valore 5 (quindi 0101) si ricorre a codificare il prodotto per A=1 e per B=4, si determinano i parziali da sommare insieme, quindi si otterranno i nove valori da inserire come input nel Carry Save.
+I parziali per il caso in cui il coefficiente del filtro corrisponde a 1010 saranno:
+\begin{itemize}
+	\item P\_P\_A\_x\_y = 0 0 0 0 P\_x\_y 
+	\item P\_P\_B\_x\_y = 0 0 P\_x\_y 0 0
+\end{itemize}
+Che verranno sommati insieme con un Ripple Carry Adder.
 
-La circuito finale avrà questa struttura:
+Lo stesso esempio corrisponde ad avere 
+
+P\_x\_y * 5 $=>$ (P\_x\_y * 1) + (P\_x\_y * 4) 
+
+P\_x\_y * 5 $=>$ P\_x\_y + (P\_x\_y * 4)  
+
+P\_x\_y * 5 $=>$ P\_x\_y + P\_x\_y  + P\_x\_y  + P\_x\_y  + P\_x\_y 
+
+
+Per ognuna delle nove coppie pixel immagine-coefficiente filtro si determinano le somme dei parziali e si inviano come input per il Carry Save Adder Tree che provvederà a fare la somma fra tutti gli operandi.
+
+\section{Il circuito moltiplicativo}
+Il circuito finale avrà questa struttura:
 \begin{figure}[H]  
 	\hspace{-3.5 cm}
 	\includegraphics[width=1.5\textwidth]{file_relazione/imgs/mul.png}
 \end{figure}
 
 \section{Il testing}
-Si allegano ora i risultati del testbench effettuato in cui figurano i risultati correttamente calcolati:
+Fra alcuni casi testati figurano:
+\begin{itemize}
+	\item Il massimo caso positivo, in cui i pixel valgono 255 e i coefficienti valgono 7
+		\begin{lstlisting}[language=VHDL]
+			--test sui massimi valori possibili
+        		-- immagine=255, filtro = +7
+       		 --risultati attesi = 1785
+        		p <= std_logic_vector(to_unsigned(255, comp_i));
+        		f <= std_logic_vector(to_signed(7, coeff_f));
+        		wait for 50 ns;
+		\end{lstlisting}
+
+	\item Il massimo caso negativo in cui i pixel valgono 255 e i coefficienti valgono -8
+		\begin{lstlisting}[language=VHDL]
+			--immagine = 255, filtro = -8
+        		--risultato atteso = -2040
+			p <= std_logic_vector(to_unsigned(255, comp_i));
+        		f <= std_logic_vector(to_signed(-8, coeff_f));
+			wait for 50 ns;
+		\end{lstlisting}
+
+	\item Caso in cui i pixel restano fissi a 255 e i coefficienti del filtro variano per tutti i valori possibili: da -8 a 7
+		\begin{lstlisting}[language=VHDL]
+			      p <= std_logic_vector(to_unsigned(255, 8));
+        			for i in -8 to 7 loop
+            		f <= std_logic_vector(to_signed(i, coeff_f));
+	    			wait for 50 ns;
+        			end loop;
+        			wait for 20 ns;
+		\end{lstlisting}
+\end{itemize}
+
+\newpage
+Si allegana ora la simulazione del testbench effettuato in cui figurano i risultati correttamente calcolati:
 
 \begin{figure}[H]  
 	\hspace{-3.5 cm}
