@@ -7,7 +7,7 @@ La trasformazione di un immagine in un contesto spaziale bidimensionale è il co
 \subsection{Architettura del Dataflow}
 Il modulo implementa una struttura a registri a scorrimento (Shift Registers) interconnessi con buffer di linea (FIFO). L'obiettivo è rendere disponibili contemporaneamente, in un singolo ciclo di clock, i 9 pixel adiacenti necessari al filtro:
 
-'''Immagine da inserire'''
+\includegraphics[width=\textwidth]{file_relazione/imgs/fifo.png}
 
 \[
 \text{Window} = \begin{bmatrix}

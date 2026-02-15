@@ -13,6 +13,9 @@ La FSM ha il compito di coordinare tre segnali di controllo fondamentali per il 
 	\item \texttt{flush\_pipeline}: segnale che gestisce la fase terminale dell'elaborazione, forzando l'ingresso a zero quando non vi sono più pixel in arrivo ma la pipeline deve ancora svuotarsi.
 \end{itemize}
 
+\includegraphics[width=\textwidth]{file_relazione/imgs/fsm.png}
+
+
 A differenza di implementazioni classiche, lo stato di \texttt{IDLE} è stato rimosso dalla logica esplicita degli stati per ottimizzare la risposta al segnale di \textit{Start Of Frame} (SOF). La macchina opera principalmente su tre stati:
 
 \begin{enumerate}
