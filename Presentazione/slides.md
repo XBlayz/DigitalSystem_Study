@@ -46,11 +46,11 @@ src: ./sections/02_basic_components.md
 ---
 
 ---
-src: ./sections/03_csa_tree.md
+src: ./sections/03_booth_multiplier.md
 ---
 
 ---
-src: ./sections/04_booth_multiplier.md
+src: ./sections/04_csa_tree.md
 ---
 
 ---
