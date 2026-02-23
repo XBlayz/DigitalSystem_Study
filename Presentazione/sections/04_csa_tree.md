@@ -85,6 +85,66 @@ I 9 input vengono raggruppati in 3 blocchi da 3. Ogni blocco genera *Sum* e *Car
 Questo processo si ripete, allargando i vettori (12 $\rightarrow$ 13 $\rightarrow$ 14 $\rightarrow$ 15 bit) fino ad avere solo due vettori finali da 16 bit.
 
 ---
+level: 3
+---
+
+# Livello 1
+
+<div class="transform scale-200 origin-top-left">
+
+![Livello 1](../img/level1.svg)
+
+</div>
+
+---
+level: 3
+---
+
+# Livello 2
+
+<div class="transform scale-200 origin-top-left">
+
+![Livello 2](../img/level2.svg)
+
+</div>
+
+---
+level: 3
+---
+
+# Livello 3
+
+<div class="transform scale-200 origin-top-left">
+
+![Livello 3](../img/level3.svg)
+
+</div>
+
+---
+level: 3
+---
+
+# Livello 4
+
+<div class="transform scale-200 origin-top-left">
+
+![Livello 4](../img/level4.svg)
+
+</div>
+
+---
+level: 3
+---
+
+# Livello finale (Carry Select Adder)
+
+<div class="transform scale-200 origin-top-left">
+
+![Livello CSA](../img/level_csa.svg)
+
+</div>
+
+---
 level: 2
 ---
 
