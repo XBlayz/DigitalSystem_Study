@@ -47,7 +47,7 @@ Generando i report relativi all’utilizzo di risorse, all’uso di potenza e al
 \end{figure}
 \begin{figure}[H]  
 	\hspace{-2 cm}
-	\includegraphics[width=1.3\textwidth]{file_relazione/imgs/report2.png}
+	\includegraphics[width=1.3\textwidth]{file_relazione/imgs/report2.jpeg}
 \end{figure}
 
 \section{Il filtro di Sobel (verticale)}
@@ -75,7 +75,7 @@ Generando i report relativi all’utilizzo di risorse, all’uso di potenza e al
 \end{figure}
 \begin{figure}[H]  
 	\hspace{-2 cm}
-	\includegraphics[width=1.3\textwidth]{file_relazione/imgs/report4.png}
+	\includegraphics[width=1.3\textwidth]{file_relazione/imgs/report4.jpeg}
 \end{figure}
-Dopo aver implementato i due filtri, è possibile notare delle differenze tra i report. La prima risiede in un WNS più alto per il circuito col filtro di Sobel verticale. Si passa infatti da un WNS di 2,46 ns ad un WNS di 2,812ns e quindi 0,352ns in più. Ipotizzando di ridurre fino a zero il WNS in entrambi i casi (idealità), tale operazione permetterebbe al circuito col filtro di Sobel di lavorare ad una frequenza massima teorica maggiore del 4,89\% rispetto al caso con il filtro Gaussiano. Questo risultato è dovuto al fatto che col filtro di Sobel non viene utilizzata la colonna centrale del kernel, e i risultati calcolati saranno più piccoli in modulo con una propagazione dei riporti più contenuta. Calcolare prodotti per zero è infatti meno dispendioso in termini computazionali, potendo anche fisicamente eliminare le linee per i coefficienti nulli. Grazie a questo funzionamento alleggerito, il risultato in uscita vedrà un path critico più corto che gli permetterà di attraversare la logica più velocemente. Per questi motivi, si vedrà una riduzione delle LUT utilizzate e anche un minore consumo di potenza dinamica dovuta alla logica che passerà dal 15\% al 9\%.  
+Dopo aver implementato i due filtri, è possibile notare delle differenze tra i report. La prima risiede in un WNS più alto per il circuito col filtro di Sobel verticale. Si passa infatti da un WNS di 2,46 ns ad un WNS di 2,812ns e quindi 0,352ns in più. Ipotizzando di ridurre fino a zero il WNS in entrambi i casi (idealità), tale operazione permetterebbe al circuito col filtro di Sobel di lavorare ad una frequenza massima teorica maggiore del 4,89\% rispetto al caso con il filtro Gaussiano. Questo risultato è dovuto al fatto che col filtro di Sobel non viene utilizzata la colonna centrale del kernel, e i risultati calcolati saranno più piccoli in modulo con una propagazione dei riporti più contenuta. Calcolare prodotti per zero è infatti meno dispendioso in termini computazionali, potendo anche fisicamente eliminare le linee per i coefficienti nulli. Grazie a questo funzionamento alleggerito, il risultato in uscita vedrà un path critico più corto che gli permetterà di attraversare la logica più velocemente. Per questi motivi, si vedrà una riduzione delle LUT utilizzate e, a fronte di una potenza dinamica maggiore di 1mW, la quota di potenza relativa alla logica scenderà dal 20\% al 19\% mentre quella relativa agli I/O dal 54\% al 53\%. Questo conferma che la parte di calcolo è effettivamente più efficiente nel Sobel.
 

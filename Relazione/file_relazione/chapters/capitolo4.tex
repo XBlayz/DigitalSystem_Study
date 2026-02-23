@@ -7,7 +7,7 @@ Per ottenere il pixel filtrato sarà ora necessario sommare tutti e nove gli ope
 
 Per poter fare ciò si hanno diverse strade, tra cui un classico sommatore “carta e penna” o una somma a due a due. Questi metodi, per quanto semplici da implementare, hanno però il grosso svantaggio di essere molto lenti ad effettuare il calcolo. Esistono invece metodi più efficienti che sfruttano più risorse HW ma che portano a termine l’operazione in un tempo molto più breve. Uno tra questi è l’approccio detto “Carry Save”. Questa metodologia consiste nel sommare gli operandi a due a due o a tre a tre, creando in uscita due diversi vettori contenenti rispettivamente i bit delle somme e i bit dei riporti. 
 
-Questo approccio interrompe dunque la catena di trasporto del riporto per ogni somma, andando ad iterare questa proceduta fino ad ottenere in uscita due soli vettori da sommare. Sarà solo a questo punto che si avrà una sola catena di riporto, andando dunque a risparmiare tanto tempo a livello complessivo. Essendo questo progetto incentrato sull’efficienza, dando il giusto peso all’utilizzo delle risorse, è stato dunque scelto un approccio Carry Save per l’albero di somma mentre, per lo step finale, è stato scelto una somma mediante un modulo Carry Select Adder. Questo per via del numero di bit favorevole che ha permesso di adottare il seguente approccio senza avere sbilanciamenti o verso le troppe risorse o verso un tempo di elaborazione eccessivamente alto.
+Questo approccio interrompe dunque la catena di trasporto del riporto per ogni somma, andando ad iterare questa proceduta fino ad ottenere in uscita due soli vettori da sommare. Sarà solo a questo punto che si avrà una sola catena di riporto, andando dunque a risparmiare tanto tempo a livello complessivo. Essendo questo progetto incentrato sull’efficienza, dando il giusto peso all’utilizzo delle risorse, è stato dunque scelto un approccio Carry Save per l’albero di somma mentre, per lo step finale, è stata scelta una somma mediante un modulo Carry Select Adder. Questo per via del numero di bit favorevole che ha permesso di adottare il seguente approccio senza avere sbilanciamenti o verso le troppe risorse o verso un tempo di elaborazione eccessivamente alto.
 
 L’albero di somma sarà formato da nove operandi in ingresso corrispondenti ai prodotti parziali e saranno rappresentati da altrettanti segnali in std\_logic\_vector a 12-bit.
 In uscita, per come verrà spiegato in seguito, si avrà un segnale in std\_logic\_vector a 16-bit.
@@ -43,7 +43,7 @@ I bit in posizione i-esima daranno in uscita un bit di somma e uno di riporto ch
 	\includegraphics[width=0.9\textwidth]{file_relazione/imgs/interno_csa(1).png}
 \end{figure}
 
-È importante sottolineare che, l’estensione con lo zero a destra e l’estensione con segno a sinistra non richiede risorse aggiuntile ma solo un collegamento rispettivamente verso GND e verso il MSB.
+È importante sottolineare che, l’estensione con lo zero a destra e l’estensione con segno a sinistra non richiedono risorse aggiuntile ma solo un collegamento rispettivamente verso GND e verso il MSB.
 
 Ottenuti i sei nuovi vettori, verrà replicata la procedura andando a raggruppare i segnali a tre a tre. Nello specifico, per il primo raggruppamento verranno presi i due segnali uscenti dal primo blocchetto e il primo del secondo blocchetto. L’altro raggruppamento sarà invece formato dal secondo segnale uscente dal secondo blocchetto e da entrambi i segnali uscenti dal terzo blocchetto.
 
@@ -61,7 +61,7 @@ A livello grafico:
 	\includegraphics[width=0.9\textwidth]{file_relazione/imgs/interno_csa(3).png}
 \end{figure}
 
-A questo si arriverà ad avere tre vettori da 15-bit ciascuno, rispettivamente uno di somma e due di riporti. I tre vettori andranno in ingresso al livello di somma finale composto da quindi Full Adder che darà come uscita i due vettori finali di somma e riporto da 16-bit. 
+A questo punto si arriverà ad avere tre vettori da 15-bit ciascuno, rispettivamente uno di somma e due di riporti. I tre vettori andranno in ingresso al livello di somma finale composto da quindici Full Adder che darà come uscita i due vettori finali di somma e riporto da 16-bit. 
 A livello grafico:
 \begin{figure}[H]
 	\centering
