@@ -3,7 +3,6 @@ lang: IT, EN
 
 # Configurazione globale di Sli.dev
 theme: default
-background: https://source.unsplash.com/collection/94734566/1920x1080
 class: 'text-center'
 highlighter: shiki
 lineNumbers: false
@@ -68,8 +67,7 @@ src: ./sections/07_results.md
 ---
 layout: center
 class: text-center
+hideInToc: true
 ---
 
 # Grazie per l'attenzione
-
-### Domande?

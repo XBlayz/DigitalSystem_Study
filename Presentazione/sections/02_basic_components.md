@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: Componenti Base
 ---
 
 # 2. Componenti Base

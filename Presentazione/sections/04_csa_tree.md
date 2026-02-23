@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: Carry Save Adder tree
 ---
 
 # 3. Carry Save Adder tree

@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: Buffer & Pipeline
 ---
 
 # 5. Buffer & Pipeline

@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: Circuito moltiplicatore
 ---
 
 # 3. Circuito moltiplicatore
