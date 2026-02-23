@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: Risultati e Conclusioni
 ---
 
 # 7. Risultati e Conclusioni

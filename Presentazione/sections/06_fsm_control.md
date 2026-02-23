@@ -2,6 +2,7 @@
 lang: IT, EN
 
 layout: section
+title: FSM e AXI-Stream
 ---
 
 # 6. Finite State Machine e Interfacce AXI-Stream
