@@ -71,5 +71,3 @@ class: text-center
 ---
 
 # Grazie per l'attenzione
-
-### Domande?
