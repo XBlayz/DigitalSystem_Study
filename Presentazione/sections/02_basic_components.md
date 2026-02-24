@@ -152,6 +152,8 @@ end loop;
 </div>
 
 ---
+level: 2
+---
 
 # Unit Testing: Ripple Carry Adder
 Verifica mirata (Directed testing)
