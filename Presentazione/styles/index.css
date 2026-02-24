@@ -1,0 +1,9 @@
+/* Inverti SVG nel tema chiaro - MARKDOWN Images */
+html:not(.dark) img[src$=".svg"] {
+    filter: invert(1) contrast(1.5);
+}
+
+/* Inverti SVG nel tema chiaro - BACKGROUND Images */
+html:not(.dark) [style*=".svg"] {
+    filter: invert(1) contrast(1.5);
+}
