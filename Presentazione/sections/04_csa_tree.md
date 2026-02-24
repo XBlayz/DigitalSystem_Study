@@ -157,8 +157,8 @@ Arrivati a due soli vettori (_Somma Parziale_ e _Riporti Parziali_), serve un ve
 ### Scelta Architetturale
 Abbiamo optato per un **Carry Select Adder (CSLA)** semplificato.
 
-* **Compromesso:** Più veloce di un Ripple Carry, meno risorse di un Kogge-Stone
-* **Semplificazione:** Non gestiamo il  finale e il relativo MUX, poiché il range a 16-bit copre garantitamente il caso peggiore (Overflow impossibile per design)
+* **Scelta:** Più performante di un Ripple Carry
+* **Semplificazione:** Non gestiamo il riporto finale e il relativo MUX, poiché il range a 16-bit copre garantitamente il caso peggiore (Overflow impossibile per design)
 
 </div>
 <div>

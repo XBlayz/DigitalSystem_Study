@@ -78,15 +78,15 @@ Confronto tra l'input e l'output elaborato
 level: 2
 ---
 
-# Caso d'uso 2: Filtro di Sobel (Verticale)
-Test con filtro Sobel (vertical edge detection) per analizzare il comportamento con coefficienti negativi e nulli
+# Caso d'uso 2: Filtro di Sobel (Orizzontale)
+Test con filtro Sobel (horizontal edge detection) per analizzare il comportamento con coefficienti negativi e nulli
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 <div>
 
 ### Parametri del Filtro
 
-* **Kernel:** Rilevamento dei gradienti verticali
+* **Kernel:** Rilevamento dei gradienti orizzontali
 * **Normalizzazione:** Divisione finale per $4$
 
 | Col 1  | Col 2 | Col 3 |
@@ -99,9 +99,9 @@ Test con filtro Sobel (vertical edge detection) per analizzare il comportamento 
 <div>
 
 ### Risultato Visivo
-I bordi verticali della scacchiera vengono evidenziati correttamente
+I bordi orizzontali della scacchiera vengono evidenziati correttamente
 
-<div class="transform scale-70 origin-top-center">
+<div class="transform scale-62 origin-top-center">
 
 ![Sobel](../img/scacchiera_sobel.png)
 
@@ -120,14 +120,14 @@ L'analisi dei report generati da Vivado rivela differenze architetturali signifi
 <div text-sm class="grid grid-cols-2 gap-8 mt-4">
 <div>
 
-| Parametri                      | Filtro Gaussiano | Filtro Sobel (Verticale) | Differenza |
-| ------------------------------ | ---------------- | ------------------------ | ---------- |
-| **WNS** (Worst Negative Slack) | $2.460$ ns       | $2.812$ ns               | $0.352$ ns |
-| **LUTs**                       | 158              | 153                      | -5         |
-| **Registers**                  | 155              | 159                      | 4          |
-| **Dynamic** power              | $12$ mW          | $13$ mW                  | $1$ mW     |
-| **Static** power               | $105$ mW         | $104$ mW                 | $-1$ mW    |
-| **Total** _On-Chip_ power      | $117$ mW         | $117$ mW                 | $0$ mW     |
+| Parametri                      | Filtro Gaussiano | Filtro Sobel (Orizzontale) | Differenza |
+| ------------------------------ | ---------------- | -------------------------- | ---------- |
+| **WNS** (Worst Negative Slack) | $2.460$ ns       | $2.812$ ns                 | $0.352$ ns |
+| **LUTs**                       | 158              | 153                        | -5         |
+| **Registers**                  | 155              | 159                        | 4          |
+| **Dynamic** power              | $12$ mW          | $13$ mW                    | $1$ mW     |
+| **Static** power               | $105$ mW         | $104$ mW                   | $-1$ mW    |
+| **Total** _On-Chip_ power      | $117$ mW         | $117$ mW                   | $0$ mW     |
 
 </div>
 <div>
@@ -138,6 +138,7 @@ L'ottimizzatore (_Synthesizer_) riconosce i coefficienti statici del filtro:
 1. **Colonne a Zero**: Nel **Sobel**, la colonna centrale è composta da `0`, il sintetizzatore elimina fisicamente i moltiplicatori e le linee dati associate
 2. **Critical Path Ridotto**: Operandi nulli o più piccoli generano riporti più corti nell'**albero CSA**, velocizzando il percorso critico
 3. **Risparmio Area/Potenza**: La rimozione logica (_pruning_) riduce l'utilizzo di **LUT** e il conseguente consumo di _potenza statica_
+4. **Frequenza di lavoro**: filtro _Sobel_ $+4,89 \%$ rispetto al caso con il filtro _Gaussiano_
 
 <br>
 
