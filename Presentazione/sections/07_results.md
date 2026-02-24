@@ -42,6 +42,18 @@ graph TD
 level: 2
 ---
 
+# Immagine originale di riferimento
+
+<div class="transform scale-70 origin-top-center">
+
+![Scacchiera](../img/scacchiera.png)
+
+</div>
+
+---
+level: 2
+---
+
 # Caso d'uso 1: Filtro Gaussiano
 Test con filtro sfocatura (blurring) per verificare il comportamento del circuito
 
@@ -63,7 +75,7 @@ Test con filtro sfocatura (blurring) per verificare il comportamento del circuit
 <div>
 
 ### Risultato Visivo
-Confronto tra l'input e l'output elaborato
+La scacchiera originale viene sfocata
 
 <div class="transform scale-73 origin-top-center">
 
@@ -78,8 +90,8 @@ Confronto tra l'input e l'output elaborato
 level: 2
 ---
 
-# Caso d'uso 2: Filtro di Sobel (Orizzontale)
-Test con filtro Sobel (horizontal edge detection) per analizzare il comportamento con coefficienti negativi e nulli
+# Caso d'uso 2: Filtro di Sobel
+Test con filtro Sobel (edge detection) per analizzare il comportamento con coefficienti negativi e nulli
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 <div>
@@ -99,9 +111,9 @@ Test con filtro Sobel (horizontal edge detection) per analizzare il comportament
 <div>
 
 ### Risultato Visivo
-I bordi orizzontali della scacchiera vengono evidenziati correttamente
+I bordi della scacchiera vengono evidenziati
 
-<div class="transform scale-62 origin-top-center">
+<div class="transform scale-68 origin-top-center">
 
 ![Sobel](../img/scacchiera_sobel.png)
 
