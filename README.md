@@ -6,7 +6,13 @@ This repository contains the source code, simulations, and documentation for a u
 
 The main goal is to create a hardware architecture capable of applying a spatial filter to an image. Specifically, the system implements a low-pass filter (blur) based on the following 3x3 kernel:
 
-$$\begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}$$
+```math
+\begin{bmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+1 & 2 & 1
+\end{bmatrix}
+```
 
 *Note: The normalization of pixel values after filtering (to avoid saturation) is handled externally via MATLAB scripts.*
 
